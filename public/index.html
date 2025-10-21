@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="!scroll-smooth">
+<html lang="pt-br" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../public/assets/css/output.css">
     <link rel="shortcut icon" href="assets/images/icones/logo1.ico" type="image/x-icon">
     <script src="../src/build/doces.js" type="module"></script>
-    <script src="../src/build/login.js" type="module"></script>
 </head>
 <body class="flex flex-col min-h-screen scroll-mt-4">
 
@@ -30,12 +29,29 @@
     <!-- Modal de login -->
     <div id="loginModal" class="fixed inset-0 hidden z-50 items-center justify-center">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
-        <div class="bg-white p-8 rounded-lg w-96 relative z-10">
-            <button id="closeModal" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">X</button>
+        <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+            <button id="closeModal" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
             <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
-            <input type="text" id="username" placeholder="Usuário" class="w-full mb-2 p-2 border rounded">
-            <input type="password" id="password" placeholder="Senha" class="w-full mb-4 p-2 border rounded">
-            <button id="loginSubmit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Logar</button>
+            <input type="email" id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
+            <input type="password" id="password" placeholder="Senha" class="w-full mb-3 p-2 border rounded">
+            <button id="loginSubmit" class="flex mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Logar</button>
+            <button id="cadastroSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastre-se</button>
+        </div>
+    </div>
+
+    <!--Modal de Cadastro-->
+    <div id="cadastroModal" class="fixed inset-0 hidden z-50 items-center justify-center">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+        <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+            <button id="closeCadastro" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
+            <h2 class="text-2xl font-bold mb-4 text-center">Cadastre-se</h2>
+            <input type="text" id="nome" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
+            <input type="text" id="sobrenome" placeholder="Sobrenome" class="w-full mb-3 p-2 border rounded"> 
+            <input type="email" id="emailCadastro" placeholder="Email" class="w-full mb-3 p-2 border rounded"> 
+            <input type="text" id="username" placeholder="Usuário" class="w-full mb-3 p-2 border rounded">
+            <input type="password" id="senha" placeholder="Senha" class="w-full mb-3 p-2 border rounded">  
+            <input type="password" id="senhaD" placeholder="Digite sua senha novamente" class="w-full mb-3 p-2 border rounded">          
+            <button id="cadastrarSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastrar</button>
         </div>
     </div>
 
@@ -51,12 +67,10 @@
         </div>
     </section>
 
-
     <!--Cards de receitas-->
     <main class="container mx-auto p-4 px-4 pb-12">
         <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
-
 
     <!--Section segundo video-->
     <section class="relative w-full h-[82vh] overflow-x-hidden">
@@ -75,9 +89,33 @@
         <div id="cards2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
     
-    <footer id="footer" class="bg-gray-800 text-white grid-cols-2 p-4 w-full h-40 mt-8 relative z-50">
-        &#x1F370;
-    </footer>
+    <footer id="footer" class="text-gray-200 bg-gray-800">
+        <div class="container mx-auto py-14 px-6">
+            <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+            
+            <div class="col-span-1 md:col-span-4 lg:col-span-4">
+                <a href="#">
+                    <img class="max-h-2/12" src="assets/images/icones/logo1.ico" alt="LinguRemi">
+                </a>
+                <p class="mt-6 text-gray-300">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, ad quis!
+                </p>
+            </div>
 
+            <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
+                <ul class="list-none mt-6 space-y-2">
+                    <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Sobre nós</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Redes sociais</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Trabalhe conosco</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Contato</a></li>
+                </ul>
+            </div>
+
+            </div>
+        </div>
+    </footer>
+    <script src="../src/build/login.js" type="module"></script>
+    <script type="module" src="../src/build/cadastro.js"></script>
 </body>
 </html>

@@ -2,6 +2,9 @@ const loginBtn = document.querySelector('a[href="#"]') as HTMLElement;
 const modal = document.getElementById('loginModal')!;
 const closeModal = document.getElementById('closeModal')!;
 const loginSubmit = document.getElementById('loginSubmit')!;
+const cadastroSubmit = document.getElementById('cadastroSubmit')!;
+const modalCadastro = document.getElementById('cadastroModal')!;
+const closeCadastro = document.getElementById('closeCadastro')!;
 
 loginBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -14,16 +17,32 @@ closeModal.addEventListener('click', () => {
     modal.classList.add('hidden');
 });
 
+cadastroSubmit.addEventListener('click', () => {
+    // Fecha modal de login
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+
+    // Abre modal de cadastro
+    modalCadastro.classList.remove('hidden');
+    modalCadastro.classList.add('flex');
+});
+
+// Fecha modal de cadastro
+closeCadastro.addEventListener('click', () => {
+    modalCadastro.classList.remove('flex');
+    modalCadastro.classList.add('hidden');
+});
+
 // Função de login
 loginSubmit.addEventListener('click', async () => {
-    const username = (document.getElementById('username') as HTMLInputElement).value;
-    const password = (document.getElementById('password') as HTMLInputElement).value;
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const senha = (document.getElementById('password') as HTMLInputElement).value;
 
     try {
         const response = await fetch('http://localhost:8080/usuarios', { // URL da sua API
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ email, senha})
         });
 
         if (!response.ok) {
