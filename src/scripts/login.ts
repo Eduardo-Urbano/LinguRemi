@@ -42,7 +42,7 @@ loginSubmit.addEventListener('click', async () => {
         const response = await fetch('http://localhost:8080/usuarios', { // URL da sua API
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, senha})
+            body: JSON.stringify({email, senha})
         });
 
         if (!response.ok) {

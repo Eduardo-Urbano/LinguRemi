@@ -16,25 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }else{
                 class NovoUsuario {
+                    private role: string;
                     private nome: string;
-                    private sobrenome: string;
                     private email: string;
-                    private username: string;
                     private senha: string;
                     
-                    constructor(nome: string, sobrenome: string, email: string, username: string, senha: string) {
+                    constructor(role: string, nome: string, email: string, senha: string) {
+                        this.role = role;
                         this.nome = nome;
-                        this.sobrenome = sobrenome;
                         this.email = email;
-                        this.username = username;
                         this.senha = senha;
                     }
                 }
                 const usuario = new NovoUsuario(
+                    "USER",
                     (document.getElementById('nome') as HTMLInputElement).value,
-                    (document.getElementById('sobrenome') as HTMLInputElement).value,
                     (document.getElementById('email') as HTMLInputElement).value,
-                    (document.getElementById('username') as HTMLInputElement).value,
                     (document.getElementById('senha') as HTMLInputElement).value
                 );
                 //console.log(usuario);

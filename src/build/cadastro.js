@@ -16,20 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else {
             class NovoUsuario {
+                role;
                 nome;
-                sobrenome;
                 email;
-                username;
                 senha;
-                constructor(nome, sobrenome, email, username, senha) {
+                constructor(role, nome, email, senha) {
+                    this.role = role;
                     this.nome = nome;
-                    this.sobrenome = sobrenome;
                     this.email = email;
-                    this.username = username;
                     this.senha = senha;
                 }
             }
-            const usuario = new NovoUsuario(document.getElementById('nome').value, document.getElementById('sobrenome').value, document.getElementById('email').value, document.getElementById('username').value, document.getElementById('senha').value);
+            const usuario = new NovoUsuario("USER", document.getElementById('nome').value, document.getElementById('email').value, document.getElementById('senha').value);
             //console.log(usuario);
             fetch("http://localhost:8080/LinguRemiApi/usuarios/cadastrar", {
                 method: "POST",
