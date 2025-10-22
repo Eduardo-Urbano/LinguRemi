@@ -1,6 +1,7 @@
 package LinguRemi.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,6 @@ public class UsuariosController {
 	private AuthenticationManager authM;
 	@Autowired
 	private TokenService tokenService;
-	
-	
 
     UsuariosController(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -43,7 +42,7 @@ public class UsuariosController {
 	
 	@PostMapping(value = "/login")
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.Login(),data.password());
+		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(),data.password());
 		var auth = this.authM.authenticate(usernamePassword);
 		
 		var token = tokenService.generateToken((Usuarios)auth.getPrincipal());
@@ -57,7 +56,8 @@ public class UsuariosController {
 		String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
 		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, data.role());
 		this.repU.save(user);
-		return ResponseEntity.ok().build();
+		//return ResponseEntity.ok().build();
+		return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso"));
 	}
 
 	@GetMapping(value = "/todos")

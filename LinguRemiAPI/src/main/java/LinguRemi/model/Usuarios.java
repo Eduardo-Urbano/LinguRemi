@@ -64,16 +64,16 @@ public class Usuarios implements UserDetails{
 	public void setNomeUsuarios(String nomeUsuarios) {
 		this.nomeUsuarios = nomeUsuarios;
 	}
-	public String getEmailUsuario() {
+	public String getEmailUsuarios() {
 		return emailUsuarios;
 	}
-	public void setEmailUsuario(String emailUsuario) {
+	public void setEmailUsuarios(String emailUsuario) {
 		this.emailUsuarios = emailUsuario;
 	}
-	public String getSenhaUsuario() {
+	public String getSenhaUsuarios() {
 		return senhaUsuarios;
 	}
-	public void setSenhaUsuario(String senhaUsuario) {
+	public void setSenhaUsuarios(String senhaUsuario) {
 		this.senhaUsuarios = senhaUsuario;
 	}
 	public UserRole getRoleUsuarios() {

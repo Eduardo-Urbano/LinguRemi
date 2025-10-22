@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const usuario = new NovoUsuario("USER", document.getElementById('nome').value, document.getElementById('email').value, document.getElementById('senha').value);
             //console.log(usuario);
-            fetch("http://localhost:8080/LinguRemiApi/usuarios/cadastrar", {
+            fetch("http://localhost:8080/usuarios/cadastrar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(usuario)

@@ -1,5 +1,5 @@
 package LinguRemi.DTO;
 
-public record AuthenticationDTO(String Login, String password) {
+public record AuthenticationDTO(String login, String password) {
 
 }

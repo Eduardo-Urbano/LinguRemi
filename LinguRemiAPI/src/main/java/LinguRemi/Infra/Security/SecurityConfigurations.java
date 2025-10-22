@@ -20,10 +20,12 @@ public class SecurityConfigurations {
 	
 	@Autowired
 	SecurityFilter securityFilter;
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
+				.cors()
+				.and()
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				//aqui defini o que só pode ser aberto por cada usuario
@@ -32,8 +34,10 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas").hasRole("ADMIN")
+						.requestMatchers("/h2-console/**").permitAll()
 						.anyRequest().authenticated()
 				)
+				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
