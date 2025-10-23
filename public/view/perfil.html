@@ -4,8 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil</title>
+    <link rel="stylesheet" href="../assets/css/output.css">
 </head>
 <body>
     
+    <header class="flex justify-between items-center px-5 shadow-lg">
+        <nav class="flex flex-row gap-x-6 text-xl">
+            <ul class="flex flex-row space-x-6">
+                <li><a href="./produtos.html">Produtos</a></li>
+                <li><a href="#footer">Sobre nós</a></li>
+            </ul>
+        </nav>
+        <img class="w-62 mx-auto" src="../assets/images/logo/logo1.png" id="">
+        <nav class="flex flex-row gap-x-6 text-xl">
+            <ul class="flex flex-row space-x-6">
+                <li><a href="./index.html"></a><img src="../assets/images/icones/Home.png" alt="Página inicial"></li>
+                <li><a href="./carrinho.html"><img src="../assets/images/icones/carrinho2.png" alt="Meu Carrinho"></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-b from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
+        <div class="container mb-0 mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+            
+                <div class="col-span-1 md:col-span-4 lg:col-span-4">
+                    <a href="#">
+                        <img class="mt-0 max-h-1/4 max-w-10/12 place-self-center" src="../assets/images/icones/logo1.ico" alt="LinguRemi">
+                    </a>
+                    <p class="mt-6 text-gray-300">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, ad quis!
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
+                    </p>
+                </div>
+
+                <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Nosso Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Trabalhe conosco</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Redes sociais</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">WhatsApp</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Instagram</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">TikTok</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center mt-1 pb-10">©LinguRémi</div>
+    </footer>
+
+    <script type="module" src="../src/build/login.js"></script>
+    <script type="module" src="../src/build/cadastro.js"></script>
 </body>
 </html>
