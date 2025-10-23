@@ -25,6 +25,5 @@ document.addEventListener("DOMContentLoaded", () => {
         container2.appendChild(card.cloneNode(true));
     });
   }
-
   criarCards();
 });

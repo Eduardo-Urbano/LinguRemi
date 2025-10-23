@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const usuario = new NovoUsuario(
                     "USER",
                     (document.getElementById('nome') as HTMLInputElement).value,
-                    (document.getElementById('email') as HTMLInputElement).value,
+                    (document.getElementById('emailCadastro') as HTMLInputElement).value,
                     (document.getElementById('senha') as HTMLInputElement).value
                 );
                 //console.log(usuario);

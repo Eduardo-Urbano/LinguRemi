@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.senha = senha;
                 }
             }
-            const usuario = new NovoUsuario("USER", document.getElementById('nome').value, document.getElementById('email').value, document.getElementById('senha').value);
+            const usuario = new NovoUsuario("USER", document.getElementById('nome').value, document.getElementById('emailCadastro').value, document.getElementById('senha').value);
             //console.log(usuario);
             fetch("http://localhost:8080/usuarios/cadastrar", {
                 method: "POST",
