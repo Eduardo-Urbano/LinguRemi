@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
     <header class="flex justify-between items-center px-5 shadow-lg">
         <nav class="flex flex-row gap-x-6 text-xl">
             <ul class="flex flex-row space-x-6">
-                <li><a href="#">Produtos</a></li>
+                <li><a href="#"><strong>Produtos</strong></a></li>
                 <li><a href="#footer">Sobre nós</a></li>
             </ul>
         </nav>
@@ -27,31 +27,34 @@
         </nav>
     </header>
 
+    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Nossos Doces</strong></h1></div>
     <!--Cards de receitas-->
     <main class="container mx-auto p-4 px-4 pb-12">
         <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
+    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Receitas do Blog</strong></h1></div>
+    
     <!--Cards de receita-->
     <main class="container mx-auto p-4 px-4 pb-12">
         <div id="cards2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
-    <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-b from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
+    <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
         <div class="container mb-0 mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+            <div class="flex flex-col md:flex-row justify-between gap-6">
             
-                <div class="col-span-1 md:col-span-4 lg:col-span-4">
+                <div class="md:w-2/5 min-w-0">
                     <a href="#">
                         <img class="mt-0 max-h-1/4 max-w-10/12 place-self-center" src="../assets/images/icones/logo1.ico" alt="LinguRemi">
                     </a>
-                    <p class="mt-6 text-gray-300">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, ad quis!
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
+                    <p class="mt-6 text-gray-300 wrap-break-words max-w-full overflow-hidden whitespace-normal">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
                     </p>
                 </div>
 
-                <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
                     <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
                     <ul class="list-none mt-6 space-y-2">
                         <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Nosso Blog</a></li>
@@ -60,7 +63,7 @@
                     </ul>
                 </div>
 
-                <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
                     <h5 class="tracking-wide text-gray-100 font-semibold">Redes sociais</h5>
                     <ul class="list-none mt-6 space-y-2">
                         <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">WhatsApp</a></li>
@@ -71,8 +74,8 @@
 
             </div>
         </div>
-        <div class="text-center mt-1 pb-10">©LinguRémi</div>
-    </footer>
+        <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
+    </footer> 
 
     <script type="module" src="../../src/build/login.js"></script>
     <script type="module" src="../../src/build/cadastro.js"></script>

@@ -3,5 +3,6 @@ export declare const receitasDoce: {
     descricao: string;
     imagem: string;
     preparo: string;
+    preco: string;
 }[];
 //# sourceMappingURL=receitas.d.ts.map
