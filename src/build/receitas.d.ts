@@ -1,9 +1,3 @@
-export declare const receitasDoce: {
-    nome: string;
-    descricao: string;
-    imagem: string;
-    preparo: string;
-    preco: string;
-    data: string;
-}[];
+import type { Receita } from "./criarReceitas.js";
+export declare function carregarReceitas(): Promise<Receita[]>;
 //# sourceMappingURL=receitas.d.ts.map
