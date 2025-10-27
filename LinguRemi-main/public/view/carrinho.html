@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho</title>
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <link rel="shortcut icon" href="../assets/images/icones/logo1.ico" type="image/x-icon">
+    <script src="../../src/build/doces.js" type="module"></script>
+</head>
+<body>
+
+    <header class="flex justify-between items-center px-5 shadow-sm">
+        <nav class="flex flex-row gap-x-6 text-xl w-1/3">
+            <ul class="flex flex-row space-x-6">
+                <li><a href="./produtos.html">Produtos</a></li>
+                <li><a href="#footer">Sobre nós</a></li>
+                <li><a href="./blog.html">Blog</a></li>
+            </ul>
+        </nav>
+
+        <div class="flex justify-center w-1/3">
+            <img class="w-62" src="../assets/images/logo/logo1.png" id="">
+        </div>
+
+        <nav class="flex flex-row gap-x-6 text-xl w-1/3 justify-end">
+            <ul class="flex flex-row space-x-6">
+                <li><a id="ident0" class="flex" href="#">Login</a></li>
+                <li><a id="ident1" class="hidden" href="./perfil.html"></a></li>
+                <li><a href="./index.html"><img src="../assets/images/icones/Home.png" alt="Página inicial"></a></li>
+                <li><a href="./carrinho.html"><img src="../assets/images/icones/carrinho2.png" alt="Meu Carrinho"></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="flex flex-row gap-6 my-5 p-3.5 bg-white">
+        <section id="minhasCompras" class="w-3/4 min-h-[500px] bg-white rounded-2xl p-4 shadow-2xl">
+            <main class="container mx-auto p-4 px-4 pb-12">
+                <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </main>
+        </section>
+        <div id="finalizarCompra" class="text-white p-4 flex flex-col gap-3.5 w-1/4 min-h-[500px] bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90% rounded-2xl shadow-2xl">
+            <h1 class="text-4xl"><strong>Finalizar compra</strong></h1>
+            <h2 class="text-2xl"><strong>Total:</strong></h2>
+        </div>
+    </div>
+
+    <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
+        <div class="container mb-0 mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between gap-6">
+            
+                <div class="md:w-2/5 min-w-0">
+                    <a href="#">
+                        <img class="mt-0 max-h-1/4 max-w-10/12 place-self-center" src="../assets/images/icones/logo1.ico" alt="LinguRemi">
+                    </a>
+                    <p class="mt-6 text-gray-300 wrap-break-words max-w-full overflow-hidden whitespace-normal">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
+                    </p>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Nosso Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Trabalhe conosco</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Redes sociais</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">WhatsApp</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Instagram</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">TikTok</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
+    </footer>    
+
+    <script type="module" src="../src/build/login.js"></script>
+    <script type="module" src="../src/build/cadastro.js"></script>
+</body>
+</html>
