@@ -59,28 +59,29 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         cont1.appendChild(card);
 
+        // Joga o produto no carrinho
         const btn = card.querySelector(".btn-add-cart");
         btn.addEventListener("click", () => {
-            // Pega o carrinho atual do localStorage ou cria um array vazio
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
             const inputQuantidade = card.querySelector("input");
             let quantidade = Number(inputQuantidade.value);
 
+            console.log(receita);
             cart.push({
                 nome: receita.nome,
                 preco: receita.preco,
                 imagem: receita.imagem,
-                quantidade: quantidade
+                quantidade: quantidade,
+                tipoQuantidade: receita.tipoQuantidade
             });
 
-            // Salva no localStorage
             localStorage.setItem("cart", JSON.stringify(cart));
 
             alert(`${receita.nome} adicionado ao carrinho!`);
         });
     }
-    dadosProduto(receitasDoce[0]);
+    dadosProduto(receitasDoce[4]);
 });
 
 function getRandomInt(min, max) {

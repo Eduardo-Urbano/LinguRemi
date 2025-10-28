@@ -36,12 +36,13 @@
     <div class="flex flex-row gap-6 my-5 p-3.5 bg-white">
         <section id="minhasCompras" class="w-3/4 min-h-[500px] bg-white rounded-2xl p-4 shadow-2xl">
             <main class="container mx-auto p-4 px-4 pb-12">
-                <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="cards1" class="flex flex-col gap-6"></div>
             </main>
         </section>
-        <div id="finalizarCompra" class="text-white p-4 flex flex-col gap-3.5 w-1/4 min-h-[500px] bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90% rounded-2xl shadow-2xl">
-            <h1 class="text-4xl"><strong>Finalizar compra</strong></h1>
-            <h2 class="text-2xl"><strong>Total:</strong></h2>
+        <div id="finalizarCompra" class="text-white p-4 flex flex-col gap-3.5 w-1/4 min-h-[500px] max-h-[900px] bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90% rounded-2xl shadow-2xl">
+            <div id="carrinho"></div>
+            <h2 id="total" class="text-2xl"><strong>Total:</strong></h2>
+            <button type="button" class="text-4xl"><strong>Finalizar compra</strong></button>
         </div>
     </div>
 
@@ -88,6 +89,8 @@
         document.addEventListener("DOMContentLoaded", function () {
         const cartContainer = document.getElementById("cards1");
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const carrinhoTotal = document.getElementById("carrinho");
+        
 
         if (cart.length === 0) {
             cartContainer.innerHTML = "<p class='text-center text-xl'>Seu carrinho está vazio.</p>";
@@ -96,31 +99,87 @@
 
         cart.forEach((item, index) => {
             const card = document.createElement("div");
-            card.className = "border rounded p-3 flex flex-col items-center";
+            card.className = "bg-white rounded-xl shadow-lg overflow-hidden justify-between flex items-center";
+            const card2= document.createElement("div")
+            card2.className = ""
+
+            // mostrar multiplicação dos preços
+            card2.innerHTML=`
+            <div class="flex flex-col">
+                <h1 class="text-xl">${item.nome}</h1>
+                <h2 class="pl-5">R$${item.preco} x ${item.quantidade} = </h2>
+                </div>
+            `
+            carrinhoTotal.appendChild(card2)
+
+            // Campo de quantidade (input alterável)
+            let campoQuantidade = "";
+            if (item.tipoQuantidade === "unidade") {
+                campoQuantidade = `
+                    <label class="font-medium mb-1">Quantidade:</label>
+                    <input type="number" min="1" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                    <span class="ml-1 text-sm text-gray-600">un</span>
+                `;
+            } else if (item.tipoQuantidade === "peso") {
+                campoQuantidade = `
+                    <label class="font-medium mb-1">Peso:</label>
+                    <input type="number" step="0.100" min="0.100" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                    <span class="text-sm text-gray-600">kg</span>
+                `;
+            }
+
             card.innerHTML = `
-                <img src="${item.imagem}" alt="${item.nome}" class="w-40 h-32 object-cover mb-2">
-                <h2 class="font-semibold text-lg">${item.nome}</h2>
-                <p>R$ ${item.preco}</p>
-                <p>Quantidade: ${item.quantidade}</p>
-                <button class="btn-remove text-red-500 mt-2">Remover</button>
+                <div class="flex flex-row items-center">
+                    <img src="${item.imagem}" alt="${item.nome}" class="w-60 h-48 object-cover">
+                    <div class="flex flex-col w-full ml-5 max-w-100">
+                        <h2 class="font-bold text-lg">${item.nome}</h2>
+                        <button type="button" class="btn-remove rounded-xl bg-red-400 hover:bg-red-700 text-white px-3 py-1 mt-3 w-36">Remover Item</button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">${campoQuantidade}</div>        
+                <h1 class="text-gray-700 mr-5">Preço: R$ ${item.preco}</h1>
             `;
 
-            // Botão remover item
+            // Remover item
             card.querySelector(".btn-remove").addEventListener("click", () => {
-                cart.splice(index, 1); // remove do array
-                localStorage.setItem("cart", JSON.stringify(cart)); // atualiza localStorage
-                card.remove(); // remove do DOM
+                cart.splice(index, 1);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                card.remove();
+                updateTotal();
+            });
+
+            // Atualizar quantidade dinamicamente
+            card.querySelector(".input-quantidade").addEventListener("change", (e) => {
+                const novaQuantidade = Number(e.target.value);
+                const itemIndex = e.target.getAttribute("data-index");
+
+                // Atualiza quantidade no carrinho
+                cart[itemIndex].quantidade = novaQuantidade;
+                localStorage.setItem("cart", JSON.stringify(cart));
                 updateTotal();
             });
 
             cartContainer.appendChild(card);
         });
 
+
         // Atualiza total
         function updateTotal() {
-            const total = cart.reduce((sum, item) => sum + item.preco * item.quantidade, 0);
-            document.querySelector("#finalizarCompra h2").textContent = `Total: R$ ${total.toFixed(2)}`;
+            const total = cart.reduce((sum, item) => {
+                let preco = Number(item.preco); // converte string para número
+                if (isNaN(preco)) {
+                    preco = Number(item.preco.replace(",", ".")); // tenta converter caso venha com vírgula
+                }
+                if(item.tipoQuantidade === "unidade"){
+                    return sum + preco * item.quantidade;
+                } else if(item.tipoQuantidade === "peso"){
+                    return sum + preco * item.quantidade * 10;
+                }
+            }, 0);
+
+            document.getElementById("total").textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
         }
+
 
         updateTotal();
     });

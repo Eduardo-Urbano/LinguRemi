@@ -4,7 +4,7 @@ export const receitasDoce = [
         descricao: "Um bolo fofinho e úmido com cobertura cremosa de chocolate.",
         imagem: "../assets/images/cards/bolo.jpg",
         preparo: "Misture os ingredientes, asse por 35 minutos a 180°C e cubra com chocolate.",
-        preco: "199,99",
+        preco: "16,99",
         tipoQuantidade: "peso",
         data: "28/04/2025",
         tempo: "1h",
@@ -34,7 +34,7 @@ export const receitasDoce = [
         data: "17/03/2025",
         tempo: "45min",
         ingredientes: "Leite condensado, Leite, Açucar, Ovo", 
-        tipoQuantidade: "unidade",
+        tipoQuantidade: "peso",
         avaliacao:"4.7",
         disponivel:"35"
     },
@@ -47,7 +47,7 @@ export const receitasDoce = [
         data: "02/01/2025",
         tempo: "2h",
         ingredientes: "Morango, Manteiga, Ovo, Açucar, Creme de Leite", 
-        tipoQuantidade: "unidade",
+        tipoQuantidade: "peso",
         avaliacao:"4.3",
         disponivel:"18"
     },
