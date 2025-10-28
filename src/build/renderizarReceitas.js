@@ -1,8 +1,8 @@
-import { carregarReceitas } from "./receitas.js";
-const container = document.getElementById("blog");
-async function renderizarReceitas() {
-    const receitas = await carregarReceitas();
-    container.innerHTML = ""; // limpa os cards
+export function renderizarReceitas(receitas, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container)
+        return;
+    container.innerHTML = "";
     receitas.forEach((receita) => {
         const card = document.createElement("div");
         card.className = "bg-white rounded-xl shadow-lg overflow-hidden flex flex-row";
@@ -17,5 +17,4 @@ async function renderizarReceitas() {
         container.appendChild(card);
     });
 }
-document.addEventListener("DOMContentLoaded", renderizarReceitas);
-//# sourceMappingURL=doces.js.map
+//# sourceMappingURL=renderizarReceitas.js.map

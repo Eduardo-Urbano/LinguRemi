@@ -6,7 +6,6 @@
     <title>LinguRemi</title>
     <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="shortcut icon" href="../assets/images/icones/logo1.ico" type="image/x-icon">
-    <script src="../../src/build/doces.js" type="module"></script>
 </head>
 <body class="flex flex-col min-h-screen scroll-mt-4">
 
@@ -75,9 +74,10 @@
         </video>
     </section>
 
+    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Nossos Doces</strong></h1></div>
     <!--Cards de receitas-->
     <main class="container mx-auto p-4 px-4 pb-12">
-        <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <!--Section segundo video-->
@@ -95,9 +95,10 @@
         </video>
     </section>
 
+    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Receitas do Blog</strong></h1></div>
     <!--Cards de receita-->
     <main class="container mx-auto p-4 px-4 pb-12">
-        <div id="cards2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="blog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
     
     <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
@@ -139,5 +140,10 @@
     
     <script type="module" src="../../src/build/login.js"></script>
     <script type="module" src="../../src/build/cadastro.js"></script>
+    <script type="module" src="../../src/build/receitas.js"></script>
+    <script type="module" src="../../src/build/renderizarReceitas.js"></script>
+    <script type="module" src="../../src/build/newReceita.js"></script>
+    <script type="module" src="../../src/build/initBlog.js"></script>
+    <script type="module" src="../../src/build/initProdutos.js"></script>
 </body>
 </html>

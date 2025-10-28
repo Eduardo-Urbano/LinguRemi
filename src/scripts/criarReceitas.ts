@@ -5,4 +5,7 @@ export interface Receita {
   preparo: string;
   data: string;
   fotoUrl: string;
+  autorEmail?: string;
+  autorRole?: string;
+  paraProdutos?: boolean;
 }

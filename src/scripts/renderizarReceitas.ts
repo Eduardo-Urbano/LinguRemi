@@ -1,12 +1,10 @@
 import type { Receita } from "./criarReceitas.js";
-import { carregarReceitas } from "./receitas.js";
 
-const container = document.getElementById("blog") as HTMLElement;
+export function renderizarReceitas(receitas: Receita[], containerId: string) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-async function renderizarReceitas() {
-  const receitas = await carregarReceitas();
-
-  container.innerHTML = ""; // limpa os cards
+  container.innerHTML = "";
 
   receitas.forEach((receita: Receita) => {
     const card = document.createElement("div");
@@ -22,5 +20,3 @@ async function renderizarReceitas() {
     container.appendChild(card);
   });
 }
-
-document.addEventListener("DOMContentLoaded", renderizarReceitas);

@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -33,13 +36,32 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.GET, "/usuarios/todos").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
-						.requestMatchers(HttpMethod.POST, "/receitas").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/receitas/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
 						.requestMatchers("/h2-console/**").permitAll()
 						.anyRequest().authenticated()
 				)
 				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
-				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+				//.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowCredentials(true);
+		configuration.addAllowedOriginPattern("http://127.0.0.1:5500");
+		configuration.addAllowedOriginPattern("http://localhost:5500");
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("GET");
+		configuration.addAllowedMethod("POST");
+		configuration.addAllowedMethod("PUT");
+		configuration.addAllowedMethod("DELETE");
+		configuration.addAllowedMethod("OPTIONS");
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 	
 	@Bean

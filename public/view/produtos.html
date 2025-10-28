@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="../assets/css/output.css">
     <title>Produtos</title>
     <link rel="shortcut icon" href="../assets/images/icones/logo1.ico" type="image/x-icon">
-    <script src="../../src/build/cardsReceitas.js" type="module"></script>
 </head>
 <body>
     
@@ -36,7 +35,7 @@
     <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Nossos Doces</strong></h1></div>
     <!--Cards de receitas-->
     <main class="container mx-auto p-4 px-4 pb-12">
-        <div id="cards1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Receitas do Blog</strong></h1></div>
@@ -83,6 +82,10 @@
         <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
     </footer> 
 
+    <script type="module" src="../../src/build/receitas.js"></script>
+    <script type="module" src="../../src/build/renderizarReceitas.js"></script>
+    <script type="module" src="../../src/build/newReceita.js"></script>
+    <script type="module" src="../../src/build/initProdutos.js"></script>
     <script type="module" src="../../src/build/login.js"></script>
     <script type="module" src="../../src/build/cadastro.js"></script>
 </body>
