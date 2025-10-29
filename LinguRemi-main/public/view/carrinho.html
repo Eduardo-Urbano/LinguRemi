@@ -6,7 +6,6 @@
     <title>Meu Carrinho</title>
     <link rel="stylesheet" href="../assets/css/output.css">
     <link rel="shortcut icon" href="../assets/images/icones/logo1.ico" type="image/x-icon">
-    <script src="../../src/build/doces.js" type="module"></script>
 </head>
 <body class="flex flex-col min-h-screen">
 
@@ -18,11 +17,9 @@
                 <li><a href="./blog.html">Blog</a></li>
             </ul>
         </nav>
-
         <div class="flex justify-center w-1/3">
-            <img class="w-62" src="../assets/images/logo/logo1.png" id="">
+            <img class="w-62" src="../assets/images/logo/logo1.png">
         </div>
-
         <nav class="flex flex-row gap-x-6 text-xl w-1/3 justify-end">
             <ul class="flex flex-row space-x-6">
                 <li><a id="ident0" class="flex" href="#">Login</a></li>
@@ -33,91 +30,41 @@
         </nav>
     </header>
 
-    <!-- Modal de login -->
-    <div id="loginModal" class="fixed inset-0 hidden z-50 items-center justify-center">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
-        <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
-            <button id="closeModal" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
-            <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
-            <input type="password" id="password" placeholder="Senha" class="w-full mb-3 p-2 border rounded">
-            <button id="loginSubmit" class="flex mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Logar</button>
-            <button id="cadastroSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastre-se</button>
-        </div>
-    </div>
-
-    <!--Modal de Cadastro-->
-    <div id="cadastroModal" class="fixed inset-0 hidden z-50 items-center justify-center">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
-        <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
-            <button id="closeCadastro" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
-            <h2 class="text-2xl font-bold mb-4 text-center">Cadastre-se</h2>
-            <input type="text" id="nome" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
-            <input type="email" id="emailCadastro" placeholder="Email" class="w-full mb-3 p-2 border rounded"> 
-            <input type="password" id="senha" placeholder="Senha" class="w-full mb-3 p-2 border rounded">  
-            <input type="password" id="senhaD" placeholder="Confirmar senha" class="w-full mb-3 p-2 border rounded">          
-            <button id="cadastrarSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastrar</button>
-        </div>
-    </div>
-
     <div class="flex flex-row gap-6 my-5 p-3.5 bg-white">
         <section id="minhasCompras" class="w-3/4 min-h-[500px] bg-white rounded-2xl p-4 shadow-2xl">
             <main class="container mx-auto p-4 px-4 pb-12">
                 <div id="cards1" class="flex flex-col gap-6"></div>
             </main>
         </section>
+
         <div id="finalizarCompra" class="text-white p-4 flex flex-col gap-3.5 w-1/4 min-h-[500px] max-h-[900px] bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90% rounded-2xl shadow-2xl">
             <div id="carrinho"></div>
             <h2 id="total" class="text-2xl"><strong>Total:</strong></h2>
-            <button type="button" class="text-4xl"><strong>Finalizar compra</strong></button>
+            <button type="button" class="text-4xl" id="btnFinalizar"><strong>Finalizar compra</strong></button>
         </div>
     </div>
 
     <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
         <div class="container mb-0 mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between gap-6">
-            
                 <div class="md:w-2/5 min-w-0">
                     <a href="#">
                         <img class="mt-0 max-h-1/4 max-w-10/12 place-self-center" src="../assets/images/icones/logo1.ico" alt="LinguRemi">
                     </a>
                     <p class="mt-6 text-gray-300 wrap-break-words max-w-full overflow-hidden whitespace-normal">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
                     </p>
                 </div>
-
-                <div class="col-span-1 md:col-span-3 lg:col-span-2">
-                    <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
-                    <ul class="list-none mt-6 space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Nosso Blog</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Trabalhe conosco</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Contato</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1 md:col-span-3 lg:col-span-2">
-                    <h5 class="tracking-wide text-gray-100 font-semibold">Redes sociais</h5>
-                    <ul class="list-none mt-6 space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">WhatsApp</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Instagram</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">TikTok</a></li>
-                    </ul>
-                </div>
-
             </div>
         </div>
         <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
     </footer>    
 
-    <script type="module" src="../../src/build/login.js"></script>
-    <script type="module" src="../../src/build/cadastro.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const cartContainer = document.getElementById("cards1");
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
         const carrinhoTotal = document.getElementById("carrinho");
-        
 
         if (cart.length === 0) {
             cartContainer.innerHTML = "<p class='text-center text-xl'>Seu carrinho está vazio.</p>";
@@ -125,58 +72,65 @@
         }
 
         cart.forEach((item, index) => {
+            const tipo = item.tipoQuantidade || "unidade";
+            const imagem = item.imagem || "https://via.placeholder.com/150";
+
+            let preco = parseFloat(item.preco.toString().replace(",", "."));
+            if (isNaN(preco)) preco = 0;
+
+            let totalItem = tipo === "unidade" ? preco * item.quantidade : preco * item.quantidade * 10;
+
+            // Card resumo
+            const card2 = document.createElement("div");
+            card2.innerHTML = `
+                <h1 class="text-xl font-semibold">${item.nome}</h1>
+                <p class="text-lg">
+                    R$ ${preco.toFixed(2).replace(".", ",")} x 
+                    <span id="qtd-${index}">${item.quantidade}</span> =
+                    <strong id="subtotal-${index}">R$ ${totalItem.toFixed(2).replace(".", ",")}</strong>
+                </p>
+            `;
+            carrinhoTotal.appendChild(card2);
+
+            // Campo quantidade
+            let campoQuantidade = tipo === "unidade"
+                ? `<label class="font-medium mb-1">Quantidade:</label>
+                   <input type="number" min="1" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                   <span class="ml-1 text-sm text-gray-600">un</span>`
+                : `<label class="font-medium mb-1">Peso:</label>
+                   <input type="number" step="0.100" min="0.100" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                   <span class="text-sm text-gray-600">kg</span>`;
+
+            // Card principal
             const card = document.createElement("div");
             card.className = "bg-white rounded-xl shadow-lg overflow-hidden justify-between flex items-center";
-            const card2= document.createElement("div")
-            card2.className = ""
-
-            // mostrar multiplicação dos preços
-            card2.innerHTML=`
-            <div class="flex flex-col">
-                <h1 class="text-xl">${item.nome}</h1>
-                <h2 class="pl-5">R$${item.preco} x ${item.quantidade} = </h2>
-                </div>
-            `
-            carrinhoTotal.appendChild(card2)
-
-            // Campo de quantidade (input alterável)
-            let campoQuantidade = "";
-            if (item.tipoQuantidade === "unidade") {
-                campoQuantidade = `
-                    <label class="font-medium mb-1">Quantidade:</label>
-                    <input type="number" min="1" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
-                    <span class="ml-1 text-sm text-gray-600">un</span>
-                `;
-            } else if (item.tipoQuantidade === "peso") {
-                campoQuantidade = `
-                    <label class="font-medium mb-1">Peso:</label>
-                    <input type="number" step="0.100" min="0.100" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
-                    <span class="text-sm text-gray-600">kg</span>
-                `;
-            }
-
             card.innerHTML = `
                 <div class="flex flex-row items-center">
-                    <img src="${item.imagem}" alt="${item.nome}" class="w-60 h-48 object-cover">
+                    <img src="${imagem}" alt="${item.nome}" class="w-60 h-48 object-cover">
                     <div class="flex flex-col w-full ml-5 max-w-100">
                         <h2 class="font-bold text-lg">${item.nome}</h2>
                         <button type="button" class="btn-remove rounded-xl bg-red-400 hover:bg-red-700 text-white px-3 py-1 mt-3 w-36">Remover Item</button>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">${campoQuantidade}</div>        
-                <h1 class="text-gray-700 mr-5">Preço: R$ ${item.preco}</h1>
+                <h1 class="text-gray-700 mr-5">Preço: R$ ${preco.toFixed(2).replace(".", ",")}</h1>
             `;
+            cartContainer.appendChild(card);
 
             // Remover item
-            card.querySelector(".btn-remove").addEventListener("click", () => {
-                cart.splice(index, 1);
-                localStorage.setItem("cart", JSON.stringify(cart));
-                card.remove();
-                updateTotal();
-            });
+            const btnRemove = card.querySelector(".btn-remove");
+            if (btnRemove) {
+                btnRemove.addEventListener("click", () => {
+                    cart.splice(index, 1);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    card.remove();
+                    card2.remove();
+                    updateTotal();
+                });
+            }
 
-            // Atualizar quantidade dinamicamente
-            card.querySelector(".input-quantidade").addEventListener("change", (e) => {
+            // Atualizar quantidade
+           card.querySelector(".input-quantidade").addEventListener("change", (e) => {
                 const novaQuantidade = Number(e.target.value);
                 const itemIndex = e.target.getAttribute("data-index");
 
@@ -185,32 +139,58 @@
                 localStorage.setItem("cart", JSON.stringify(cart));
                 updateTotal();
             });
-
             cartContainer.appendChild(card);
+            updateTotal()
         });
-
 
         // Atualiza total
         function updateTotal() {
             const total = cart.reduce((sum, item) => {
-                let preco = Number(item.preco); // converte string para número
-                if (isNaN(preco)) {
-                    preco = Number(item.preco.replace(",", ".")); // tenta converter caso venha com vírgula
-                }
-                if(item.tipoQuantidade === "unidade"){
-                    return sum + preco * item.quantidade;
-                } else if(item.tipoQuantidade === "peso"){
-                    return sum + preco * item.quantidade * 10;
-                }
+                const precoItem = parseFloat(item.preco.toString().replace(",", ".")) || 0;
+                return sum + (item.tipoQuantidade === "peso" ? precoItem * item.quantidade * 10 : precoItem * item.quantidade);
             }, 0);
-
             document.getElementById("total").textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
         }
 
-
         updateTotal();
-    });
 
+        // Botão finalizar compra
+        const btnFinalizar = document.getElementById("btnFinalizar");
+        btnFinalizar.addEventListener("click", async () => {
+            if (cart.length === 0) {
+                alert("O carrinho está vazio!");
+                return;
+            }
+
+            const historicoDTOs = cart.map(item => ({
+                usuarioId: 1, // substituir pelo ID do usuário logado
+                emailTransferencia: "usuario@email.com", // substituir pelo email real
+                valorTransferencia: item.tipoQuantidade === "peso" 
+                    ? item.preco * item.quantidade * 10 
+                    : item.preco * item.quantidade,
+                dataTransferencia: new Date().toISOString(),
+                descTransferencia: `Compra de ${item.quantidade} ${item.tipoQuantidade === "unidade" ? "unidades" : "kg"} de ${item.nome}`
+            }));
+
+            try {
+                const response = await fetch("http://localhost:8080/historico/adicionar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(historicoDTOs)
+                });
+
+                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+
+                alert("Compra finalizada e histórico atualizado!");
+                localStorage.removeItem("cart");
+                window.location.reload();
+            } catch (error) {
+                console.error(error);
+                alert("Ocorreu um erro ao finalizar a compra.");
+            }
+        });
+    });
     </script>
+
 </body>
 </html>

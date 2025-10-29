@@ -133,5 +133,61 @@
     <script type="module" src="../../src/build/initBlog.js"></script>
     <script type="module" src="../../src/build/login.js"></script>
     <script type="module" src="../../src/build/cadastro.js"></script>
+    <script type="module">
+        const container = document.getElementById("blog");
+      
+        // Função para buscar as receitas da API
+        async function carregarReceitas() {
+          try {
+            const resposta = await fetch("http://localhost:8080/receitas/todas");
+            if (!resposta.ok) throw new Error("Erro ao buscar receitas");
+            return await resposta.json();
+          } catch (erro) {
+            console.error("Erro no fetch:", erro);
+            return [];
+          }
+        }
+      
+        async function renderizarReceitas() {
+          console.log("blog.html carregado");
+      
+          try {
+            const receitas = await carregarReceitas();
+            console.log("Receitas recebidas:", receitas);
+      
+            container.innerHTML = ""; // limpa antes de adicionar
+      
+            receitas.forEach(receita => {
+                const card = document.createElement("div");
+                card.className = "bg-white rounded-xl shadow-lg overflow-hidden flex flex-col sm:flex-row cursor-pointer"; 
+
+                const caminhoImagem = `http://localhost:8080/${receita.imgReceitablog}`;
+
+                card.innerHTML = `
+                    <img src="${caminhoImagem}" alt="${receita.nomeReceitablog}" class="w-full sm:w-60 h-48 object-cover">
+                    <div class="p-4 flex flex-col"> 
+                        <h4 class="font-light text-gray-400">${new Date(receita.dataReceitablog).toLocaleDateString()}</h4>
+                        <h3 class="font-bold text-lg mb-2">${receita.nomeReceitablog}</h3> 
+                        <p class="text-gray-600 text-sm">${receita.descricaoReceitablog}</p>
+                    </div>
+                `;
+
+                card.addEventListener("click", () => {
+                    window.location.href = `receita.html?id=${receita.idReceitaBlog}`;
+                });
+
+                container.appendChild(card);
+            });
+
+      
+          } catch (erro) {
+            console.error("Erro ao carregar receitas:", erro);
+            container.innerHTML = "<p class='text-red-500'>Não foi possível carregar as receitas.</p>";
+          }
+        }
+      
+        document.addEventListener("DOMContentLoaded", renderizarReceitas);
+      </script>
+      
 </body>
 </html>
