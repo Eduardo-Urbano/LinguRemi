@@ -27,8 +27,6 @@ public class SecurityConfigurations {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
-				.cors()
-				.and()
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				//aqui defini o que só pode ser aberto por cada usuario
@@ -36,8 +34,10 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.GET, "/usuarios/todos").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
-						.requestMatchers(HttpMethod.POST, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/historico/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/historico/**").permitAll()
+						.requestMatchers("/uploads/**").permitAll()
 						.requestMatchers("/h2-console/**").permitAll()
 						.anyRequest().authenticated()
 				)

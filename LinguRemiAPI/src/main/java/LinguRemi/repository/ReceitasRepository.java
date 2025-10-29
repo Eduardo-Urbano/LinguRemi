@@ -8,6 +8,4 @@ import LinguRemi.model.Receitas;
 public interface ReceitasRepository extends JpaRepository<Receitas, Long>{
 	List<Receitas> findAll();
 	Optional<Receitas> findByIdReceitas(Long id);
-
-	List<Receitas> findByParaProdutosTrue();
 }

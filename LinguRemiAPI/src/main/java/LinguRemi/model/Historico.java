@@ -18,9 +18,6 @@ public class Historico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idHistorico;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idUsuarios")
-	private Usuarios usuario;
 	private String emailTransferencia;
 	private Double valorTransferencia;
 	private ZonedDateTime dataTransferencia;
@@ -70,6 +67,7 @@ public class Historico {
 	public void setDescTransferencia(String descTransferencia) {
 		this.descTransferencia = descTransferencia;
 	}
+
 	
 	
 }

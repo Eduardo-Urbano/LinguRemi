@@ -9,14 +9,22 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import LinguRemi.model.Receitablog;
 import LinguRemi.model.Receitas;
+import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // libera acesso do front
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/receitas")
 
@@ -27,23 +35,30 @@ public class ReceitasController {
 
     @Autowired
     private ReceitasRepository repR;
-
+    @Autowired
+    private ReceitaBlogRepository repRP;
+    
     @GetMapping("/todas")
-    public List<Receitas> todas() {
-        return repR.findAll();
+    public List<Receitablog> todas() {
+        return repRP.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Receitas> buscarPorId(@PathVariable Long id) {
-        Optional<Receitas> receitaOpt = repR.findById(id);
-        if (receitaOpt.isPresent()) {
-            return ResponseEntity.ok(receitaOpt.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/buscar/{id}")
+    public Optional<Receitablog> findbyIdReceitablog(@PathVariable Long id) {
+    	return repRP.findById(id);
     }
-
-    @PostMapping
+    
+    @GetMapping("/produtos")
+    public List<Receitas> todasReceitas(){
+    	return repR.findAll();
+    }
+    
+    @GetMapping("/produtos/{id}")
+    public Optional<Receitas> buscarReceita(@PathVariable Long id) {
+    	return repR.findById(id);
+    }
+/*
+    @PostMapping("/cadastrar")
     public ResponseEntity<String> cadastrarReceita(
             @RequestParam("nome") String nome,
             @RequestParam("ingredientes") String ingredientes,
@@ -97,4 +112,5 @@ public class ReceitasController {
     public List<Receitas> receitasParaProdutos() {
         return repR.findByParaProdutosTrue();
     }
+ */
 }
