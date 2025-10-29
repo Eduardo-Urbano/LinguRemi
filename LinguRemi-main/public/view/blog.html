@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="../assets/css/output.css">
+    <title>Produtos</title>
+    <link rel="shortcut icon" href="../assets/images/icones/logo1.ico" type="image/x-icon">
+</head>
+<body class="flex flex-col min-h-screen scroll-mt-4">
+
+    <header class="flex justify-between items-center px-5 shadow-sm">
+        <nav class="flex flex-row gap-x-6 text-xl w-1/3">
+            <ul class="flex flex-row space-x-6">
+                <li><a href="./produtos.html">Produtos</a></li>
+                <li><a href="#footer">Sobre nós</a></li>
+                <li><a href="./blog.html"><strong>Blog</strong></a></li>
+            </ul>
+        </nav>
+
+        <div class="flex justify-center w-1/3">
+            <img class="w-62" src="../assets/images/logo/logo1.png" id="">
+        </div>
+
+        <nav class="flex flex-row gap-x-6 text-xl w-1/3 justify-end">
+            <ul class="flex flex-row space-x-6">
+                <li><a id="ident0" class="flex" href="#">Login</a></li>
+                <li><a id="ident1" class="hidden" href="./perfil.html"></a></li>
+                <li><a href="./index.html"><img src="../assets/images/icones/Home.png" alt="Página inicial"></a></li>
+                <li><a href="./carrinho.html"><img src="../assets/images/icones/carrinho2.png" alt="Meu Carrinho"></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="flex flex-col grow">
+        <!-- Modal de login -->
+        <div id="loginModal" class="fixed inset-0 hidden z-50 items-center justify-center">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+            <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+                <button id="closeModal" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
+                <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+                <input type="email" id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
+                <input type="password" id="password" placeholder="Senha" class="w-full mb-3 p-2 border rounded">
+                <button id="loginSubmit" class="flex mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Logar</button>
+                <button id="cadastroSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastre-se</button>
+            </div>
+        </div>
+        <!--Modal de Cadastro-->
+        <div id="cadastroModal" class="fixed inset-0 hidden z-50 items-center justify-center">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+            <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+                <button id="closeCadastro" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
+                <h2 class="text-2xl font-bold mb-4 text-center">Cadastre-se</h2>
+                <input type="text" id="nome" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
+                <input type="email" id="emailCadastro" placeholder="Email" class="w-full mb-3 p-2 border rounded">
+                <input type="password" id="senha" placeholder="Senha" class="w-full mb-3 p-2 border rounded">
+                <input type="password" id="senhaD" placeholder="Confirmar senha" class="w-full mb-3 p-2 border rounded">
+                <button id="cadastrarSubmit" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Cadastrar</button>
+            </div>
+        </div>
+        <div class="flex flex-row mt-5 items-center justify-center gap-4">
+            <!--Barra de pesquisa-->
+            <div class="flex shadow-lg overflow-hidden border-black rounded-xl w-150 h-8 pl-3 items-center justify-between">
+                <input type="text" id="txtBusca" placeholder="Buscar receitas..." class="bg-transparent border-none outline-none grow">
+                <img id="procurar" src="../assets/images/icones/lupa.png" class="w-6 h-6 mr-2 cursor-pointer">
+            </div>
+            <button id="adicionarBtn" class="rounded-xl shadow-lg overflow-hidden p-2 cursor-pointer">Adicionar Receita <strong>+</strong></button>
+        </div>
+        
+        <!--Modelo dos cards de receita que eu só copiei o que o urbano fez e botei data-->
+        <main class="container mx-auto p-4 px-4 pb-12">
+            <div id="blog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"></div>
+        </main>
+        
+        <div id="newReceitaModal" class="fixed inset-0 hidden z-50 items-center justify-center">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+            <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+                <button id="closeAdicionar" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
+                <h2 class="text-2xl font-bold mb-4 text-center">Adicione Sua Receita</h2>
+                <input type="text" id="nomeReceita" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
+                <input type="text" id="ingredientes" placeholder="Ingredientes" class="w-full mb-3 p-2 border rounded">
+                <input type="text" id="preparo" placeholder="Mode de Preparo" class="w-full mb-3 p-2 border rounded max-h-48">
+                <input type="number" id="valor" placeholder="Preço" class="w-full mb-3 p-2 border rounded max-h-48">
+                <input type="file" accept="image/*" id="fotoDoce" placeholder="Foto da Receita" class="w-full mb-3 p-2 border rounded hidden">
+                <span id="fileName" class="flex mt-2 mx-auto justify-center text-gray-600">Nenhuma imagem selecionada</span>
+                <label for="fotoDoce" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar Imagem</label>
+                <button id="adicionarReceita" class="flex mt-5 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
+        <div class="container mb-0 mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between gap-6">
+            
+                <div class="md:w-2/5 min-w-0">
+                    <a href="#">
+                        <img class="mt-0 max-h-1/4 max-w-10/12 place-self-center" src="../assets/images/icones/logo1.ico" alt="LinguRemi">
+                    </a>
+                    <p class="mt-6 text-gray-300 wrap-break-words max-w-full overflow-hidden whitespace-normal">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos consectetur consequuntur sunt sequi sint inventore nesciunt, omnis iure repellendus possimus cumque. Distinctio vel cum iusto quia corrupti. Recusandae, quibusdam!
+                    </p>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Company</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Nosso Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Trabalhe conosco</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 lg:col-span-2">
+                    <h5 class="tracking-wide text-gray-100 font-semibold">Redes sociais</h5>
+                    <ul class="list-none mt-6 space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">WhatsApp</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">Instagram</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-gray-400 transition-all duration-500">TikTok</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
+    </footer> 
+
+    <script type="module" src="../../src/build/receitas.js"></script>
+    <script type="module" src="../../src/build/renderizarReceitas.js"></script>
+    <script type="module" src="../../src/build/newReceita.js"></script>
+    <script type="module" src="../../src/build/initBlog.js"></script>
+    <script type="module" src="../../src/build/login.js"></script>
+    <script type="module" src="../../src/build/cadastro.js"></script>
+</body>
+</html>
