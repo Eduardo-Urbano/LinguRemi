@@ -11,9 +11,16 @@ async function carregar(url) {
     }
 }
 export async function carregarReceitasBlog() {
-    return carregar("http://localhost:8080/receitas");
+    return carregar("http://localhost:8080/receitas/todas");
 }
 export async function carregarReceitasProdutos() {
     return carregar("http://localhost:8080/receitas/produtos");
 }
+export async function carregarReceitaPorId(id){
+    return carregar(`http://localhost:8080/receitas/buscar/${id}`)
+}
+export async function carregarProdutoPorId(id){
+    return carregar(`http://localhost:8080/receitas/produtos/${id}`)
+}
+
 //# sourceMappingURL=receitas.js.map
