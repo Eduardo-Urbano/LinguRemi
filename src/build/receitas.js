@@ -16,11 +16,4 @@ export async function carregarReceitasBlog() {
 export async function carregarReceitasProdutos() {
     return carregar("http://localhost:8080/receitas/produtos");
 }
-export async function carregarReceitaPorId(id){
-    return carregar(`http://localhost:8080/receitas/buscar/${id}`)
-}
-export async function carregarProdutoPorId(id){
-    return carregar(`http://localhost:8080/receitas/produtos/${id}`)
-}
-
 //# sourceMappingURL=receitas.js.map

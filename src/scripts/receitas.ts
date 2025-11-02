@@ -12,7 +12,7 @@ async function carregar(url: string): Promise<Receita[]> {
 }
 
 export async function carregarReceitasBlog(): Promise<Receita[]> {
-  return carregar("http://localhost:8080/receitas");
+  return carregar("http://localhost:8080/receitas/todas");
 }
 
 export async function carregarReceitasProdutos(): Promise<Receita[]> {

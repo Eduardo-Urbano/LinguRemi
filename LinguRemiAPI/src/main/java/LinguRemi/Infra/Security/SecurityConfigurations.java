@@ -25,25 +25,26 @@ public class SecurityConfigurations {
 	SecurityFilter securityFilter;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				//aqui defini o que só pode ser aberto por cada usuario
-				.authorizeHttpRequests(authorize -> authorize
+				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.GET, "/usuarios/todos").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
 						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/historico/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/historico/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/receitaBlog/cadastrar").permitAll()
 						.requestMatchers("/uploads/**").permitAll()
 						.requestMatchers("/h2-console/**").permitAll()
 						.anyRequest().authenticated()
 				)
-				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
-				//.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+				.cors(cors -> {}) // habilita CORS
+				.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+
+		return http.build();
 	}
 
 	@Bean

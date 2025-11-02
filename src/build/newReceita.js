@@ -19,28 +19,28 @@ fotoInput.addEventListener("change", () => {
     fileName.textContent = file ? file.name : "Nenhuma imagem selecionada";
 });
 adicionarReceita.addEventListener('click', async () => {
-    const nomeReceita = document.getElementById('nomeReceita').value;
-    const ingredientes = document.getElementById('ingredientes').value;
-    const modoDePreparo = document.getElementById('preparo').value;
-    const valorReceitas = parseFloat(document.getElementById('valor').value);
+    const nomeReceitaBlog = document.getElementById('nomeReceita').value;
+    const descricaoReceitaBlog = document.getElementById('descricao').value;
+    const ingredientesReceitaBlog = document.getElementById('ingredientes').value;
+    const preparoReceitaBlog = document.getElementById('preparo').value;
     const file = fotoInput.files?.[0];
     if (!file) {
         alert("Selecione uma imagem!");
         return;
     }
     const formData = new FormData();
-    formData.append("nomeReceitas", nomeReceita);
-    formData.append("ingredientes", ingredientes);
-    formData.append("modoDePreparo", modoDePreparo);
-    formData.append("valorReceitas", valorReceitas.toString());
-    formData.append("foto", file);
+    formData.append("nomeReceitaBlog", nomeReceitaBlog);
+    formData.append("descricaoReceitaBlog", descricaoReceitaBlog);
+    formData.append("ingredientesReceitaBlog", ingredientesReceitaBlog);
+    formData.append("preparoReceitaBlog", preparoReceitaBlog);
+    formData.append("imgReceitaBlog", file);
     await enviarReceita(formData);
 });
 async function enviarReceita(formData) {
     try {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
         const token = user?.token;
-        const response = await fetch("http://localhost:8080/receitas/cadastrar", {
+        const response = await fetch("http://localhost:8080/receitaBlog/cadastrar", {
             method: "POST",
             headers: {
                 Authorization: token ? `Bearer ${token}` : "",

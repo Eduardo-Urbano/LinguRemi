@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,60 +58,4 @@ public class ReceitasController {
     public Optional<Receitas> buscarReceita(@PathVariable Long id) {
     	return repR.findById(id);
     }
-/*
-    @PostMapping("/cadastrar")
-    public ResponseEntity<String> cadastrarReceita(
-            @RequestParam("nome") String nome,
-            @RequestParam("ingredientes") String ingredientes,
-            @RequestParam("modoDePreparo") String modoDePreparo,
-            @RequestParam("foto") MultipartFile foto,
-            @RequestParam(value="paraProdutos", required = false)Boolean paraProdutos,//opicional
-            Authentication authentication) throws IOException {
-
-        // Cria objeto receita sem imagem
-        Receitas receita = new Receitas();
-        receita.setNomeReceitas(nome);
-        receita.setIngredientesReceitas(ingredientes);
-        receita.setModoDePreparoReceitas(modoDePreparo);
-        receita.setValorReceitas(0);
-
-        //Pega as informações do usuário logado
-        String email = authentication.getName();
-        String role = authentication.getAuthorities().stream().findFirst().map(a -> a.getAuthority().replace("ROLE_", "")).orElse("USER");
-
-        receita.setAutorEmail(email);
-        receita.setAutorRole(role);
-
-        //Regra para somente ADMIN adicionar na página de produtos
-        if(Boolean.TRUE.equals(paraProdutos)&& !"ADMIN".equals(role)){
-            return ResponseEntity.status(403).body("Apenas ADMIN pode adicionar na página de produtos!");
-        }
-        receita.setParaProdutos(Boolean.TRUE.equals(paraProdutos));
-
-        // Salva no banco (gera ID)
-        Receitas receitaSalva = repR.save(receita);
-
-        // Diretório de upload
-        Path uploadPath = Paths.get(diretorioImagem);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        // Salva imagem
-        String fileName = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-        Files.write(filePath, foto.getBytes());
-
-        // Atualiza caminho da imagem na receita
-        receitaSalva.setImgReceitas("/" + diretorioImagem + fileName);
-        repR.save(receitaSalva);
-
-        return ResponseEntity.ok("Receita cadastrada com sucesso!");
-    }
-
-    @GetMapping("/produtos")
-    public List<Receitas> receitasParaProdutos() {
-        return repR.findByParaProdutosTrue();
-    }
- */
 }

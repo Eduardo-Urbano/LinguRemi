@@ -34,10 +34,6 @@ public class Receitas {
         this.tipoquantidadeReceitas = tipoquantidadeReceitas;
     }
 
-	public Receitas() {
-
-	}
-
 	public long getIdReceitas() {
 		return idReceitas;
 	}
@@ -89,8 +85,8 @@ public class Receitas {
 
 	public void setDescReceitas(String descReceitas) {
 		this.descReceitas = descReceitas;
-	}	
-	
+	}
+
 	public String getTipoquantidadeReceitas() {
 		return tipoquantidadeReceitas;
 	}

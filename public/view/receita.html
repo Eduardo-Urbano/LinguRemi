@@ -99,7 +99,7 @@
             card.className="mx-auto flex flex-col";
             if (!cont1) return;
     
-            // Pega o ID da receita da query string (ex: receita.html?id=2)
+            // Pega o ID da receita da query string
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get("id");
     
@@ -129,8 +129,10 @@
                     <h2 class="font-bold text-center pb-5 pt-5 text-lg items-center">Tempo de preparo: ${receita.tempoReceitablog}</h2>
                     <h1 class="font-bold text-xl pb-5">Ingredientes:</h1>
                     <ol class="grid grid-cols-2 list-disc text-lg pl-10 gap-2 pb-8 max-w-150">${listaHTML}</ol>
-                    <h1 class="font-bold text-xl pb-5">Modo de Preparo:</h1>
+                    <h1 class="font-bold text-xl pb-5">Descrição:</h1>
                     <p class="text-xl pl-5">${receita.descricaoReceitablog}</p>
+                    <h1 class="font-bold text-xl pb-5">Modo de Preparo:</h1>
+                    <p class="text-xl pl-5"${receita.preparoReceitaBlo}</p>
                 `;
                 cont1.appendChild(card);
             } catch (error) {

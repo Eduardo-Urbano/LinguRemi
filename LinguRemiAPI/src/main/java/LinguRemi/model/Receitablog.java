@@ -17,6 +17,7 @@ public class Receitablog {
 	private long idReceitaBlog;
 	private String nomeReceitablog;
 	private String descricaoReceitablog;
+	private String preparoReceitaBlog;
 	private String imgReceitablog;
 	private String ingredientesReceitablog;
 	private ZonedDateTime dataReceitablog;
@@ -26,11 +27,12 @@ public class Receitablog {
 		super();
 	}
 
-	public Receitablog(String nomeReceitablog, String descricaoReceitablog, String imgReceitablog,
+	public Receitablog(String nomeReceitablog, String descricaoReceitablog, String preparoReceitaBlog, String imgReceitablog,
 			String ingredientesReceitablog, ZonedDateTime dataReceitablog, String tempoReceitablog) {
 		super();
 		this.nomeReceitablog = nomeReceitablog;
 		this.descricaoReceitablog = descricaoReceitablog;
+		this.preparoReceitaBlog = preparoReceitaBlog;
 		this.imgReceitablog = imgReceitablog;
 		this.ingredientesReceitablog = ingredientesReceitablog;
 		this.dataReceitablog = dataReceitablog;
@@ -60,6 +62,10 @@ public class Receitablog {
 	public void setDescricaoReceitablog(String descricaoReceitablog) {
 		this.descricaoReceitablog = descricaoReceitablog;
 	}
+
+	public String getPreparoReceitaBlog(){return preparoReceitaBlog;}
+
+	public void setPreparoReceitaBlog(String preparoReceitaBlog){this.preparoReceitaBlog = preparoReceitaBlog;}
 
 	public String getImgReceitablog() {
 		return imgReceitablog;
