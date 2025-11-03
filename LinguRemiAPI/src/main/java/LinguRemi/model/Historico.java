@@ -1,13 +1,12 @@
 package LinguRemi.model;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -22,21 +21,24 @@ public class Historico {
 	private Double valorTransferencia;
 	private ZonedDateTime dataTransferencia;
 	private String descTransferencia;
+	private double quantidadeTransferencia;	
 	
 	public Historico() {
 		super();
 	}
-
 	public Historico(long idHistorico, String emailTransferencia, Double valorTransferencia,
-			ZonedDateTime dataTransferencia, String descTransferencia) {
+			ZonedDateTime dataTransferencia, String descTransferencia,
+			double quantidadeTransferencia) {
 		super();
 		this.idHistorico = idHistorico;
 		this.emailTransferencia = emailTransferencia;
 		this.valorTransferencia = valorTransferencia;
 		this.dataTransferencia = dataTransferencia;
 		this.descTransferencia = descTransferencia;
+		this.quantidadeTransferencia = quantidadeTransferencia;
 	}
-
+	
+	
 	public long getIdHistorico() {
 		return idHistorico;
 	}
@@ -67,7 +69,13 @@ public class Historico {
 	public void setDescTransferencia(String descTransferencia) {
 		this.descTransferencia = descTransferencia;
 	}
-
 	
+	public double getQuantidadeTransferencia() {
+		return quantidadeTransferencia;
+	}
+
+	public void setQuantidadeTransferencia(double quantidadeTransferencia) {
+		this.quantidadeTransferencia = quantidadeTransferencia;
+	}
 	
 }

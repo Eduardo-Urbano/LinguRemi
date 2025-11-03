@@ -27,6 +27,8 @@ public class HistoricoController {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
+    
+    /*
     @PostMapping("/adicionar")
     public ResponseEntity<?> adicionarHistorico(@RequestBody HistoricoDTO dto) {
         Historico historico = new Historico();
@@ -39,6 +41,7 @@ public class HistoricoController {
 
         return ResponseEntity.ok(historico);
     }
+    */
     
     @GetMapping("/dados")
     public List<Historico> transações(){
