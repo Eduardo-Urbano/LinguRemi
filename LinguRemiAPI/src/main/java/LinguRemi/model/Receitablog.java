@@ -2,6 +2,8 @@ package LinguRemi.model;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,25 +19,38 @@ public class Receitablog {
 	private long idReceitaBlog;
 	private String nomeReceitablog;
 	private String descricaoReceitablog;
-	private String preparoReceitaBlog;
 	private String imgReceitablog;
 	private String ingredientesReceitablog;
+	private String preparoReceitaBlog;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
 	private ZonedDateTime dataReceitablog;
 	private String tempoReceitablog;
-	
+		
+	public Receitablog(long idReceitaBlog, String nomeReceitablog, String descricaoReceitablog, String imgReceitablog,
+			String ingredientesReceitablog,String preparoReceitaBlog ,ZonedDateTime dataReceitablog) {
+		super();
+		this.idReceitaBlog = idReceitaBlog;
+		this.nomeReceitablog = nomeReceitablog;
+		this.descricaoReceitablog = descricaoReceitablog;
+		this.imgReceitablog = imgReceitablog;
+		this.ingredientesReceitablog = ingredientesReceitablog;
+		this.preparoReceitaBlog = preparoReceitaBlog;
+		this.dataReceitablog = dataReceitablog;
+	}
+
 	public Receitablog() {
 		super();
 	}
 
-	public Receitablog(String nomeReceitablog, String descricaoReceitablog, String preparoReceitaBlog, String imgReceitablog,
-			String ingredientesReceitablog, ZonedDateTime dataReceitablog, String tempoReceitablog) {
+	public Receitablog(String nomeReceitablog, String descricaoReceitablog, String imgReceitablog,
+			String ingredientesReceitablog,String preparoReceitaBlog ,ZonedDateTime dataReceitablog, String tempoReceitablog) {
 		super();
 		this.nomeReceitablog = nomeReceitablog;
 		this.descricaoReceitablog = descricaoReceitablog;
-		this.preparoReceitaBlog = preparoReceitaBlog;
 		this.imgReceitablog = imgReceitablog;
 		this.ingredientesReceitablog = ingredientesReceitablog;
 		this.dataReceitablog = dataReceitablog;
+		this.preparoReceitaBlog = preparoReceitaBlog;
 		this.tempoReceitablog = tempoReceitablog;
 	}
 
@@ -62,10 +77,6 @@ public class Receitablog {
 	public void setDescricaoReceitablog(String descricaoReceitablog) {
 		this.descricaoReceitablog = descricaoReceitablog;
 	}
-
-	public String getPreparoReceitaBlog(){return preparoReceitaBlog;}
-
-	public void setPreparoReceitaBlog(String preparoReceitaBlog){this.preparoReceitaBlog = preparoReceitaBlog;}
 
 	public String getImgReceitablog() {
 		return imgReceitablog;
@@ -99,6 +110,12 @@ public class Receitablog {
 		this.tempoReceitablog = tempoReceitablog;
 	}
 
+	public String getPreparoReceitaBlog() {
+		return preparoReceitaBlog;
+	}
 
+	public void setPreparoReceitaBlog(String preparoReceitaBlog) {
+		this.preparoReceitaBlog = preparoReceitaBlog;
+	}
 	
 }
