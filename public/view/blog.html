@@ -73,21 +73,24 @@
             <div id="blog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"></div>
         </main>
         
-        <div id="newReceitaModal" class="fixed inset-0 hidden z-50 items-center justify-center">
-            <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
-            <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
-                <button id="closeAdicionar" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
-                <h2 class="text-2xl font-bold mb-4 text-center">Adicione Sua Receita</h2>
-                <input type="text" id="nomeReceita" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
-                <input type="text" id="ingredientes" placeholder="Ingredientes" class="w-full mb-3 p-2 border rounded">
-                <input type="text" id="preparo" placeholder="Mode de Preparo" class="w-full mb-3 p-2 border rounded max-h-48">
-                <input type="text" id="descricao" placeholder="Uma breve descrição" class="w-full mb-3 p-2 border rounded max-h-48">
-                <input type="file" accept="image/*" id="fotoDoce" placeholder="Foto da Receita" class="w-full mb-3 p-2 border rounded hidden">
-                <span id="fileName" class="flex mt-2 mx-auto justify-center text-gray-600">Nenhuma imagem selecionada</span>
-                <label for="fotoDoce" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar Imagem</label>
-                <button id="adicionarReceita" class="flex mt-5 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar</button>
+        <form id="formReceita">
+            <div id="newReceitaModal" class="fixed inset-0 hidden z-50 items-center justify-center">
+                <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+                <div class="bg-white p-8 rounded-lg w-96 relative z-10 justify-center gap-1.5">
+                    <button id="closeAdicionar" class="absolute top-1 right-1.5 bg-red-400 text-white px-2 py-0.5 rounded-4xl hover:bg-red-600 cursor-pointer">X</button>
+                    <h2 class="text-2xl font-bold mb-4 text-center">Adicione Sua Receita</h2>
+                    <input type="text" id="nomeReceita" name="nomeReceita" placeholder="Nome" class="w-full mb-3 p-2 border rounded">
+                    <input type="text" id="ingReceita" name="ingReceita" placeholder="Ingredientes" class="w-full mb-3 p-2 border rounded">
+                    <input type="text" id="preparoReceita" name="preparoReceita" placeholder="Mode de Preparo" class="w-full mb-3 p-2 border rounded max-h-48">
+                    <input type="text" id="descReceita" name="descReceita" placeholder="Uma breve descrição" class="w-full mb-3 p-2 border rounded max-h-48">
+                    <input type="text" id="tempoReceita" name="tempoReceita" placeholder="Ex: 15min" class="w-full mb-3 p-2 border rounded max-h-48">
+                    <input type="file" accept="image/*" id="fotoDoce" placeholder="Foto da Receita" class="w-full mb-3 p-2 border rounded hidden">
+                    <span id="fileName" class="flex mt-2 mx-auto justify-center text-gray-600">Nenhuma imagem selecionada</span>
+                    <label for="fotoDoce" class="flex mt-2 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar Imagem</label>
+                    <button id="adicionarReceita" class="flex mt-5 mx-auto justify-center w-3/4 bg-black text-white py-2 rounded-2xl hover:bg-blue-600 cursor-pointer">Adicionar</button>
+                </div>
             </div>
-        </div>
+        </form> 
     </div>
 
     <footer id="footer" class="text-gray-200 pt-32 bg-linear-to-br from-gray-500 from-1% via-gray-700 via-9% to-black to-90%">
