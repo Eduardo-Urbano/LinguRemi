@@ -130,13 +130,33 @@
             }
 
             // Atualizar quantidade
-           card.querySelector(".input-quantidade").addEventListener("change", (e) => {
+           card.querySelector(".input-quantidade").addEventListener("input", (e) => {
                 const novaQuantidade = Number(e.target.value);
                 const itemIndex = e.target.getAttribute("data-index");
 
                 // Atualiza quantidade no carrinho
                 cart[itemIndex].quantidade = novaQuantidade;
                 localStorage.setItem("cart", JSON.stringify(cart));
+                
+
+                const item = cart[itemIndex];
+                const preco = parseFloat(item.preco.toString().replace(",", ".")) || 0;
+                const tipo = item.tipoQuantidade || "unidade";
+
+                const novoSubtotal = tipo === "unidade"
+                ? preco * novaQuantidade
+                : preco * novaQuantidade * 10
+
+                const qtdElemento = document.getElementById(`qtd-${itemIndex}`);
+                if (qtdElemento) {
+                    qtdElemento.textContent = novaQuantidade;
+                }
+
+                const subtotalElemento = document.getElementById(`subtotal-${itemIndex}`);
+                if (subtotalElemento) {
+                    subtotalElemento.textContent = `R$ ${novoSubtotal.toFixed(2).replace(".", ",")}`;
+                }
+
                 updateTotal();
             });
             cartContainer.appendChild(card);
@@ -162,26 +182,23 @@
                 return;
             }
 
-            const historicoDTOs = cart.map(item => ({
-                usuarioId: 1, // substituir pelo ID do usuário logado
-                emailTransferencia: "usuario@email.com", // substituir pelo email real
-                valorTransferencia: item.tipoQuantidade === "peso" 
-                    ? item.preco * item.quantidade * 10 
-                    : item.preco * item.quantidade,
-                dataTransferencia: new Date().toISOString(),
-                descTransferencia: `Compra de ${item.quantidade} ${item.tipoQuantidade === "unidade" ? "unidades" : "kg"} de ${item.nome}`
+            // Mapeia apenas os IDs e quantidades para enviar ao backend
+            const payload = cart.map(item => ({
+                receitaId: item.id,         // id da receita/produto
+                quantidade: item.quantidade,
+                precoUnitario: item.preco
             }));
 
             try {
                 const response = await fetch("http://localhost:8080/historico/adicionar", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(historicoDTOs)
+                    body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
 
-                alert("Compra finalizada e histórico atualizado!");
+                alert("Compra enviada com sucesso!");
                 localStorage.removeItem("cart");
                 window.location.reload();
             } catch (error) {
