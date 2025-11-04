@@ -1,22 +1,27 @@
 package LinguRemi.controller;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import LinguRemi.DTO.CadastroDTO;
+import LinguRemi.model.Receitablog;
 import LinguRemi.model.Receitas;
+import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // libera acesso do front
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/receitas")
 
@@ -27,23 +32,53 @@ public class ReceitasController {
 
     @Autowired
     private ReceitasRepository repR;
-
+    @Autowired
+    private ReceitaBlogRepository repRP;
+    
+    //receita do blod
     @GetMapping("/todas")
-    public List<Receitas> todas() {
-        return repR.findAll();
+    public List<Receitablog> todas() {
+        return repRP.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Receitas> buscarPorId(@PathVariable Long id) {
-        Optional<Receitas> receitaOpt = repR.findById(id);
-        if (receitaOpt.isPresent()) {
-            return ResponseEntity.ok(receitaOpt.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/buscar/{id}")
+    public Optional<Receitablog> findbyIdReceitablog(@PathVariable Long id) {
+    	return repRP.findById(id);
     }
+    
+    //receitas a venda
+    @GetMapping("/produtos")
+    public List<Receitas> todasReceitas(){
+    	return repR.findAll();
+    }
+    
+    @GetMapping("/produtos/{id}")
+    public Optional<Receitas> buscarReceita(@PathVariable Long id) {
+    	return repR.findById(id);
+    }
+    
+    @PostMapping("/cadastrar")
+    public Receitablog cadastrarBlog(@ModelAttribute CadastroDTO dto) throws IOException {
+        Receitablog receita = new Receitablog();
 
-    @PostMapping
+
+        String pastaUploads = System.getProperty("user.dir") + "/uploads/";
+        String caminho = pastaUploads + dto.getImgReceita().getOriginalFilename();
+        dto.getImgReceita().transferTo(new File(caminho));
+        
+        receita.setNomeReceitablog(dto.getNomeReceita());
+        receita.setIngredientesReceitablog(dto.getIngReceita());
+        receita.setDescricaoReceitablog(dto.getDescReceita());
+        receita.setPreparoReceitaBlog(dto.getPreparoReceita());
+        receita.setDataReceitablog(ZonedDateTime.now());
+        receita.setTempoReceitablog(dto.getTempoReceita());
+        receita.setImgReceitablog("uploads/" + dto.getImgReceita().getOriginalFilename());
+        repRP.save(receita);
+
+        return receita;
+    }
+/*
+    @PostMapping("/cadastrar")
     public ResponseEntity<String> cadastrarReceita(
             @RequestParam("nome") String nome,
             @RequestParam("ingredientes") String ingredientes,
@@ -97,4 +132,5 @@ public class ReceitasController {
     public List<Receitas> receitasParaProdutos() {
         return repR.findByParaProdutosTrue();
     }
+ */
 }

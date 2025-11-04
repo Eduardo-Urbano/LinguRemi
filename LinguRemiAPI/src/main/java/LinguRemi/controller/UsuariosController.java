@@ -44,10 +44,12 @@ public class UsuariosController {
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
 		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(),data.password());
 		var auth = this.authM.authenticate(usernamePassword);
-		
+		var usuario = (Usuarios) auth.getPrincipal();
 		var token = tokenService.generateToken((Usuarios)auth.getPrincipal());
 		
-		return ResponseEntity.ok(new LoginResponseDTO(token));
+		
+		
+		return ResponseEntity.ok(new LoginResponseDTO(token, usuario.getNomeUsuarios(), usuario.getEmailUsuarios()));
 	}
 	
 	@PostMapping(value = "/cadastrar")

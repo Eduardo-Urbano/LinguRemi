@@ -1,9 +1,13 @@
 package LinguRemi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,30 +18,23 @@ public class Receitas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idReceitas;
 	private String nomeReceitas;
-	private String ingredientesReceitas;
-	private String modoDePreparoReceitas;
+	private String descReceitas;
 	private double valorReceitas;
 	private String imgReceitas;
+	private double avaliacaoReceitas;
+	private int disponivelReceitas;
+	private String tipoquantidadeReceitas;	
 
-	private String autorEmail;//email do usuário que cadastrou a receita
-	private String autorRole;//ADMIN ou USER para definir se vai ter opção de envio da receita
-
-	private boolean paraProdutos;//True apenas se a receita for adicionada a produtos
-	
-	public Receitas(String autorEmail) {
-		super();
-        this.autorEmail = autorEmail;
-    }
-	
-	public Receitas(long idReceitas, String nomeReceitas, String ingredientesReceitas, String modoDePreparoReceitas, double valorReceitas, String imgReceitas, String autorEmail) {
+	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, int disponivelReceitas, String tipoquantidadeReceitas) {
 		super();
 		this.idReceitas = idReceitas;
 		this.nomeReceitas = nomeReceitas;
-		this.ingredientesReceitas = ingredientesReceitas;
-		this.modoDePreparoReceitas = modoDePreparoReceitas;
+		this.descReceitas = descReceitas;
 		this.valorReceitas = valorReceitas;
 		this.imgReceitas = imgReceitas;
-        this.autorEmail = autorEmail;
+        this.avaliacaoReceitas = avaliacaoReceitas;
+        this.disponivelReceitas = disponivelReceitas;
+        this.tipoquantidadeReceitas = tipoquantidadeReceitas;
     }
 
 	public Receitas() {
@@ -56,22 +53,7 @@ public class Receitas {
 	public void setNomeReceitas(String nomeReceitas) {
 		this.nomeReceitas = nomeReceitas;
 	}
-	public String getIngredientesReceitas() {return ingredientesReceitas;}
-	public void setIngredientesReceitas(String ingredientesReceiatas) {
-		this.ingredientesReceitas = ingredientesReceitas;
-	}
-	public String getModoDePreparoReceitas() {
-		return modoDePreparoReceitas;
-	}
-	public void setModoDePreparoReceitas(String modoDePreparoReceitas) {this.modoDePreparoReceitas = modoDePreparoReceitas;}
-	public String getAutorEmail() { return autorEmail; }
-	public void setAutorEmail(String autorEmail) { this.autorEmail = autorEmail; }
 
-	public String getAutorRole() { return autorRole; }
-	public void setAutorRole(String autorRole) { this.autorRole = autorRole; }
-
-	public boolean isParaProdutos() { return paraProdutos; }
-	public void setParaProdutos(boolean paraProdutos) { this.paraProdutos = paraProdutos; }
 	public double getValorReceitas() {
 		return valorReceitas;
 	}
@@ -85,6 +67,41 @@ public class Receitas {
 
 	public void setImgReceitas(String imgReceitas) {
 		this.imgReceitas = imgReceitas;
+	}
+
+	public double getAvaliacaoReceitas() {
+		return avaliacaoReceitas;
+	}
+
+	public void setAvaliacaoReceitas(double avaliacaoReceitas) {
+		this.avaliacaoReceitas = avaliacaoReceitas;
+	}
+
+	public int getDisponivelReceitas() {
+		return disponivelReceitas;
+	}
+
+	public void setDisponivelReceitas(int disponivelReceitas) {
+		this.disponivelReceitas = disponivelReceitas;
 	}	
+	
+	
+	public String getDescReceitas() {
+		return descReceitas;
+	}
+
+	public void setDescReceitas(String descReceitas) {
+		this.descReceitas = descReceitas;
+	}	
+	
+	public String getTipoquantidadeReceitas() {
+		return tipoquantidadeReceitas;
+	}
+
+	public void setTipoquantidadeReceitas(String tipoquantidadeReceitas) {
+		this.tipoquantidadeReceitas = tipoquantidadeReceitas;
+	}
+
+	
 	
 }
