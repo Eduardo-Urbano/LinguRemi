@@ -25,10 +25,9 @@ fotoInput.addEventListener("change", () => {
 
 adicionarReceita.addEventListener('click', async () => {
   const nomeReceitaBlog = (document.getElementById('nomeReceita') as HTMLInputElement).value;
-  const descricaoReceitaBlog = (document.getElementById('descReceita') as HTMLInputElement).value;
-  const ingredientesReceitaBlog = (document.getElementById('ingReceita') as HTMLInputElement).value;
-  const preparoReceitaBlog = (document.getElementById('preparoReceita') as HTMLInputElement).value;
-  const tempoReceitaBlog = (document.getElementById('tempoReceita') as HTMLInputElement).value;
+  const descricaoReceitaBlog = (document.getElementById('descricao') as HTMLInputElement).value;
+  const ingredientesReceitaBlog = (document.getElementById('ingredientes') as HTMLInputElement).value;
+  const preparoReceitaBlog = (document.getElementById('preparo') as HTMLInputElement).value;
   const file = fotoInput.files?.[0];
 
   if (!file) {
@@ -37,10 +36,10 @@ adicionarReceita.addEventListener('click', async () => {
   }
 
   const formData = new FormData();
-  formData.append("nomeReceita", nomeReceitaBlog);
-  formData.append("descReceita", descricaoReceitaBlog);
-  formData.append("ingReceita", ingredientesReceitaBlog);
-  formData.append("preparoReceita",preparoReceitaBlog);
+  formData.append("nomeReceitaBlog", nomeReceitaBlog);
+  formData.append("descricaoReceitaBlog", descricaoReceitaBlog);
+  formData.append("ingredientesReceitaBlog", ingredientesReceitaBlog);
+  formData.append("preparoReceitaBlog",preparoReceitaBlog);
   formData.append("imgReceitaBlog", file);
 
   await enviarReceita(formData);

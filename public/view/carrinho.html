@@ -183,27 +183,35 @@
             }
 
             // Mapeia apenas os IDs e quantidades para enviar ao backend
-            const payload = cart.map(item => ({
-                receitaId: item.id,         // id da receita/produto
-                quantidade: item.quantidade,
-                precoUnitario: item.preco
-            }));
+
+            const payload = {
+            emailTransferencia: localStorage.getItem("emailUser"), // ou outro dado do usuário logado
+            valorTransferencia: cart.reduce((acc, item) => acc + item.preco * item.quantidade, 0),
+            descTransferencia: "Compra realizada via site",
+            quantidadeTransferencia: cart.reduce((acc, item) => acc + item.quantidade, 0),
+            receitasTransferencia: cart.map(item => ({
+                    id: item.id,
+                    quantidade: item.quantidade
+                }))
+            };
 
             try {
-                const response = await fetch("http://localhost:8080/historico/adicionar", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
+            const response = await fetch("http://localhost:8080/historico/adicionar", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload)
+            });
 
-                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+            if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
 
-                alert("Compra enviada com sucesso!");
-                localStorage.removeItem("cart");
-                window.location.reload();
+            alert("Compra enviada com sucesso!");
+            localStorage.removeItem("cart");
+            window.location.reload();
             } catch (error) {
-                console.error(error);
-                alert("Ocorreu um erro ao finalizar a compra.");
+            console.error(error);
+            alert("Ocorreu um erro ao finalizar a compra.");
             }
         });
     });
