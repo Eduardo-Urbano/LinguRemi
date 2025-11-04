@@ -2,12 +2,6 @@ INSERT INTO Usuarios (nome_Usuarios, email_Usuarios, senha_Usuarios, role_Usuari
 INSERT INTO Usuarios (nome_Usuarios, email_Usuarios, senha_Usuarios, role_Usuarios)VALUES ('Maria Oliveira', 'maria.oliveira@email.com', 'abcde', '1');
 INSERT INTO Usuarios (nome_Usuarios, email_Usuarios, senha_Usuarios, role_Usuarios)VALUES ('Carlos Santos', 'carlos.santos@email.com', 'senha123', '0');
 
-
-INSERT INTO Historico (email_Transferencia, valor_Transferencia, data_Transferencia, desc_Transferencia) VALUES ('maria.oliveira@email.com', 150.00, '2025-10-08T14:30:00Z', 'Transferência para Maria');
-INSERT INTO Historico (email_Transferencia, valor_Transferencia, data_Transferencia, desc_Transferencia) VALUES ('carlos.santos@email.com', 50.00, '2025-10-07T09:15:00Z', 'Almoço dividido');
-INSERT INTO Historico (email_Transferencia, valor_Transferencia, data_Transferencia, desc_Transferencia) VALUES ('giovanni@email.com', 200.00, '2025-10-06T18:00:00Z', 'Pagamento de serviço');
-INSERT INTO Historico (email_Transferencia, valor_Transferencia, data_Transferencia, desc_Transferencia) VALUES ('maria.oliveira@email.com', 75.50, '2025-10-05T12:00:00Z', 'Compra compartilhada');
-
 INSERT INTO Receitablog (nome_Receitablog, descricao_Receitablog, img_Receitablog, ingredientes_Receitablog, data_Receitablog, tempo_Receitablog) VALUES ('Brigadeiro', 'Doce brasileiro clássico de chocolate com granulado', 'uploads/brigadeiro.jpg', '1 lata de leite condensado, 1 colher de manteiga, 4 colheres de chocolate em pó, chocolate granulado', '2025-10-29T12:00:00Z', '20 minutos');
 INSERT INTO Receitablog (nome_Receitablog, descricao_Receitablog, img_Receitablog, ingredientes_Receitablog, data_Receitablog, tempo_Receitablog) VALUES ('Beijinho', 'Docinho de coco com sabor delicado e envolto em açúcar', 'uploads/beijinho.jpg', '1 lata de leite condensado, 1 colher de manteiga, 100g de coco ralado, açúcar cristal', '2025-10-29T12:05:00Z', '25 minutos');
 INSERT INTO Receitablog (nome_Receitablog, descricao_Receitablog, img_Receitablog, ingredientes_Receitablog, data_Receitablog, tempo_Receitablog) VALUES ('Pudim de Leite', 'Pudim cremoso de leite com calda de caramelo', 'uploads/pudim.jpeg', '1 lata de leite condensado, mesma medida de leite, 3 ovos, 1 xícara de açúcar', '2025-10-29T12:10:00Z', '1 hora');

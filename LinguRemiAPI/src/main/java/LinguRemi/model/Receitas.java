@@ -1,9 +1,13 @@
 package LinguRemi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,8 +23,7 @@ public class Receitas {
 	private String imgReceitas;
 	private double avaliacaoReceitas;
 	private int disponivelReceitas;
-	private String tipoquantidadeReceitas;
-	
+	private String tipoquantidadeReceitas;	
 
 	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, int disponivelReceitas, String tipoquantidadeReceitas) {
 		super();
@@ -98,5 +101,7 @@ public class Receitas {
 	public void setTipoquantidadeReceitas(String tipoquantidadeReceitas) {
 		this.tipoquantidadeReceitas = tipoquantidadeReceitas;
 	}
+
+	
 	
 }

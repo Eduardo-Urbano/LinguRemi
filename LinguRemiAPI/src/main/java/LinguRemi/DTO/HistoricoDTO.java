@@ -1,77 +1,58 @@
 package LinguRemi.DTO;
 
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
-import LinguRemi.model.Receitas;
-import jakarta.persistence.ManyToOne;
+import java.util.List;
 
 public class HistoricoDTO {
-	private Long receitaId;
-	private double quantidade;
-	private double precoUnitario;
-	private String email;
-	private double total;
-	private String desc;
-	
+	private String emailTransferencia;
+    private double valorTransferencia;
+    private String descTransferencia;
+    private List<ReceitaQuantidadeDTO> receitasTransferencia;
 	
 	public HistoricoDTO() {
 		super();
 	}
 	
-	public HistoricoDTO(Long receitaId, double quantidade, double precoUnitario, String email, double total,
-			String desc) {
+	public HistoricoDTO(String emailTransferencia, double valorTransferencia, String descTransferencia,
+			List<ReceitaQuantidadeDTO> receitasTransferencia) {
 		super();
-		this.receitaId = receitaId;
-		this.quantidade = quantidade;
-		this.precoUnitario = precoUnitario;
-		this.email = email;
-		this.total = total;
-		this.desc = desc;
+		this.emailTransferencia = emailTransferencia;
+		this.valorTransferencia = valorTransferencia;
+		this.descTransferencia = descTransferencia;
+		this.receitasTransferencia = receitasTransferencia;
 	}
 
-	public Long getReceitaId() {
-		return receitaId;
-	}
-	public void setReceitaId(Long receitaId) {
-		this.receitaId = receitaId;
-	}
-	public double getQuantidade() {
-		return quantidade;
-	}
-	public void setQuantidade(double quantidade) {
-		this.quantidade = quantidade;
-	}
-	public double getPrecoUnitario() {
-		return precoUnitario;
-	}
-	public void setPrecoUnitario(double precoUnitario) {
-		this.precoUnitario = precoUnitario;
+	public String getEmailTransferencia() {
+		return emailTransferencia;
 	}
 
-	public String getEmail() {
-		return email;
+	public void setEmailTransferencia(String emailTransferencia) {
+		this.emailTransferencia = emailTransferencia;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public double getValorTransferencia() {
+		return valorTransferencia;
 	}
 
-	public double getTotal() {
-		return total;
+	public void setValorTransferencia(double valorTransferencia) {
+		this.valorTransferencia = valorTransferencia;
 	}
 
-	public void setTotal(double total) {
-		this.total = total;
+	public String getDescTransferencia() {
+		return descTransferencia;
 	}
 
-	public String getDesc() {
-		return desc;
+	public void setDescTransferencia(String descTransferencia) {
+		this.descTransferencia = descTransferencia;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public List<ReceitaQuantidadeDTO> getReceitasTransferencia() {
+		return receitasTransferencia;
 	}
-    
-    
+
+	public void setReceitasTransferencia(List<ReceitaQuantidadeDTO> receitasTransferencia) {
+		this.receitasTransferencia = receitasTransferencia;
+	}
+
+	
+	
 }
