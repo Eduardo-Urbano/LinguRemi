@@ -5,8 +5,8 @@ const loginSubmit = document.getElementById('loginSubmit')!;
 const cadastroSubmit = document.getElementById('cadastroSubmit')!;
 const modalCadastro = document.getElementById('cadastroModal')!;
 const closeCadastro = document.getElementById('closeCadastro')!;
-const logad0 = document.getElementById('ident0')!;
-const logad1 = document.getElementById('ident1')!;
+export const logad0 = document.getElementById('ident0')!;
+export const logad1 = document.getElementById('ident1')!;
 
 //Botão para abrir o modal de Login
 loginBtn.addEventListener('click', (e) => {
@@ -36,6 +36,8 @@ cadastroSubmit.addEventListener('click', () => {
 closeCadastro.addEventListener('click', () => {
     modalCadastro.classList.remove('flex');
     modalCadastro.classList.add('hidden');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 });
 
 // Função de login
@@ -67,7 +69,6 @@ loginSubmit.addEventListener('click', async () => {
         const token = data.token;
         const nome = data.nome;
         const email = data.email;
-        const nomeUsuario = data.nomeUsuario;
         if(!token){
             alert('Token não recebido!');
             return;
@@ -82,17 +83,15 @@ loginSubmit.addEventListener('click', async () => {
         console.log('Login realizado');
 
         //Troca o link do login pelo de perfil do usuário
-        logad0.classList.remove('flex')
-        logad0.classList.add('hidden')
-        logad1.textContent = nomeUsuario;
-        logad1.classList.remove('hidden')
-        logad1.classList.add('flex')
+        logad0.classList.remove('flex');
+        logad0.classList.add('hidden');
+        logad1.textContent = nome;
+        logad1.classList.remove('hidden');
+        logad1.classList.add('flex');
 
-        //Fecha modal e redireciona
+        //Fecha modal
         modal.classList.remove('flex');
         modal.classList.add('hidden');
-
-        window.location.href = "index.html";
 
     //Erro de conexão com a API
     }catch(error){

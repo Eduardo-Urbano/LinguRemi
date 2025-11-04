@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cadastrarSubmit = document.getElementById('cadastrarSubmit') as HTMLElement;
     const modalCadastro = document.getElementById('cadastroModal')!;
+    const modal = document.getElementById('loginModal')!;
 
     cadastrarSubmit.addEventListener('click', () => {    
         const senha = (document.getElementById('senha') as HTMLInputElement).value;
@@ -48,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("Cadastro realizado com sucesso!");
                     modalCadastro.classList.remove('flex');
                     modalCadastro.classList.add('hidden');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
                 })
                 .catch(error =>{
                     console.error("Erro:", error);
