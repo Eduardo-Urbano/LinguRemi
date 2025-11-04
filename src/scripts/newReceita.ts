@@ -24,10 +24,10 @@ fotoInput.addEventListener("change", () => {
 });
 
 adicionarReceita.addEventListener('click', async () => {
-  const nomeReceita = (document.getElementById('nomeReceita') as HTMLInputElement).value;
-  const ingredientes = (document.getElementById('ingredientes') as HTMLInputElement).value;
-  const modoDePreparo = (document.getElementById('preparo') as HTMLInputElement).value;
-  const valorReceitas = parseFloat((document.getElementById('valor') as HTMLInputElement).value);
+  const nomeReceitaBlog = (document.getElementById('nomeReceita') as HTMLInputElement).value;
+  const descricaoReceitaBlog = (document.getElementById('descricao') as HTMLInputElement).value;
+  const ingredientesReceitaBlog = (document.getElementById('ingredientes') as HTMLInputElement).value;
+  const preparoReceitaBlog = (document.getElementById('preparo') as HTMLInputElement).value;
   const file = fotoInput.files?.[0];
 
   if (!file) {
@@ -36,11 +36,11 @@ adicionarReceita.addEventListener('click', async () => {
   }
 
   const formData = new FormData();
-  formData.append("nomeReceitas", nomeReceita);
-  formData.append("ingredientes", ingredientes);
-  formData.append("modoDePreparo",modoDePreparo);
-  formData.append("valorReceitas", valorReceitas.toString());
-  formData.append("foto", file);
+  formData.append("nomeReceitaBlog", nomeReceitaBlog);
+  formData.append("descricaoReceitaBlog", descricaoReceitaBlog);
+  formData.append("ingredientesReceitaBlog", ingredientesReceitaBlog);
+  formData.append("preparoReceitaBlog",preparoReceitaBlog);
+  formData.append("imgReceitaBlog", file);
 
   await enviarReceita(formData);
 });
@@ -50,7 +50,7 @@ async function enviarReceita(formData: FormData) {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const token = user?.token;
 
-    const response = await fetch("http://localhost:8080/receitas/cadastrar", {
+    const response = await fetch("http://localhost:8080/receitaBlog/cadastrar", {
       method: "POST",
       headers: {
 

@@ -58,6 +58,8 @@ loginSubmit.addEventListener('click', async () => {
         //Login OK
         const data = await response.json();
         const token = data.token;
+        const nome = data.nome;
+        const email = data.email;
         const nomeUsuario = data.nomeUsuario;
         if (!token) {
             alert('Token não recebido!');
@@ -65,6 +67,8 @@ loginSubmit.addEventListener('click', async () => {
         }
         //Armazena token no localStorage
         localStorage.setItem('jwtToken', token);
+        localStorage.setItem('nomeUser',nome);
+        localStorage.setItem('emailUser',email);
         alert('Login realizado com sucesso!');
         console.log(token);
         console.log('Login realizado');

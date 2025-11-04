@@ -11,7 +11,7 @@ async function carregar(url) {
     }
 }
 export async function carregarReceitasBlog() {
-    return carregar("http://localhost:8080/receitas");
+    return carregar("http://localhost:8080/receitas/todas");
 }
 export async function carregarReceitasProdutos() {
     return carregar("http://localhost:8080/receitas/produtos");
