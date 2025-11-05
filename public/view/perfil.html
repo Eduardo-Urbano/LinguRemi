@@ -32,9 +32,40 @@
 
     <div class="flex flex-col grow w-full">
 
-        <main class="container flex flex-row gap-4 mx-0 px-2 w-full bg-white">
-            <section id="infoUser" class="flex flex-col min-w-2/5 min-h-[500px] rounded-2xl shadow-2xl bg-gray-900"></section>
-            <section id="historico" class="flex flex-col min-w-2/3 min-h-[500px] rounded-2xl shadow-2xl bg-red-500"></section>
+        <main class="container flex flex-row gap-4 mx-0 px-2 pb-5 pt-3 w-full bg-white">
+
+            <section class="flex flex-col items-center min-w-2/5 min-h-[700px] rounded-2xl shadow-2xl text-gray-200 pt-8 bg-linear-to-br from-gray-500 from-1% via-gray-600 via-9% to-black to-90%">
+                <div id="carregarFoto" class="flex min-w-3/5 min-h-2/5 mb-3 border rounded-3xl cursor-pointer items-center justify-center">
+                    <input type="file" accept="image/*" id="carregarFoto" placeholder="Adicione sua Foto" class="max-w-2/5 mb-3 rounded hidden">
+                    <span id="fileName" class="flex mt-2 mx-auto justify-center text-gray-600">Adicione sua Foto</span>
+                    <div id="fotoUser" class="max-w-3/5 min-h-2/5 mb-3 border rounded-3xl cursor-pointer hidden"></div>
+                </div>
+                <div id="infoUser" class="flex items-center flex-col max-w-full">
+                    <ul class="flex flex-col space-y-6">
+                        <li id="userName" class="text-2xl font-bold"></li>
+                        <li id="userEmail" class="text-2xl font-bold"></li>
+                        <li id="logout" class="mt-50 mb-0 text-[20px] font-bold cursor-pointer">Sair</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="historico" class="relative flex flex-col min-w-2/3 min-h-[700px] rounded-2xl shadow-2xl overflow-hidden">
+
+                <div class="absolute inset-0 bg-linear-to-br from-gray-500/60 via-gray-600/60 to-black/60 backdrop-blur-md"></div>
+                
+                <div class="w-full h-full relative z-10 p-6 text-white">
+                    <div class="w-full flex text-center"><h1 class="text-3xl mx-auto my-3 flex self-center"><strong>Histórico</strong></h1></div>
+                    <div id="itensHist" class="flex flex-col w-full h-2/4 bg-white/30 rounded-3xl">
+                        <ul class="flex flex-col space-x-6">
+                            <li id="tipo"></li>
+                            <li id="titulo"></li>
+                            <li id="valor" class="hidden"></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </section>
         </main>
 
     </div>
@@ -73,5 +104,6 @@
         <div class="text-center mt-1 pb-10">©LinguRémi 2025</div>
     </footer> 
 
+    <script type="module" src="../../src/build/perfil.js"></script>
 </body>
 </html>

@@ -1,3 +1,2 @@
-export declare const logad0: HTMLElement;
-export declare const logad1: HTMLElement;
+export {};
 //# sourceMappingURL=login.d.ts.map
