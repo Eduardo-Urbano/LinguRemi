@@ -72,7 +72,7 @@
         </video>
     </section>
 
-    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Nossos Doces</strong></h1></div>
+    <div class="w-full flex text-center"><h1 class="text-4xl mx-auto my-3 flex self-center"><strong>Descubra novos sabores</strong></h1></div>
     <!--Cards de receitas-->
     <main class="container mx-auto p-4 px-4 pb-12">
         <div id="produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -138,10 +138,53 @@
     
     <script type="module" src="../../src/build/login.js"></script>
     <script type="module" src="../../src/build/cadastro.js"></script>
-    <script type="module" src="../../src/build/receitas.js"></script>
-    <script type="module" src="../../src/build/renderizarReceitas.js"></script>
-    <script type="module" src="../../src/build/newReceita.js"></script>
-    <script type="module" src="../../src/build/initBlog.js"></script>
-    <script type="module" src="../../src/build/initProdutos.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const container = document.getElementById("produtos");
+            if (!container) return;
+    
+            container.innerHTML = "<p>Carregando...</p>";
+    
+            async function carregarProdutos() {
+                try {
+                    const response = await fetch("http://localhost:8080/receitas/aleatorios");
+                    if (!response.ok) throw new Error("Erro ao buscar produtos");
+                    return await response.json();
+                } catch (error) {
+                    console.error("Erro ao carregar produtos:", error);
+                    return [];
+                }
+            }
+    
+            const produtos = await carregarProdutos();
+            container.innerHTML = "";
+    
+            produtos.forEach(produto => {
+                const card = document.createElement("div");
+                card.className = `
+                    bg-white rounded-xl shadow-lg overflow-hidden flex flex-col cursor-pointer
+                `;
+    
+                const imagem = `http://localhost:8080/${produto.imgReceitas}`;
+    
+                card.innerHTML = `
+                    <img src="${imagem}" alt="${produto.nomeReceitas}" class="w-full h-48 object-cover">
+                    <div class="p-4 flex flex-col">
+                        <div class="flex flex-row">
+                            <h3 class="font-bold text-lg mb-2 pr-5">${produto.nomeReceitas}</h3>
+                            <p class="text-sm mt-1">★ ${produto.avaliacaoReceitas}</p>
+                        </div>
+                        <p class="text-gray-600 text-sm">${produto.descReceitas}</p>
+                    </div>
+                `;
+    
+                card.addEventListener("click", () => {
+                    window.location.href = `item.html?id=${produto.idReceitas}`;
+                });
+    
+                container.appendChild(card);
+            });
+        });
+    </script>
 </body>
 </html>

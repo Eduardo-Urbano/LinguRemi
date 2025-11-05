@@ -1,68 +1,76 @@
 import { carregarReceitasBlog } from "./receitas.js";
 
-const adicionarButton = document.getElementById('adicionarBtn') as HTMLElement;
-const adicionarReceita = document.getElementById('adicionarReceita') as HTMLElement;
-const closeAdicionar = document.getElementById('closeAdicionar') as HTMLElement;
-const modalReceita = document.getElementById('newReceitaModal')!;
-const fotoInput = document.getElementById("fotoDoce") as HTMLInputElement;
-const fileName = document.getElementById("fileName") as HTMLElement;
+const adicionarButton = document.getElementById('adicionarBtn') as HTMLButtonElement | null;
+const adicionarReceita = document.getElementById('adicionarReceita') as HTMLButtonElement | null;
+const closeAdicionar = document.getElementById('closeAdicionar') as HTMLButtonElement | null;
+const modalReceita = document.getElementById('newReceitaModal') as HTMLElement | null;
+const fotoInput = document.getElementById("fotoDoce") as HTMLInputElement | null;
+const fileName = document.getElementById("fileName") as HTMLElement | null;
 
-adicionarButton.addEventListener('click', (e) => {
-  e.preventDefault();
-  modalReceita.classList.remove('hidden');
-  modalReceita.classList.add('flex');
-});
+// 🔒 Verifica se todos os elementos existem
+if (
+  adicionarButton &&
+  adicionarReceita &&
+  closeAdicionar &&
+  modalReceita &&
+  fotoInput &&
+  fileName
+) {
+  // Abrir modal
+  adicionarButton.addEventListener('click', (e: MouseEvent) => {
+    e.preventDefault();
+    modalReceita.classList.remove('hidden');
+    modalReceita.classList.add('flex');
+  });
 
-closeAdicionar.addEventListener('click', () => {
-  modalReceita.classList.remove('flex');
-  modalReceita.classList.add('hidden');
-});
+  // Fechar modal
+  closeAdicionar.addEventListener('click', () => {
+    modalReceita.classList.remove('flex');
+    modalReceita.classList.add('hidden');
+  });
 
-fotoInput.addEventListener("change", () => {
-  const file = fotoInput.files?.[0];
-  fileName.textContent = file ? file.name : "Nenhuma imagem selecionada";
-});
+  // Mostrar nome da imagem selecionada
+  fotoInput.addEventListener("change", () => {
+    const file = fotoInput.files?.[0];
+    fileName.textContent = file ? file.name : "Nenhuma imagem selecionada";
+  });
 
-adicionarReceita.addEventListener('click', async () => {
-  const nomeReceitaBlog = (document.getElementById('nomeReceita') as HTMLInputElement).value;
-  const descricaoReceitaBlog = (document.getElementById('descricao') as HTMLInputElement).value;
-  const ingredientesReceitaBlog = (document.getElementById('ingredientes') as HTMLInputElement).value;
-  const preparoReceitaBlog = (document.getElementById('preparo') as HTMLInputElement).value;
-  const file = fotoInput.files?.[0];
+  // Enviar dados
+  adicionarReceita.addEventListener('click', async (e: MouseEvent) => {
+    e.preventDefault();
 
-  if (!file) {
-    alert("Selecione uma imagem!");
-    return;
-  }
+    const nomeReceita = (document.getElementById('nomeReceita') as HTMLInputElement | null)?.value.trim() || "";
+    const ingReceita = (document.getElementById('ingReceita') as HTMLTextAreaElement | null)?.value.trim() || "";
+    const preparoReceita = (document.getElementById('preparoReceita') as HTMLTextAreaElement | null)?.value.trim() || "";
+    const descReceita = (document.getElementById('descReceita') as HTMLTextAreaElement | null)?.value.trim() || "";
+    const tempoReceita = (document.getElementById('tempoReceita') as HTMLInputElement | null)?.value.trim() || "";
+    const file = fotoInput.files?.[0];
 
-  const formData = new FormData();
-  formData.append("nomeReceitaBlog", nomeReceitaBlog);
-  formData.append("descricaoReceitaBlog", descricaoReceitaBlog);
-  formData.append("ingredientesReceitaBlog", ingredientesReceitaBlog);
-  formData.append("preparoReceitaBlog",preparoReceitaBlog);
-  formData.append("imgReceitaBlog", file);
-
-  await enviarReceita(formData);
-});
-
-async function enviarReceita(formData: FormData) {
-  try {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const token = user?.token;
-
-    const response = await fetch("http://localhost:8080/receitaBlog/cadastrar", {
-      method: "POST",
-      headers: {
-
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-      body: formData,
-    });
-
-    if (response.status === 401) {
-      alert("Você precisa estar logado para cadastrar uma receita!");
+    if (!file) {
+      alert("Selecione uma imagem!");
       return;
     }
+
+    const formData = new FormData();
+    formData.append("nomeReceita", nomeReceita);
+    formData.append("ingReceita", ingReceita);
+    formData.append("preparoReceita", preparoReceita);
+    formData.append("descReceita", descReceita);
+    formData.append("tempoReceita", tempoReceita);
+    formData.append("imgReceita", file);
+
+    await enviarReceita(formData);
+  });
+} else {
+  console.error("❌ Um ou mais elementos do DOM não foram encontrados.");
+}
+
+async function enviarReceita(formData: FormData): Promise<void> {
+  try {
+    const response = await fetch("http://localhost:8080/receitas/cadastrar", {
+      method: "POST",
+      body: formData,
+    });
 
     if (response.ok) {
       alert("Receita cadastrada com sucesso!");

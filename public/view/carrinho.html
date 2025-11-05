@@ -95,10 +95,10 @@
             // Campo quantidade
             let campoQuantidade = tipo === "unidade"
                 ? `<label class="font-medium mb-1">Quantidade:</label>
-                   <input type="number" min="1" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                   <input type="number" min="5" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
                    <span class="ml-1 text-sm text-gray-600">un</span>`
                 : `<label class="font-medium mb-1">Peso:</label>
-                   <input type="number" step="0.100" min="0.100" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
+                   <input type="number" step="0.100" min="0.300" value="${item.quantidade}" data-index="${index}" class="input-quantidade border rounded p-1 w-20 text-center" />
                    <span class="text-sm text-gray-600">kg</span>`;
 
             // Card principal
@@ -182,38 +182,49 @@
                 return;
             }
 
-            // Mapeia apenas os IDs e quantidades para enviar ao backend
+            // ✅ usa a mesma função de cálculo para garantir consistência
+            const total = calcularTotal();
 
             const payload = {
-            emailTransferencia: localStorage.getItem("emailUser"), // ou outro dado do usuário logado
-            valorTransferencia: cart.reduce((acc, item) => acc + item.preco * item.quantidade, 0),
-            descTransferencia: "Compra realizada via site",
-            quantidadeTransferencia: cart.reduce((acc, item) => acc + item.quantidade, 0),
-            receitasTransferencia: cart.map(item => ({
+                emailTransferencia: localStorage.getItem("emailUser") || "usuario@teste.com",
+                valorTransferencia: total, // 🔹 valor total correto e atualizado
+                descTransferencia: "Compra realizada via site",
+                quantidadeTransferencia: cart.reduce((acc, item) => acc + item.quantidade, 0),
+                receitasTransferencia: cart.map(item => ({
                     id: item.id,
                     quantidade: item.quantidade
                 }))
             };
 
             try {
-            const response = await fetch("http://localhost:8080/historico/adicionar", {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload)
-            });
+                const response = await fetch("http://localhost:8080/historico/adicionar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
 
-            alert("Compra enviada com sucesso!");
-            localStorage.removeItem("cart");
-            window.location.reload();
+                alert("Compra realizada com sucesso!");
+                localStorage.removeItem("cart");
+                window.location.reload();
             } catch (error) {
-            console.error(error);
-            alert("Ocorreu um erro ao finalizar a compra.");
+                console.error(error);
+                alert("Ocorreu um erro ao finalizar a compra.");
             }
         });
+
+        // 🔧 função reaproveitável
+        function calcularTotal() {
+            return cart.reduce((sum, item) => {
+                const precoItem = parseFloat(item.preco.toString().replace(",", ".")) || 0;
+                return sum + (item.tipoQuantidade === "peso"
+                    ? precoItem * item.quantidade * 10
+                    : precoItem * item.quantidade);
+            }, 0);
+        }
     });
     </script>
 
