@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="151ef2c5-22b0-4388-a3cf-775cfc2da281" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/target/classes/LinguRemi/controller/HistoricoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LinguRemi/controller/HistoricoController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LinguRemi/controller/ReceitasController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LinguRemi/controller/ReceitasController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LinguRemi/controller/UsuariosController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LinguRemi/controller/UsuariosController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LinguRemi/model/Historico.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LinguRemi/model/Historico.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LinguRemi/model/Receitas.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LinguRemi/model/Receitas.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/assets/css/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/../public/assets/css/output.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/build/criarReceitas.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/build/criarReceitas.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/build/newReceita.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/build/newReceita.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/build/receitas.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/build/receitas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +46,19 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="LinguRemi.controller" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="LinguRemiAPI" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="LinguRemiAPI" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
