@@ -1,11 +1,12 @@
 import { carregarReceitasBlog } from "./receitas.js";
+import { isUserLogged } from "./auth.js";
 const adicionarButton = document.getElementById('adicionarBtn');
 const adicionarReceita = document.getElementById('adicionarReceita');
 const closeAdicionar = document.getElementById('closeAdicionar');
 const modalReceita = document.getElementById('newReceitaModal');
 const fotoInput = document.getElementById("fotoDoce");
 const fileName = document.getElementById("fileName");
-// 🔒 Verifica se todos os elementos existem
+//Verifica se todos os elementos existem
 if (adicionarButton &&
     adicionarReceita &&
     closeAdicionar &&
@@ -14,9 +15,16 @@ if (adicionarButton &&
     fileName) {
     // Abrir modal
     adicionarButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        modalReceita.classList.remove('hidden');
-        modalReceita.classList.add('flex');
+        if (!isUserLogged()) {
+            e.preventDefault();
+            alert("É necessário estar logado primeiro!");
+            return;
+        }
+        else {
+            modalReceita.classList.remove('hidden');
+            modalReceita.classList.add('flex');
+            return;
+        }
     });
     // Fechar modal
     closeAdicionar.addEventListener('click', () => {
