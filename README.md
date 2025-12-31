@@ -24,8 +24,6 @@ O projeto é dividido em duas partes principais:
 
 ### Front-end
 - TypeScript
-- HTML5
-- CSS3
 - JavaScript
 - Tailwind CSS
 
