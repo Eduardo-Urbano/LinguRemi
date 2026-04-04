@@ -28,7 +28,7 @@ export function updateAuthLinks(): void {
 // Funçao de logout
 export function logout(): void {
   localStorage.removeItem("jwtToken");
-  window.location.href = "./index.html";
+  window.location.href = "../index.html";
 }
 
 window.addEventListener("DOMContentLoaded", () => {

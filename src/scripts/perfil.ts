@@ -3,7 +3,7 @@ import { isUserLogged, logout } from "./auth.js";
 document.addEventListener("DOMContentLoaded", async () => {
   // Verifica se está logado
   if (!isUserLogged()) {
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
     return;
   }
 
