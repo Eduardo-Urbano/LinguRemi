@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Carrega histórico
   try {
-    const response = await fetch("http://localhost:8080/historico/dados");
+    const response = await fetch("https://linguremi-api.onrender.com/historico/dados");
     if (!response.ok) throw new Error("Erro ao buscar histórico");
 
     const historicos = await response.json();

@@ -144,7 +144,7 @@
         
         async function carregarReceitas() {
           try {
-            const resposta = await fetch("http://localhost:8080/receitas/todas");
+            const resposta = await fetch("https://linguremi-api.onrender.com/receitas/todas");
             if (!resposta.ok) throw new Error("Erro ao buscar receitas");
             return await resposta.json();
           } catch (erro) {
@@ -177,7 +177,7 @@
               const card = document.createElement("div");
               card.className = "bg-white rounded-xl shadow-lg overflow-hidden flex flex-col sm:flex-row cursor-pointer";
         
-              const caminhoImagem = `http://localhost:8080/${receita.imgReceitablog}`;
+              const caminhoImagem = `https://linguremi-api.onrender.com/${receita.imgReceitablog}`;
         
               card.innerHTML = `
                 <img src="${caminhoImagem}" alt="${receita.nomeReceitablog}" class="w-full sm:w-60 h-48 object-cover">

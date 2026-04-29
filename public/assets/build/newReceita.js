@@ -64,7 +64,7 @@ else {
 }
 async function enviarReceita(formData) {
     try {
-        const response = await fetch("http://localhost:8080/receitas/cadastrar", {
+        const response = await fetch("https://linguremi-api.onrender.com/receitas/cadastrar", {
             method: "POST",
             body: formData,
         });

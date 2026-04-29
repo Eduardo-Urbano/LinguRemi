@@ -12,9 +12,9 @@ async function carregar(url: string): Promise<Receita[]> {
 }
 
 export async function carregarReceitasBlog(): Promise<Receita[]> {
-  return carregar("http://localhost:8080/receitas/todas");
+  return carregar("https://linguremi-api.onrender.com/receitas/todas");
 }
 
 export async function carregarReceitasProdutos(): Promise<Receita[]> {
-  return carregar("http://localhost:8080/receitas/produtos");
+  return carregar("https://linguremi-api.onrender.com/receitas/produtos");
 }

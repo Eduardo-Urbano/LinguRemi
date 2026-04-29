@@ -92,7 +92,7 @@
     
         // Função para buscar uma receita pelo ID
         async function carregarReceitaPorId(id) {
-            return await carregar(`http://localhost:8080/receitas/buscar/${id}`);
+            return await carregar(`https://linguremi-api.onrender.com/receitas/buscar/${id}`);
         }
     
         document.addEventListener("DOMContentLoaded", async () => {
@@ -127,7 +127,7 @@
                 // Montar card da receita
                 card.innerHTML = `
                     <h1 class="font-bold text-2xl mb-2 pb-5 self-center pb-5">${receita.nomeReceitablog}</h1>
-                    <img src="http://localhost:8080/${receita.imgReceitablog}" alt="${receita.nomeReceitablog}" class="w-250 h-150 rounded-xl object-cover">
+                    <img src="https://linguremi-api.onrender.com/${receita.imgReceitablog}" alt="${receita.nomeReceitablog}" class="w-250 h-150 rounded-xl object-cover">
                     <h2 class="font-bold text-center pb-5 pt-5 text-lg items-center">Tempo de preparo: ${receita.tempoReceitablog}</h2>
                     <h1 class="font-bold text-xl pb-5">Ingredientes:</h1>
                     <ol class="grid grid-cols-2 list-disc text-lg pl-10 gap-2 pb-8 max-w-150">${listaHTML}</ol>

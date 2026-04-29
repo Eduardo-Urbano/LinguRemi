@@ -44,7 +44,7 @@ loginSubmit.addEventListener('click', async () => {
     else {
         //Conexão com a API
         try {
-            const response = await fetch('http://localhost:8080/usuarios/login', {
+            const response = await fetch('https://linguremi-api.onrender.com/usuarios/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ login: login, password })

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     (document.getElementById('senha') as HTMLInputElement).value
                 );
                 //console.log(usuario);
-                fetch("http://localhost:8080/usuarios/cadastrar",{
+                fetch("https://linguremi-api.onrender.com/usuarios/cadastrar",{
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(usuario)
