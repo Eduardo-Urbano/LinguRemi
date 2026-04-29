@@ -34,6 +34,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.GET, "/usuarios/todos").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
+						.requestMatchers("/", "/health").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/historico/**").permitAll()
@@ -50,22 +51,15 @@ public class SecurityConfigurations {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowCredentials(true);
-		configuration.addAllowedOriginPattern("http://127.0.0.1:5500");
-		configuration.addAllowedOriginPattern("http://localhost:5500");
-		configuration.addAllowedHeader("*");
-		configuration.addAllowedMethod("GET");
-		configuration.addAllowedMethod("POST");
-		configuration.addAllowedMethod("PUT");
-		configuration.addAllowedMethod("DELETE");
-		configuration.addAllowedMethod("OPTIONS");
 
-		configuration.addAllowedHeader("Authorization");  // Permite cabeçalho Authorization
-	    configuration.addAllowedHeader("*");  // Permite todos os cabeçalhos (caso haja mais cabeçalhos personalizados)
-	    configuration.addAllowedMethod("*"); 
-	    
+		configuration.setAllowCredentials(true);
+		configuration.addAllowedOriginPattern("*");
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("*");
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
+
 		return source;
 	}
 	
