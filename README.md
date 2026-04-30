@@ -1,97 +1,173 @@
 # 🍰 LinguRémi
 
-Projeto de uma **doceria gourmet** desenvolvido para a disciplina de **Desenvolvimento Web**, com foco em uma aplicação **full stack**, separando claramente front-end e back-end.
+Projeto full stack de uma doceria gourmet desenvolvido com foco em experiência digital, integração entre front-end moderno e back-end robusto com Java Spring Boot.
 
-O sistema simula a presença digital de uma doceria, com interface moderna e uma API para gerenciamento de dados.
-
----
-
-## 🧠 Visão Geral
-
-O **LinguRémi** foi criado com o objetivo de aplicar conceitos de:
-- Desenvolvimento Front-end moderno
-- Criação de APIs REST
-- Organização de projeto full stack
-- Integração entre front-end e back-end
-
-O projeto é dividido em duas partes principais:
-- **Front-end**: interface da aplicação
-- **Back-end (API)**: responsável pelas regras de negócio e persistência de dados
+O sistema simula uma plataforma digital de doceria com catálogo, receitas, gerenciamento de dados, autenticação e documentação profissional de API com Swagger/OpenAPI.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+# Deploy em Produção
+
+### Front-end:
+https://linguremi.vercel.app
+
+### API (Spring Boot):
+https://linguremi-api.onrender.com
+
+### Swagger / Documentação da API:
+https://linguremi-api.onrender.com/swagger-ui/index.html
+
+### Health Check:
+https://linguremi-api.onrender.com/health
+
+---
+
+## Visão Geral
+
+O LinguRémi foi desenvolvido para consolidar conhecimentos em desenvolvimento full stack, separando claramente:
+
+### Front-end
+- Interface moderna
+- Navegação responsiva
+- Catálogo visual
+- Integração dinâmica com API
+
+### Back-end
+- API REST
+- Login e cadastro
+- Receitas
+- Produtos
+- Histórico
+- H2 Database
+- Swagger/OpenAPI
+- Deploy em produção
+
+---
+
+## Tecnologias Utilizadas
 
 ### Front-end
 - TypeScript
 - JavaScript
 - Tailwind CSS
+- HTML5
 
 ### Back-end
 - Java
 - Spring Boot
-- API REST
+- Spring Security
+- H2 Database
+- Swagger / OpenAPI
+- Render
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```bash
 LinguRemi/
 │
-├── public/            # Arquivos públicos do front-end
-├── src/               # Código fonte do front-end
-├── LinguRemiAPI/      # API desenvolvida em Spring Boot
+├── public/              # Front-end
+├── src/                 # Código principal front-end
+├── LinguRemiAPI/        # API Spring Boot
 │
 ├── package.json
 ├── tsconfig.json
 ├── README.md
 └── LICENSE
 ```
-▶️ Como Executar o Projeto
-🔹 Front-end
-```bash
-# Instale as dependências
-npm install
 
-# Execute o projeto
+---
+
+
+## Como Executar
+
+Front-end
+```bash
+npm install
 npm run dev
 ```
-O front-end estará disponível em:
-```bash
+URL:
+```http
 http://localhost:5173
 ```
 
-🔹 Back-end (API)
-```bash
-# Abra o projeto LinguRemiAPI na sua IDE (IntelliJ ou Eclipse)
+---
 
-# Execute a aplicação Spring Boot
+Back-end estará disponivel em:
+```http
+https://linguremi-api.onrender.com
 ```
-A API será iniciada por padrão em:
-```bash
-http://localhost:8080
+OBS: Por der um serviço de hospedagem gratuito, a primeira requisição pode demorar alguns segundos
+
+---
+
+## Swagger / OpenAPI
+A documentação completa da API está disponível em:
+```http
+https://linguremi-api.onrender.com/swagger-ui/index.html
 ```
-🎯 Funcionalidades
-Interface moderna e responsiva
+Inclui:
+- Endpoints
+- Métodos
+- Rotas públicas e privadas
+- Testes diretos
+- Estrutura de autenticação
 
-Estrutura organizada para front-end e back-end
+---
 
-API REST para consumo de dados
+## Health Check
+```http
+GET /health
+```
 
-Base preparada para futuras evoluções do sistema
+Resposta:
+```json
+{
+  "status": "ok",
+  "service": "LinguRemi API"
+}
+```
 
-🚀 Próximos Passos (Evoluções Futuras)
+---
 
-Autenticação de usuários Admin e Padrão
+## Funcionalidades
 
-Cadastro e gerenciamento de produtos do Shop
+Front-end:
+- Landing page responsiva
+- Catálogo de doces
+- Receitas dinâmicas
+- Estrutura visual moderna
+- Consumo de API
 
-Deploy da aplicação
+Back-end:
+- Cadastro de usuários
+- Login
+- Produtos
+- Receitas
+- Histórico
+- Uploads
+- Segurança com Spring Security
+- Documentação Swagger
 
-📚 Contexto Acadêmico
-Projeto desenvolvido como parte da disciplina de Desenvolvimento Web, aplicando conceitos práticos de desenvolvimento full stack.
+---
 
-📄 Licença
-Este projeto está sob a licença MIT.
-Consulte o arquivo LICENSE para mais detalhes.
+## Boas Práticas Aplicadas
+- Separação front/back
+- API REST
+- Swagger/OpenAPI
+- Spring Security
+- Deploy em produção
+- Health Check
+- Organização modular
+- Versionamento GitHub
+
+---
+
+## Contexto
+Projeto iniciado academicamente e expandido como projeto de portfólio, com foco em evolução prática para desenvolvimento full stack profissional.
+
+---
+
+## Licença
+MIT
