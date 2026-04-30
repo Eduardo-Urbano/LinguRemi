@@ -21,6 +21,10 @@ import LinguRemi.repository.HistoricoRepository;
 import LinguRemi.repository.ReceitasRepository;
 import LinguRemi.repository.UsuariosRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+
+@Tag(name = "Histórico", description = "Endpoints relacionados ao histórico de transações e compras")
 @RestController
 @RequestMapping("/historico")
 public class HistoricoController {
@@ -32,7 +36,7 @@ public class HistoricoController {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
-    
+    @Operation(summary = "Adiciona uma nova transação ao histórico")
     @PostMapping("/adicionar")
     public ResponseEntity<?> adicionarHistorico(@RequestBody HistoricoDTO dto) {
 
@@ -64,7 +68,7 @@ public class HistoricoController {
     }
 
 
-    
+    @Operation(summary = "Lista todas as transações registradas")
     @GetMapping("/dados")
     public List<Historico> transações(){
     	return historicoRepository.findAll();

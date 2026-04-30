@@ -23,6 +23,10 @@ import LinguRemi.model.Receitas;
 import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+
+@Tag(name = "Receitas", description = "Endpoints relacionados às receitas do blog, produtos à venda e cadastro de novas receitas")
 @RestController
 @RequestMapping("/receitas")
 
@@ -36,28 +40,31 @@ public class ReceitasController {
     @Autowired
     private ReceitaBlogRepository repRP;
     
-    //receitas do blog // // // // // // // // // // // // //
+    @Operation(summary = "Lista todas as receitas do blog")
     @GetMapping("/todas")
     public List<Receitablog> todas() {
         return repRP.findAll(Sort.by(Sort.Direction.DESC,"dataReceitablog"));
     }
 
+    @Operation(summary = "Busca uma receita do blog por ID")
     @GetMapping("/buscar/{id}")
     public Optional<Receitablog> findbyIdReceitablog(@PathVariable Long id) {
     	return repRP.findById(id);
     }
     
-    //receitas a venda // // // // // // // // // // // // //
+    @Operation(summary = "Lista todos os produtos disponíveis para venda")
     @GetMapping("/produtos")
     public List<Receitas> todasReceitas(){
     	return repR.findAll();
     }
     
+    @Operation(summary = "Busca um produto por ID")
     @GetMapping("/produtos/{id}")
     public Optional<Receitas> buscarReceita(@PathVariable Long id) {
     	return repR.findById(id);
     }
     
+    @Operation(summary = "Cadastra uma nova receita no blog com upload de imagem")
     @PostMapping("/cadastrar")
     public Receitablog cadastrarBlog(@ModelAttribute CadastroDTO dto) throws IOException {
         Receitablog receita = new Receitablog();
@@ -79,6 +86,7 @@ public class ReceitasController {
         return receita;
     }
 
+    @Operation(summary = "Retorna receitas aleatórias para destaque na página inicial")
     @GetMapping("/aleatorios")
     public List<Receitas> receitasAleatorias(){
     	Random gen = new Random();

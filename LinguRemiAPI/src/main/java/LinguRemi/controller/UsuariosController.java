@@ -23,6 +23,10 @@ import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
 import jakarta.validation.Valid;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+
+@Tag(name = "Usuários", description = "Endpoints relacionados ao gerenciamento de usuários, autenticação, cadastro e listagem")
 @RestController
 @RequestMapping(value = "/usuarios")
 public class UsuariosController {
@@ -40,6 +44,7 @@ public class UsuariosController {
         this.passwordEncoder = passwordEncoder;
     }
 	
+	@Operation(summary = "Realiza login do usuário e retorna token JWT")
 	@PostMapping(value = "/login")
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
 		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(),data.password());
@@ -52,6 +57,7 @@ public class UsuariosController {
 		return ResponseEntity.ok(new LoginResponseDTO(token, usuario.getNomeUsuarios(), usuario.getEmailUsuarios()));
 	}
 	
+	@Operation(summary = "Cadastra um novo usuário no sistema")
 	@PostMapping(value = "/cadastrar")
 	public ResponseEntity cadastrar(@RequestBody @Valid RegisterDTO data) {
 		if(this.repU.findByEmailUsuarios(data.email()) != null) return ResponseEntity.badRequest().build();
@@ -62,6 +68,7 @@ public class UsuariosController {
 		return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso"));
 	}
 
+	@Operation(summary = "Lista todos os usuários cadastrados")
 	@GetMapping(value = "/todos")
 	public List<Usuarios> users() {
 		List<Usuarios> op = repU.findAll();
