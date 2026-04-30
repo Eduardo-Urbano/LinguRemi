@@ -35,7 +35,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
 						.requestMatchers("/", "/health").permitAll()
-						.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+						.requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/v3/api-docs","/swagger-resources/**","/webjars/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/historico/**").permitAll()
