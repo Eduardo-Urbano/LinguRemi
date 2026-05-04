@@ -12,6 +12,7 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isRegisterOpen, setIsRegisterOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     async function loadRecipes() {
@@ -20,12 +21,19 @@ export function Home() {
       setIsLoading(false)
     }
 
+    const token = localStorage.getItem('jwtToken')
+    setIsAuthenticated(!!token)
+
     loadRecipes()
   }, [])
 
   return (
     <div className="flex min-h-screen flex-col scroll-mt-4">
-      <Header onLoginClick={() => setIsLoginOpen(true)} />
+      <Header
+        onLoginClick={() => setIsLoginOpen(true)}
+        isAuthenticated={isAuthenticated}
+        onLogout={() => setIsAuthenticated(false)}
+      />
 
       {isLoginOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -41,7 +49,10 @@ export function Home() {
             </button>
 
             <Login
-              onSuccess={() => setIsLoginOpen(false)}
+              onSuccess={() => {
+                setIsLoginOpen(false)
+                setIsAuthenticated(true)
+              }}
               onOpenRegister={() => {
                 setIsLoginOpen(false)
                 setIsRegisterOpen(true)

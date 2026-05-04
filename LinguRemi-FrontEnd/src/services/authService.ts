@@ -93,3 +93,4 @@ export async function registerUser(user: RegisterRequest) {
 
   return data
 }
+

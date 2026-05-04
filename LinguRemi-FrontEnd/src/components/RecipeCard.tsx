@@ -7,7 +7,7 @@ type RecipeCardProps = {
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   function handleOpenRecipe() {
-    window.location.href = `/item.html?id=${recipe.idReceitas}`
+    window.location.href = `/product?id=${recipe.idReceitas}`
   }
 
   return (
