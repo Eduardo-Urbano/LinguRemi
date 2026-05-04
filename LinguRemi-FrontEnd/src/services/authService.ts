@@ -59,3 +59,37 @@ export function getAuthToken() {
 export function isAuthenticated() {
   return Boolean(getAuthToken())
 }
+
+export function getUserData() {
+  return {
+    nome: localStorage.getItem('nomeUser'),
+    email: localStorage.getItem('emailUser'),
+    token: localStorage.getItem('jwtToken'),
+  }
+}
+
+type RegisterRequest = {
+  role: 'USER'
+  nome: string
+  email: string
+  senha: string
+}
+
+export async function registerUser(user: RegisterRequest) {
+  const response = await fetch(`${API_URL}/usuarios/cadastrar`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  })
+
+  const data = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    const message = data?.message || 'Erro ao cadastrar usuário.'
+    throw new Error(message)
+  }
+
+  return data
+}

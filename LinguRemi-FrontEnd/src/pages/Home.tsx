@@ -5,11 +5,13 @@ import { RecipeCard } from '../components/RecipeCard'
 import { getRandomRecipes } from '../services/recipeService'
 import type { Recipe } from '../types/Recipe'
 import { Login } from './Login'
+import { Register } from './Register'
 
 export function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
   useEffect(() => {
     async function loadRecipes() {
@@ -42,11 +44,34 @@ export function Home() {
               onSuccess={() => setIsLoginOpen(false)}
               onOpenRegister={() => {
                 setIsLoginOpen(false)
+                setIsRegisterOpen(true)
               }}
-            /><Login
-              onSuccess={() => setIsLoginOpen(false)}
-              onOpenRegister={() => {
-                setIsLoginOpen(false)
+            />
+          </div>
+        </div>
+      )}
+
+      {isRegisterOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
+
+          <div className="relative z-10 w-11/12 max-w-sm rounded-lg bg-white p-8">
+            <button
+              type="button"
+              onClick={() => setIsRegisterOpen(false)}
+              className="absolute right-1.5 top-1 cursor-pointer rounded-full bg-red-400 px-2 py-0.5 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+
+            <Register
+              onSuccess={() => {
+                setIsRegisterOpen(false)
+                setIsLoginOpen(true)
+              }}
+              onBackToLogin={() => {
+                setIsRegisterOpen(false)
+                setIsLoginOpen(true)
               }}
             />
           </div>

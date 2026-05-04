@@ -95,7 +95,7 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
       <button
         type="submit"
         disabled={isLoading}
-        className="mx-auto flex w-3/4 justify-center rounded-2xl bg-black py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mx-auto cursor-pointer flex w-3/4 justify-center rounded-2xl bg-black py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isLoading ? 'Entrando...' : 'Logar'}
       </button>
@@ -103,7 +103,7 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
       <button
         type="button"
         onClick={onOpenRegister}
-        className="mx-auto mt-2 flex w-3/4 justify-center rounded-2xl bg-black py-2 text-white hover:bg-blue-600"
+        className="mx-auto mt-2 cursor-pointer flex w-3/4 justify-center rounded-2xl bg-black py-2 text-white hover:bg-blue-600"
       >
         Cadastre-se
       </button>
