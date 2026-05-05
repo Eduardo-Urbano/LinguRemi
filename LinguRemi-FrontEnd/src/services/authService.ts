@@ -52,9 +52,9 @@ export function isAuthenticated() {
 
 export function getUserData() {
   return {
-    nome: localStorage.getItem('nomeUser'),
-    email: localStorage.getItem('emailUser'),
-    token: localStorage.getItem('jwtToken'),
+    nome: localStorage.getItem('nomeUser') || '',
+    email: localStorage.getItem('emailUser') || '',
+    token: localStorage.getItem('jwtToken') || '',
   }
 }
 
@@ -66,7 +66,7 @@ type RegisterRequest = {
 }
 
 export async function registerUser(user: RegisterRequest) {
-  return await apiFetch('/usuarios/cadastrar', {
+  return await apiFetch<unknown>('/usuarios/cadastrar', {
     method: 'POST',
     body: JSON.stringify(user),
   })

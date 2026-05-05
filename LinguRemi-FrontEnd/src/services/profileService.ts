@@ -5,12 +5,13 @@ export async function getUserHistory(): Promise<HistoryItem[]> {
   try {
     const email = localStorage.getItem('emailUser')
 
-    if (!email) return []
+    if (!email || email.trim() === '') return []
 
     return await apiFetch<HistoryItem[]>(`/historico/${email}`, {
       auth: true,
     })
-  } catch {
+  } catch (error) {
+    console.error('Erro ao buscar histórico:', error)
     return []
   }
 }

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export function Footer() {
   return (
     <footer
@@ -7,13 +9,13 @@ export function Footer() {
       <div className="container mx-auto mb-0 px-6">
         <div className="flex flex-col justify-between gap-10 md:flex-row">
           <section className="min-w-0 md:w-2/5" aria-labelledby="about-title">
-            <a href="/" aria-label="LinguRemi">
+            <Link to="/" aria-label="LinguRemi">
               <img
                 className="mx-auto mt-0 max-h-32 max-w-60"
                 src="/assets/images/logo/LinguRemiLogo.ico"
                 alt="LinguRemi"
               />
-            </a>
+            </Link>
 
             <h2 id="about-title" className="sr-only">
               Sobre a LinguRemi
@@ -33,9 +35,9 @@ export function Footer() {
 
             <ul className="mt-6 list-none space-y-2">
               <li>
-                <a href="/blog" className="text-gray-300 transition-all duration-500 hover:text-gray-400">
+                <Link to="/blog" className="text-gray-300 transition-all duration-500 hover:text-gray-400">
                   Nosso Blog
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-gray-300 transition-all duration-500 hover:text-gray-400">

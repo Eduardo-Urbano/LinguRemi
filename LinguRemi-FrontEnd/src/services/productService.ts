@@ -21,5 +21,6 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export function getProductImage(path: string) {
+  if (!path) return '/assets/images/placeholder.png'
   return `${API_URL}/${path}`
 }

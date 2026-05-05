@@ -23,13 +23,21 @@ export async function apiFetch<T>(
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...fetchOptions,
     headers: {
-      'Content-Type': 'application/json',
+      ...(fetchOptions.body && !(fetchOptions.body instanceof FormData)
+        ? { 'Content-Type': 'application/json' }
+        : {}),
       ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
   })
 
-  const data = await response.json().catch(() => null)
+  let data = null
+
+  try {
+    data = await response.json()
+  } catch {
+    data = null
+  }
 
   if (!response.ok) {
     const message = data?.message || `Erro ${response.status} na requisição`

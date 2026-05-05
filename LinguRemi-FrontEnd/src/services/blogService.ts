@@ -18,7 +18,7 @@ export function getBlogRecipeImage(path: string): string {
 
 export async function getBlogRecipeById(id: string): Promise<BlogRecipe | null> {
   try {
-    return await apiFetch(`/receitas/buscar/${id}`)
+    return await apiFetch<BlogRecipe>(`/receitas/buscar/${id}`)
   } catch {
     return null
   }

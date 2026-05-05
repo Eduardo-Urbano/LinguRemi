@@ -1,13 +1,15 @@
 import { getProductImage } from '../services/productService'
 import type { Product } from '../types/Product'
+import { useNavigate } from 'react-router-dom'
 
 type ProductCardProps = {
   product: Product
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const navigate = useNavigate()
   function handleOpenProduct() {
-    window.location.href = `/product?id=${product.idReceitas}`
+    navigate(`/product/${product.idReceitas}`)
   }
 
   return (

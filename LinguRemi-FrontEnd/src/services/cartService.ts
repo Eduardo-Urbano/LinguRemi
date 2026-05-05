@@ -1,7 +1,12 @@
 import type { CartItem } from '../types/CartItem'
 
 export function getCart(): CartItem[] {
-  return JSON.parse(localStorage.getItem('cart') || '[]')
+  try {
+    const data = localStorage.getItem('cart')
+    return data ? JSON.parse(data) : []
+  } catch {
+    return []
+  }
 }
 
 export function saveCart(cart: CartItem[]) {
@@ -25,9 +30,13 @@ export function calculateTotal(cart: CartItem[]) {
 export function validateCart(cart: CartItem[]): boolean {
   return cart.every(item => {
     return (
-      item.id &&
-      item.nome &&
+      typeof item.id === 'number' &&
+      item.id > 0 &&
+      typeof item.nome === 'string' &&
+      item.nome.trim().length > 0 &&
+      typeof item.preco === 'number' &&
       item.preco > 0 &&
+      typeof item.quantidade === 'number' &&
       item.quantidade > 0 &&
       (item.tipoQuantidade === 'peso' || item.tipoQuantidade === 'unidade')
     )
