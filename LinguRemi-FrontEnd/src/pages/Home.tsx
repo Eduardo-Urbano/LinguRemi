@@ -6,6 +6,7 @@ import { getRandomRecipes } from '../services/recipeService'
 import type { Recipe } from '../types/Recipe'
 import { Login } from './Login'
 import { Register } from './Register'
+import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 
 export function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -13,6 +14,7 @@ export function Home() {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isRegisterOpen, setIsRegisterOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  
 
   useEffect(() => {
     async function loadRecipes() {
@@ -21,8 +23,7 @@ export function Home() {
       setIsLoading(false)
     }
 
-    const token = localStorage.getItem('jwtToken')
-    setIsAuthenticated(!!token)
+    setIsAuthenticated(checkAuth())
 
     loadRecipes()
   }, [])
@@ -32,7 +33,10 @@ export function Home() {
       <Header
         onLoginClick={() => setIsLoginOpen(true)}
         isAuthenticated={isAuthenticated}
-        onLogout={() => setIsAuthenticated(false)}
+        onLogout={() => {
+          clearAuthData()
+          setIsAuthenticated(false)
+        }}
       />
 
       {isLoginOpen && (

@@ -1,16 +1,11 @@
 import type { BlogRecipe } from '../types/BlogRecipe'
+import { apiFetch, getApiUrl } from './api'
 
-const API_URL = 'https://linguremi-api.onrender.com'
+const API_URL = getApiUrl()
 
 export async function getBlogRecipes(): Promise<BlogRecipe[]> {
   try {
-    const response = await fetch(`${API_URL}/receitas/todas`)
-
-    if (!response.ok) {
-      throw new Error('Erro ao buscar receitas')
-    }
-
-    return await response.json()
+    return await apiFetch<BlogRecipe[]>('/receitas/todas')
   } catch (error) {
     console.error('Erro ao carregar receitas do blog:', error)
     return []
@@ -23,11 +18,7 @@ export function getBlogRecipeImage(path: string): string {
 
 export async function getBlogRecipeById(id: string) {
   try {
-    const response = await fetch(`${API_URL}/receitas/buscar/${id}`)
-
-    if (!response.ok) return null
-
-    return await response.json()
+    return await apiFetch(`/receitas/buscar/${id}`)
   } catch {
     return null
   }

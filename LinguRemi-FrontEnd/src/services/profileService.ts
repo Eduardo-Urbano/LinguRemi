@@ -1,6 +1,5 @@
 import type { HistoryItem } from '../types/History'
-
-const API_URL = 'https://linguremi-api.onrender.com'
+import { apiFetch } from './api'
 
 export async function getUserHistory(): Promise<HistoryItem[]> {
   try {
@@ -8,11 +7,9 @@ export async function getUserHistory(): Promise<HistoryItem[]> {
 
     if (!email) return []
 
-    const response = await fetch(`${API_URL}/historico/${email}`)
-
-    if (!response.ok) return []
-
-    return await response.json()
+    return await apiFetch<HistoryItem[]>(`/historico/${email}`, {
+      auth: true,
+    })
   } catch {
     return []
   }

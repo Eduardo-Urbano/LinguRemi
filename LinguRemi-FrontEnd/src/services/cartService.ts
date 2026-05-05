@@ -21,3 +21,15 @@ export function calculateTotal(cart: CartItem[]) {
     )
   }, 0)
 }
+
+export function validateCart(cart: CartItem[]): boolean {
+  return cart.every(item => {
+    return (
+      item.id &&
+      item.nome &&
+      item.preco > 0 &&
+      item.quantidade > 0 &&
+      (item.tipoQuantidade === 'peso' || item.tipoQuantidade === 'unidade')
+    )
+  })
+}

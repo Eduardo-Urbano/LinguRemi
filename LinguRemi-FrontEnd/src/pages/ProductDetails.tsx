@@ -2,17 +2,21 @@ import { useEffect, useState } from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { getProductById, getProductImage } from '../services/productService'
+import { getCart, saveCart } from '../services/cartService'
+import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 import type { Product } from '../types/Product'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [notFound, setNotFound] = useState(false)
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState<'success' | 'error'>('success')
+  const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const id = params.get('id')
-
     if (!id) {
       setNotFound(true)
       return
@@ -30,7 +34,7 @@ export function ProductDetails() {
     }
 
     loadProduct(id)
-  }, [])
+  }, [id])
 
   if (notFound) {
     return <p className="mt-10 text-center">Produto não encontrado.</p>
@@ -43,7 +47,15 @@ export function ProductDetails() {
   function handleAddToCart(redirect = false) {
     if (!product) return
 
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    const minQuantity = product.tipoquantidadeReceitas === 'peso' ? 0.3 : 5
+
+    if (quantity < minQuantity) {
+      setMessageType('error')
+      setMessage(`Quantidade mínima: ${minQuantity}${product.tipoquantidadeReceitas === 'peso' ? 'kg' : ' unidades'}`)
+      return
+    }
+
+    const cart = getCart()
 
     cart.push({
       id: product.idReceitas,
@@ -54,21 +66,41 @@ export function ProductDetails() {
       tipoQuantidade: product.tipoquantidadeReceitas,
     })
 
-    localStorage.setItem('cart', JSON.stringify(cart))
+    saveCart(cart)
 
     if (redirect) {
       window.location.href = '/carrinho'
     } else {
-      alert(`${product.nomeReceitas} adicionado ao carrinho!`)
+      setMessageType('success')
+      setMessage(`${product.nomeReceitas} adicionado ao carrinho!`)
     }
   }
-  //window.location.href = '/carrinho'
 
   return (
     <>
-      <Header onLoginClick={() => {}} isAuthenticated={false} onLogout={() => {}} />
+      <Header
+        onLoginClick={() => {
+          window.location.href = '/login'
+        }}
+        isAuthenticated={checkAuth()}
+        onLogout={() => {
+          clearAuthData()
+          window.location.reload()
+        }}
+      />
 
       <main className="container mx-auto p-4">
+        {message && (
+          <p
+            className={`mb-4 rounded-lg p-3 text-center ${
+              messageType === 'success'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700'
+            }`}
+          >
+            {message}
+          </p>
+        )}
         <button
           type="button"
           onClick={() => window.history.back()}

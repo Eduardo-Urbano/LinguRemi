@@ -3,6 +3,7 @@ import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { getBlogRecipeImage, getBlogRecipes } from '../services/blogService'
 import type { BlogRecipe } from '../types/BlogRecipe'
+import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 
 export function Blog() {
   const [recipes, setRecipes] = useState<BlogRecipe[]>([])
@@ -18,7 +19,7 @@ export function Blog() {
       setIsLoading(false)
     }
 
-    setIsAuthenticated(Boolean(localStorage.getItem('jwtToken')))
+    setIsAuthenticated(checkAuth())
     loadRecipes()
   }, [])
 
@@ -40,10 +41,13 @@ export function Blog() {
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
         onLoginClick={() => {
-          window.location.href = '/'
+          window.location.href = '/login'
         }}
         isAuthenticated={isAuthenticated}
-        onLogout={() => setIsAuthenticated(false)}
+        onLogout={() => {
+          clearAuthData()
+          setIsAuthenticated(false)
+        }}
       />
 
       <main className="flex-1">

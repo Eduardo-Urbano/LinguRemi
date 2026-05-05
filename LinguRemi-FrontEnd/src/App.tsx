@@ -1,3 +1,5 @@
+import { Routes, Route } from 'react-router-dom'
+
 import { Home } from './pages/Home'
 import { ProductDetails } from './pages/ProductDetails'
 import { Cart } from './pages/Cart'
@@ -5,16 +7,21 @@ import { Profile } from './pages/Profile'
 import { Products } from './pages/Products'
 import { Blog } from './pages/Blog'
 import { RecipeBlogDetails } from './pages/RecipeBlogDetails'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
 
 export default function App() {
-  const path = window.location.pathname
-
-  if (path.includes('/product')) return <ProductDetails />
-  if (path.includes('/carrinho')) return <Cart />
-  if (path.includes('/perfil')) return <Profile />
-  if (path.includes('/produtos')) return <Products />
-  if (path.includes('/blog')) return <Blog />
-  if (path.includes('/receita')) return <RecipeBlogDetails />
-
-  return <Home />
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/produtos" element={<Products />} />
+      <Route path="/product/:id" element={<ProductDetails />} />
+      <Route path="/carrinho" element={<Cart />} />
+      <Route path="/perfil" element={<Profile />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/receita/:id" element={<RecipeBlogDetails />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Register />} />
+    </Routes>
+  )
 }

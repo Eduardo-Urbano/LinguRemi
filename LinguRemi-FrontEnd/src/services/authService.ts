@@ -1,4 +1,4 @@
-const API_URL = 'https://linguremi-api.onrender.com'
+import { apiFetch } from './api'
 
 type LoginRequest = {
   login: string
@@ -12,20 +12,10 @@ type LoginResponse = {
 }
 
 export async function loginUser({ login, password }: LoginRequest): Promise<LoginResponse> {
-  const response = await fetch(`${API_URL}/usuarios/login`, {
+  const data = await apiFetch<LoginResponse>('/usuarios/login', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ login, password }),
   })
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    const message = data?.message || `Erro ${response.status} ao fazer login`
-    throw new Error(message)
-  }
 
   if (!data?.token) {
     throw new Error('Token não recebido pela API')
@@ -76,21 +66,8 @@ type RegisterRequest = {
 }
 
 export async function registerUser(user: RegisterRequest) {
-  const response = await fetch(`${API_URL}/usuarios/cadastrar`, {
+  return await apiFetch('/usuarios/cadastrar', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(user),
   })
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    const message = data?.message || 'Erro ao cadastrar usuário.'
-    throw new Error(message)
-  }
-
-  return data
 }
-

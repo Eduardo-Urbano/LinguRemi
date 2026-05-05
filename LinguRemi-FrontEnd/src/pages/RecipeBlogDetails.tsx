@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { getBlogRecipeById, getBlogRecipeImage } from '../services/blogService'
+import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 
 type RecipeBlog = {
   nomeReceitablog: string
@@ -54,7 +55,16 @@ export function RecipeBlogDetails() {
 
   return (
     <>
-      <Header onLoginClick={() => {}} isAuthenticated={false} onLogout={() => {}} />
+      <Header
+        onLoginClick={() => {
+          window.location.href = '/login'
+        }}
+        isAuthenticated={checkAuth()}
+        onLogout={() => {
+          clearAuthData()
+          window.location.reload()
+        }}
+      />
 
       <main className="container mx-auto p-4">
         
@@ -62,7 +72,7 @@ export function RecipeBlogDetails() {
           onClick={() => window.history.back()}
           className="mb-4 rounded-xl bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
-          ← Voltar
+          Voltar
         </button>
 
         <div className="flex flex-col items-center">

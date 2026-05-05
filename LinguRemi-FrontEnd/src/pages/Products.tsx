@@ -4,6 +4,7 @@ import { Header } from '../components/Header'
 import { ProductCard } from '../components/ProductCard'
 import { getProducts } from '../services/productService'
 import type { Product } from '../types/Product'
+import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 
 export function Products() {
   const [products, setProducts] = useState<Product[]>([])
@@ -17,7 +18,7 @@ export function Products() {
       setIsLoading(false)
     }
 
-    setIsAuthenticated(Boolean(localStorage.getItem('jwtToken')))
+    setIsAuthenticated(checkAuth())
     loadProducts()
   }, [])
 
@@ -25,10 +26,13 @@ export function Products() {
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
         onLoginClick={() => {
-          window.location.href = '/'
+          window.location.href = '/login'
         }}
         isAuthenticated={isAuthenticated}
-        onLogout={() => setIsAuthenticated(false)}
+        onLogout={() => {
+          clearAuthData()
+          setIsAuthenticated(false)
+        }}
       />
 
       <main className="container mx-auto flex-1 px-4 pb-12">

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { getUserHistory } from '../services/profileService'
-import { clearAuthData } from '../services/authService'
+import { clearAuthData, isAuthenticated } from '../services/authService'
 import type { HistoryItem } from '../types/History'
 
 export function Profile() {
@@ -11,6 +11,11 @@ export function Profile() {
   const [email, setEmail] = useState('')
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      window.location.href = '/login'
+      return
+    }
+
     const nomeUser = localStorage.getItem('nomeUser') || ''
     const emailUser = localStorage.getItem('emailUser') || ''
 
@@ -32,7 +37,13 @@ export function Profile() {
 
   return (
     <>
-      <Header onLoginClick={() => {}} isAuthenticated={true} onLogout={handleLogout} />
+      <Header
+        onLoginClick={() => {
+          window.location.href = '/login'
+        }}
+        isAuthenticated={isAuthenticated()}
+        onLogout={handleLogout}
+      />
 
       <main className="flex flex-col lg:flex-row gap-4 p-4">
 

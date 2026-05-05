@@ -1,14 +1,11 @@
 import type { Product } from '../types/Product'
+import { apiFetch, getApiUrl } from './api'
 
-const API_URL = 'https://linguremi-api.onrender.com'
+const API_URL = getApiUrl()
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {
-    const response = await fetch(`${API_URL}/receitas/produtos/${id}`)
-
-    if (!response.ok) return null
-
-    return await response.json()
+    return await apiFetch<Product>(`/receitas/produtos/${id}`)
   } catch {
     return null
   }
@@ -16,13 +13,7 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function getProducts(): Promise<Product[]> {
   try {
-    const response = await fetch(`${API_URL}/receitas/produtos`)
-
-    if (!response.ok) {
-      throw new Error('Erro ao buscar produtos')
-    }
-
-    return await response.json()
+    return await apiFetch<Product[]>('/receitas/produtos')
   } catch (error) {
     console.error('Erro ao carregar produtos:', error)
     return []

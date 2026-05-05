@@ -1,16 +1,11 @@
 import type { Recipe } from '../types/Recipe'
+import { apiFetch, getApiUrl } from './api'
 
-const API_URL = 'https://linguremi-api.onrender.com'
+const API_URL = getApiUrl()
 
 export async function getRandomRecipes(): Promise<Recipe[]> {
   try {
-    const response = await fetch(`${API_URL}/receitas/aleatorios`)
-
-    if (!response.ok) {
-      throw new Error('Erro ao buscar receitas')
-    }
-
-    return await response.json()
+    return await apiFetch<Recipe[]>('/receitas/aleatorios')
   } catch (error) {
     console.error('Erro ao carregar receitas:', error)
     return []
