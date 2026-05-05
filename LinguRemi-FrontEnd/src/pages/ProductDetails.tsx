@@ -69,7 +69,7 @@ export function ProductDetails() {
     saveCart(cart)
 
     if (redirect) {
-      window.location.href = '/carrinho'
+      navigate('/carrinho')
     } else {
       setMessageType('success')
       setMessage(`${product.nomeReceitas} adicionado ao carrinho!`)
@@ -80,7 +80,7 @@ export function ProductDetails() {
     <>
       <Header
         onLoginClick={() => {
-          window.location.href = '/login'
+          navigate('/login')
         }}
         isAuthenticated={checkAuth()}
         onLogout={() => {

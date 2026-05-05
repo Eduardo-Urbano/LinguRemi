@@ -5,11 +5,13 @@ import { ProductCard } from '../components/ProductCard'
 import { getProducts } from '../services/productService'
 import type { Product } from '../types/Product'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
+import { useNavigate } from 'react-router-dom'
 
 export function Products() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function loadProducts() {
@@ -26,7 +28,7 @@ export function Products() {
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
         onLoginClick={() => {
-          window.location.href = '/login'
+          navigate('/login')
         }}
         isAuthenticated={isAuthenticated}
         onLogout={() => {

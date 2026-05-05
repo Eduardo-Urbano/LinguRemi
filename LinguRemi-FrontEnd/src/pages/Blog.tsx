@@ -4,6 +4,7 @@ import { Header } from '../components/Header'
 import { getBlogRecipeImage, getBlogRecipes } from '../services/blogService'
 import type { BlogRecipe } from '../types/BlogRecipe'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
+import { useNavigate } from 'react-router-dom'
 
 export function Blog() {
   const [recipes, setRecipes] = useState<BlogRecipe[]>([])
@@ -11,6 +12,7 @@ export function Blog() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function loadRecipes() {
@@ -41,7 +43,7 @@ export function Blog() {
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
         onLoginClick={() => {
-          window.location.href = '/login'
+          navigate('/login')
         }}
         isAuthenticated={isAuthenticated}
         onLogout={() => {
@@ -92,7 +94,7 @@ export function Blog() {
                 <article
                   key={recipe.idReceitaBlog}
                   onClick={() => {
-                    window.location.href = `/receita?id=${recipe.idReceitaBlog}`
+                    navigate(`/receita/${recipe.idReceitaBlog}`)
                   }}
                   className="flex cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl sm:flex-row"
                 >
@@ -104,7 +106,9 @@ export function Blog() {
 
                   <div className="flex flex-col p-4">
                     <time className="font-light text-gray-400">
-                      {new Date(recipe.dataReceitablog).toLocaleDateString('pt-BR')}
+                      {recipe.dataReceitablog
+                        ? new Date(recipe.dataReceitablog).toLocaleDateString('pt-BR')
+                        : 'Data não informada'}
                     </time>
 
                     <h2 className="mb-2 text-lg font-bold">

@@ -1,13 +1,15 @@
 import type { Recipe } from '../types/Recipe'
 import { getRecipeImageUrl } from '../services/recipeService'
+import { useNavigate } from 'react-router-dom'
 
 type RecipeCardProps = {
   recipe: Recipe
 }
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
+  const navigate = useNavigate()
   function handleOpenRecipe() {
-    window.location.assign(`/product?id=${recipe.idReceitas}`)
+    navigate(`/product/${recipe.idReceitas}`)
   }
 
   return (

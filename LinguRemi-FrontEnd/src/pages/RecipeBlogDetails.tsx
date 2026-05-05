@@ -3,43 +3,34 @@ import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { getBlogRecipeById, getBlogRecipeImage } from '../services/blogService'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
-
-type RecipeBlog = {
-  nomeReceitablog: string
-  descricaoReceitablog: string
-  ingredientesReceitablog: string
-  preparoReceitaBlog: string
-  tempoReceitablog: string
-  imgReceitablog: string
-}
+import { useNavigate, useParams } from 'react-router-dom'
+import type { BlogRecipe } from '../types/BlogRecipe'
 
 export function RecipeBlogDetails() {
-  const [recipe, setRecipe] = useState<RecipeBlog | null>(null)
+  const [recipe, setRecipe] = useState<BlogRecipe | null>(null)
   const [notFound, setNotFound] = useState(false)
+  const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const id = params.get('id')
-
     if (!id) {
       setNotFound(true)
       return
     }
 
     async function load(recipeId: string) {
-        const data = await getBlogRecipeById(recipeId)
+      const data = await getBlogRecipeById(recipeId)
 
-        if (!data) {
-            setNotFound(true)
-            return
-        }
+      if (!data) {
+        setNotFound(true)
+        return
+      }
 
-        setRecipe(data)
+      setRecipe(data)
     }
 
     load(id)
-
-  }, [])
+  }, [id])
 
   if (notFound) {
     return <p className="text-center mt-10">Receita não encontrada.</p>
@@ -57,7 +48,7 @@ export function RecipeBlogDetails() {
     <>
       <Header
         onLoginClick={() => {
-          window.location.href = '/login'
+          navigate('/login')
         }}
         isAuthenticated={checkAuth()}
         onLogout={() => {
