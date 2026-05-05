@@ -5,12 +5,14 @@ import { getBlogRecipeById, getBlogRecipeImage } from '../services/blogService'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { BlogRecipe } from '../types/BlogRecipe'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function RecipeBlogDetails() {
   const [recipe, setRecipe] = useState<BlogRecipe | null>(null)
   const [notFound, setNotFound] = useState(false)
   const { id } = useParams()
   const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     if (!id) {
@@ -47,20 +49,18 @@ export function RecipeBlogDetails() {
   return (
     <>
       <Header
-        onLoginClick={() => {
-          navigate('/login')
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={checkAuth()}
         onLogout={() => {
           clearAuthData()
-          window.location.reload()
+          navigate(0)
         }}
       />
 
       <main className="container mx-auto p-4">
         
         <button
-          onClick={() => window.history.back()}
+          onClick={() => navigate(-1)}
           className="mb-4 rounded-xl bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           Voltar
@@ -78,7 +78,7 @@ export function RecipeBlogDetails() {
           />
 
           <h2 className="py-5 text-lg font-bold">
-            Tempo de preparo: {recipe.tempoReceitablog}
+            Tempo de preparo: {recipe.tempoReceitablog || 'Não informado'}
           </h2>
 
           <section className="w-full max-w-3xl">
@@ -98,7 +98,7 @@ export function RecipeBlogDetails() {
 
           <section className="w-full max-w-3xl mt-6">
             <h3 className="text-xl font-bold">Modo de Preparo:</h3>
-            <p className="pl-2 text-lg">{recipe.preparoReceitaBlog}</p>
+            <p className="pl-2 text-lg">{recipe.preparoReceitaBlog || 'Modo de preparo não informado.'}</p>
           </section>
         </div>
 

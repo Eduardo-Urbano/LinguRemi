@@ -17,6 +17,9 @@ export function Register({ onSuccess, onBackToLogin }: RegisterProps) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isLoading) {
+      return
+    }
     setErrorMessage('')
 
     const sanitizedNome = nome.trim()

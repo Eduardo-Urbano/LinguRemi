@@ -7,8 +7,6 @@ import { Profile } from './pages/Profile'
 import { Products } from './pages/Products'
 import { Blog } from './pages/Blog'
 import { RecipeBlogDetails } from './pages/RecipeBlogDetails'
-import { Login } from './pages/Login'
-import { Register } from './pages/Register'
 
 export default function App() {
   return (
@@ -20,8 +18,6 @@ export default function App() {
       <Route path="/perfil" element={<Profile />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/receita/:id" element={<RecipeBlogDetails />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Register />} />
     </Routes>
   )
 }

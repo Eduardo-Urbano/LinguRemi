@@ -12,9 +12,13 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isLoading) {
+      return
+    }
     setErrorMessage('')
 
     const sanitizedLogin = login.trim()
@@ -22,6 +26,11 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
 
     if (!sanitizedLogin || !sanitizedPassword) {
       setErrorMessage('Preencha todos os campos.')
+      return
+    }
+
+    if (!emailRegex.test(sanitizedLogin)) {
+      setErrorMessage('Insira um email válido.')
       return
     }
 

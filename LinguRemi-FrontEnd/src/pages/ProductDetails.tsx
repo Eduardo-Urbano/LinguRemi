@@ -6,6 +6,7 @@ import { getCart, saveCart } from '../services/cartService'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 import type { Product } from '../types/Product'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null)
@@ -15,6 +16,7 @@ export function ProductDetails() {
   const [messageType, setMessageType] = useState<'success' | 'error'>('success')
   const { id } = useParams()
   const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     if (!id) {
@@ -79,13 +81,11 @@ export function ProductDetails() {
   return (
     <>
       <Header
-        onLoginClick={() => {
-          navigate('/login')
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={checkAuth()}
         onLogout={() => {
           clearAuthData()
-          window.location.reload()
+          navigate(0)
         }}
       />
 
@@ -103,7 +103,7 @@ export function ProductDetails() {
         )}
         <button
           type="button"
-          onClick={() => window.history.back()}
+          onClick={() => navigate(-1)}
           className="mb-4 cursor-pointer rounded-xl text-white bg-gray-800 px-4 py-2 shadow transition hover:bg-gray-300 hover:text-black"
         >
           Voltar
@@ -134,7 +134,10 @@ export function ProductDetails() {
                 value={quantity}
                 min={product.tipoquantidadeReceitas === 'peso' ? 0.3 : 5}
                 step={product.tipoquantidadeReceitas === 'peso' ? 0.1 : 1}
-                onChange={(event) => setQuantity(Number(event.target.value))}
+                onChange={(event) => {
+                  const value = Number(event.target.value)
+                  if (value > 0) setQuantity(value)
+                }}
                 className="w-20 rounded border p-2 text-center"
               />
 

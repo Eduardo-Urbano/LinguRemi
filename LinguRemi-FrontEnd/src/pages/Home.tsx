@@ -4,17 +4,14 @@ import { Header } from '../components/Header'
 import { RecipeCard } from '../components/RecipeCard'
 import { getRandomRecipes } from '../services/recipeService'
 import type { Recipe } from '../types/Recipe'
-import { Login } from './Login'
-import { Register } from './Register'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     async function loadRecipes() {
@@ -31,67 +28,13 @@ export function Home() {
   return (
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
-        onLoginClick={() => setIsLoginOpen(true)}
+        onLoginClick={openLogin}
         isAuthenticated={isAuthenticated}
         onLogout={() => {
           clearAuthData()
           setIsAuthenticated(false)
         }}
       />
-
-      {isLoginOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
-
-          <div className="relative z-10 w-11/12 max-w-sm rounded-lg bg-white p-8">
-            <button
-              type="button"
-              onClick={() => setIsLoginOpen(false)}
-              className="absolute right-1.5 top-1 cursor-pointer rounded-full bg-red-400 px-2 py-0.5 text-white hover:bg-red-600"
-            >
-              X
-            </button>
-
-            <Login
-              onSuccess={() => {
-                setIsLoginOpen(false)
-                setIsAuthenticated(true)
-              }}
-              onOpenRegister={() => {
-                setIsLoginOpen(false)
-                setIsRegisterOpen(true)
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {isRegisterOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
-
-          <div className="relative z-10 w-11/12 max-w-sm rounded-lg bg-white p-8">
-            <button
-              type="button"
-              onClick={() => setIsRegisterOpen(false)}
-              className="absolute right-1.5 top-1 cursor-pointer rounded-full bg-red-400 px-2 py-0.5 text-white hover:bg-red-600"
-            >
-              X
-            </button>
-
-            <Register
-              onSuccess={() => {
-                setIsRegisterOpen(false)
-                setIsLoginOpen(true)
-              }}
-              onBackToLogin={() => {
-                setIsRegisterOpen(false)
-                setIsLoginOpen(true)
-              }}
-            />
-          </div>
-        </div>
-      )}
 
       <section className="relative h-[70vh] w-full overflow-x-hidden md:h-[82vh]" aria-label="Apresentação da LinguRemi">
         <div className="absolute inset-0 z-40 flex items-center justify-start px-6 md:px-20">
@@ -117,6 +60,8 @@ export function Home() {
 
           {isLoading ? (
             <p className="text-center text-gray-600">Carregando receitas...</p>
+          ) : recipes.length === 0 ? (
+            <p className="text-center text-gray-600">Nenhuma receita encontrada.</p>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {recipes.map((recipe) => (

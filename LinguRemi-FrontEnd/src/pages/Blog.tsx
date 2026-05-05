@@ -5,6 +5,7 @@ import { getBlogRecipeImage, getBlogRecipes } from '../services/blogService'
 import type { BlogRecipe } from '../types/BlogRecipe'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
 import { useNavigate } from 'react-router-dom'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function Blog() {
   const [recipes, setRecipes] = useState<BlogRecipe[]>([])
@@ -13,6 +14,7 @@ export function Blog() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     async function loadRecipes() {
@@ -32,9 +34,9 @@ export function Blog() {
 
     return recipes.filter((recipe) => {
       return (
-        recipe.nomeReceitablog.toLowerCase().includes(term) ||
-        recipe.descricaoReceitablog.toLowerCase().includes(term) ||
-        recipe.ingredientesReceitablog?.toLowerCase().includes(term)
+        (recipe.nomeReceitablog || '').toLowerCase().includes(term) ||
+        (recipe.descricaoReceitablog || '').toLowerCase().includes(term) ||
+        (recipe.ingredientesReceitablog || '').toLowerCase().includes(term)
       )
     })
   }, [recipes, search])
@@ -42,9 +44,7 @@ export function Blog() {
   return (
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
-        onLoginClick={() => {
-          navigate('/login')
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={isAuthenticated}
         onLogout={() => {
           clearAuthData()
@@ -72,7 +72,13 @@ export function Blog() {
 
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              if (!isAuthenticated) {
+                openLogin()
+                return
+              }
+              setIsModalOpen(true)
+            }}
             className="rounded-xl p-2 shadow-lg"
           >
             Adicionar Receita <strong>+</strong>

@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import type { CartItem } from '../types/CartItem'
-import { isAuthenticated } from '../services/authService'
+import { clearAuthData, isAuthenticated } from '../services/authService'
 import {getCart, saveCart, clearCart, calculateTotal, validateCart,} from '../services/cartService'
+import { useNavigate } from 'react-router-dom'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function Cart() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState<'success' | 'error'>('success')
+  const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     setCart(getCart())
@@ -33,6 +37,7 @@ export function Cart() {
     if (!isAuthenticated()) {
       setMessageType('error')
       setMessage('Você precisa estar logado para finalizar a compra.')
+      openLogin()
       return
     }
 
@@ -60,12 +65,11 @@ export function Cart() {
   return (
     <>
       <Header
-        onLoginClick={() => {
-          window.location.href = '/login'
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={isAuthenticated()}
         onLogout={() => {
-          window.location.href = '/'
+          clearAuthData()
+          navigate('/')
         }}
       />
 
@@ -90,7 +94,11 @@ export function Cart() {
                 <div key={index} className="flex justify-between items-center border-b py-4">
           
                   <div className="flex items-center gap-4">
-                    <img src={item.imagem} className="w-32 h-24 object-cover rounded" />
+                    <img
+                      src={item.imagem}
+                      alt={`Imagem de ${item.nome}`}
+                      className="w-32 h-24 object-cover rounded"
+                    />
                     <div>
                       <h2 className="font-bold">{item.nome}</h2>
                       <button
@@ -110,7 +118,10 @@ export function Cart() {
                     />
                   </div>
                   <p>
-                    R$ {(item.preco * item.quantidade).toFixed(2)}
+                    R$ {(item.tipoQuantidade === 'peso'
+                        ? item.preco * item.quantidade * 10
+                        : item.preco * item.quantidade
+                    ).toFixed(2)}
                   </p>
                 </div>
               ))

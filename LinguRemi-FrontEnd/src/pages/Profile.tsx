@@ -4,15 +4,19 @@ import { Footer } from '../components/Footer'
 import { getUserHistory } from '../services/profileService'
 import { clearAuthData, isAuthenticated } from '../services/authService'
 import type { HistoryItem } from '../types/History'
+import { useNavigate } from 'react-router-dom'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function Profile() {
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
+  const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      window.location.href = '/login'
+      navigate('/')
       return
     }
 
@@ -32,15 +36,13 @@ export function Profile() {
 
   function handleLogout() {
     clearAuthData()
-    window.location.href = '/'
+    navigate('/')
   }
 
   return (
     <>
       <Header
-        onLoginClick={() => {
-          window.location.href = '/login'
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={isAuthenticated()}
         onLogout={handleLogout}
       />
@@ -71,8 +73,8 @@ export function Profile() {
           {history.length === 0 ? (
             <p>Nenhuma compra encontrada.</p>
           ) : (
-            history.map((item, index) => (
-              <div key={index} className="border-b py-3">
+            history.map((item) => (
+              <div key={item.id} className="border-b py-3">
                 <p>{item.descTransferencia}</p>
                 <p>R$ {item.valorTransferencia.toFixed(2)}</p>
               </div>

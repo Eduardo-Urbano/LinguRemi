@@ -5,13 +5,13 @@ import { ProductCard } from '../components/ProductCard'
 import { getProducts } from '../services/productService'
 import type { Product } from '../types/Product'
 import { clearAuthData, isAuthenticated as checkAuth } from '../services/authService'
-import { useNavigate } from 'react-router-dom'
+import { useAuthModal } from '../contexts/AuthModalContext'
 
 export function Products() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const navigate = useNavigate()
+  const { openLogin } = useAuthModal()
 
   useEffect(() => {
     async function loadProducts() {
@@ -27,9 +27,7 @@ export function Products() {
   return (
     <div className="flex min-h-screen flex-col scroll-mt-4">
       <Header
-        onLoginClick={() => {
-          navigate('/login')
-        }}
+        onLoginClick={openLogin}
         isAuthenticated={isAuthenticated}
         onLogout={() => {
           clearAuthData()
