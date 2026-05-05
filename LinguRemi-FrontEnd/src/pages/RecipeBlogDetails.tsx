@@ -43,7 +43,7 @@ export function RecipeBlogDetails() {
   }
 
   const ingredientes = recipe.ingredientesReceitablog
-    ? recipe.ingredientesReceitablog.split(',').map((i) => i.trim())
+    ? recipe.ingredientesReceitablog.split(',').map(i => i.trim())
     : []
 
   return (

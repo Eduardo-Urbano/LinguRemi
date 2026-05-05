@@ -73,8 +73,8 @@ export function Profile() {
           {history.length === 0 ? (
             <p>Nenhuma compra encontrada.</p>
           ) : (
-            history.map((item) => (
-              <div key={item.id} className="border-b py-3">
+            history.map((item, index) => (
+              <div key={item.id ?? index} className="border-b py-3">
                 <p>{item.descTransferencia}</p>
                 <p>R$ {item.valorTransferencia.toFixed(2)}</p>
               </div>
