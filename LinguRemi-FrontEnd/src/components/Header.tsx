@@ -46,7 +46,7 @@ export function Header({ onLoginClick, isAuthenticated, onLogout }: HeaderProps)
         </div>
 
         <nav className="flex w-auto flex-row justify-end gap-x-6 text-base md:w-1/3 md:text-xl">
-          <ul className="flex flex-row items-center space-x-4 md:space-x-6">
+          <ul className="flex flex-row cursor-pointer items-center space-x-4 md:space-x-6">
             {!userName ? (
               <li>
                 <button type="button" onClick={onLoginClick}>
