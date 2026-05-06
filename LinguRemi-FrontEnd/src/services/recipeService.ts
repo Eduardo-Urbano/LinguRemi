@@ -12,7 +12,7 @@ export async function getRandomRecipes(): Promise<Recipe[]> {
   }
 }
 
-export function getRecipeImageUrl(imagePath: string): string {
+export function getRecipeImageUrl(imagePath?: string): string {
   if (!imagePath) return '/assets/images/placeholder.png'
   return `${API_URL}/${imagePath}`
 }
