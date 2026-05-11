@@ -1,4 +1,4 @@
-const API_URL = 'https://linguremi-api.onrender.com'
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 export function getApiUrl() {
   return API_URL
