@@ -2,13 +2,13 @@ package LinguRemi.DTO;
 
 public class ReceitaQuantidadeDTO {
 	private Long id;
-	private double quantidade;
+	private Double quantidade;
 	
 	public ReceitaQuantidadeDTO() {
 		super();
 	}
 	
-	public ReceitaQuantidadeDTO(Long id, double quantidade) {
+	public ReceitaQuantidadeDTO(Long id, Double quantidade) {
 		super();
 		this.id = id;
 		this.quantidade = quantidade;
@@ -23,7 +23,7 @@ public class ReceitaQuantidadeDTO {
 	public double getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(double quantidade) {
+	public void setQuantidade(Double quantidade) {
 		this.quantidade = quantidade;
 	}
 	

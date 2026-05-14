@@ -22,10 +22,10 @@ public class Receitas {
 	private double valorReceitas;
 	private String imgReceitas;
 	private double avaliacaoReceitas;
-	private int disponivelReceitas;
+	private Double disponivelReceitas;
 	private String tipoquantidadeReceitas;	
 
-	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, int disponivelReceitas, String tipoquantidadeReceitas) {
+	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, Double disponivelReceitas, String tipoquantidadeReceitas) {
 		super();
 		this.idReceitas = idReceitas;
 		this.nomeReceitas = nomeReceitas;
@@ -77,11 +77,11 @@ public class Receitas {
 		this.avaliacaoReceitas = avaliacaoReceitas;
 	}
 
-	public int getDisponivelReceitas() {
+	public Double getDisponivelReceitas() {
 		return disponivelReceitas;
 	}
 
-	public void setDisponivelReceitas(int disponivelReceitas) {
+	public void setDisponivelReceitas(Double disponivelReceitas) {
 		this.disponivelReceitas = disponivelReceitas;
 	}	
 	
