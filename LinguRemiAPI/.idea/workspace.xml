@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="151ef2c5-22b0-4388-a3cf-775cfc2da281" name="Changes" comment="">
+    <list default="true" id="151ef2c5-22b0-4388-a3cf-775cfc2da281" name="Changes" comment="refactor(api): melhora autenticação JWT e controle de roles&#10;Adiciona validações no SecurityFilter&#10;Ativa filtro JWT no SecurityConfigurations&#10;Implementa controle de roles USER e ADMIN&#10;Ajusta permissões de rotas públicas e privadas&#10;Adiciona role ao token JWT&#10;Remove possibilidade de criar ADMIN pelo cadastro público&#10;Melhora validação de token inválido&#10;Ajusta histórico para usar usuário autenticado via token&#10;Adiciona busca de histórico por usuário&#10;Corrige lógica de receitas aleatórias&#10;Revisa controllers e DTOs relacionados à autenticação e histórico">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/LoginResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/LoginResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/ReceitaQuantidadeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/ReceitaQuantidadeDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/RegisterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/RegisterDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityConfigurations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityConfigurations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/TokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/TokenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/HistoricoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/HistoricoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/ReceitasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/ReceitasController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/UsuariosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/UsuariosController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/HistoricoReceita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/HistoricoReceita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Receitas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Receitas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Usuarios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Usuarios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/repository/HistoricoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/repository/HistoricoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/service/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/service/AuthorizationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/uploads/WIN_20250729_15_32_09_Pro.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +82,19 @@
       <option name="presentableId" value="Default" />
       <updated>1761054813536</updated>
     </task>
+    <task id="LOCAL-00001" summary="refactor(api): melhora autenticação JWT e controle de roles&#10;Adiciona validações no SecurityFilter&#10;Ativa filtro JWT no SecurityConfigurations&#10;Implementa controle de roles USER e ADMIN&#10;Ajusta permissões de rotas públicas e privadas&#10;Adiciona role ao token JWT&#10;Remove possibilidade de criar ADMIN pelo cadastro público&#10;Melhora validação de token inválido&#10;Ajusta histórico para usar usuário autenticado via token&#10;Adiciona busca de histórico por usuário&#10;Corrige lógica de receitas aleatórias&#10;Revisa controllers e DTOs relacionados à autenticação e histórico">
+      <option name="closed" value="true" />
+      <created>1778973374194</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1778973374194</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor(api): melhora autenticação JWT e controle de roles&#10;Adiciona validações no SecurityFilter&#10;Ativa filtro JWT no SecurityConfigurations&#10;Implementa controle de roles USER e ADMIN&#10;Ajusta permissões de rotas públicas e privadas&#10;Adiciona role ao token JWT&#10;Remove possibilidade de criar ADMIN pelo cadastro público&#10;Melhora validação de token inválido&#10;Ajusta histórico para usar usuário autenticado via token&#10;Adiciona busca de histórico por usuário&#10;Corrige lógica de receitas aleatórias&#10;Revisa controllers e DTOs relacionados à autenticação e histórico" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor(api): melhora autenticação JWT e controle de roles&#10;Adiciona validações no SecurityFilter&#10;Ativa filtro JWT no SecurityConfigurations&#10;Implementa controle de roles USER e ADMIN&#10;Ajusta permissões de rotas públicas e privadas&#10;Adiciona role ao token JWT&#10;Remove possibilidade de criar ADMIN pelo cadastro público&#10;Melhora validação de token inválido&#10;Ajusta histórico para usar usuário autenticado via token&#10;Adiciona busca de histórico por usuário&#10;Corrige lógica de receitas aleatórias&#10;Revisa controllers e DTOs relacionados à autenticação e histórico" />
   </component>
 </project>
