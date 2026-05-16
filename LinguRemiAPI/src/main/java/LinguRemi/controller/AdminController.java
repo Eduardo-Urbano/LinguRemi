@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import LinguRemi.DTO.ReceitaQuantidadeDTO;
-import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.model.Receitas;
 import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
@@ -34,9 +32,15 @@ public class AdminController {
 	@PutMapping(value="/qtd")
 	public ResponseEntity<Receitas> mudarQtd(@RequestBody ReceitaQuantidadeDTO dto) {
 		Optional<Receitas> rAntiga = repR.findById(dto.getId());
+
+		if (rAntiga.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
+
 		Receitas rNova = rAntiga.get();
 		rNova.setDisponivelReceitas(dto.getQuantidade());
 		repR.save(rNova);
+
 		return ResponseEntity.ok(rNova);
 	}
 	
@@ -60,7 +64,7 @@ public class AdminController {
 		return ResponseEntity.ok("Receita Apagada do blog");
 	}
 	
-	//mata um usuario
+	//Exclui um usuario
 	@DeleteMapping(value="/delUser")
 	public ResponseEntity<String> matarUser(@RequestBody long id){
 		if(!repU.existsById(id)) {

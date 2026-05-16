@@ -3,6 +3,7 @@ package LinguRemi.model;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,11 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import LinguRemi.Enum.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "Usuarios")
@@ -26,6 +25,7 @@ public class Usuarios implements UserDetails{
 	private String nomeUsuarios;
 	private String emailUsuarios;	
 	private String senhaUsuarios;
+	@Enumerated(EnumType.STRING)
 	private UserRole roleUsuarios;
 	
 	public Usuarios(String nomeUsuarios, String emailUsuarios, String senhaUsuario,

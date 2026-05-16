@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import LinguRemi.DTO.ReceitaQuantidadeDTO;
 import LinguRemi.model.Historico;
 import LinguRemi.model.HistoricoReceita;
 import LinguRemi.model.Receitas;
+import LinguRemi.model.Usuarios;
 import LinguRemi.repository.HistoricoRepository;
 import LinguRemi.repository.ReceitasRepository;
 import LinguRemi.repository.UsuariosRepository;
@@ -38,10 +40,10 @@ public class HistoricoController {
 
     @Operation(summary = "Adiciona uma nova transação ao histórico")
     @PostMapping("/adicionar")
-    public ResponseEntity<?> adicionarHistorico(@RequestBody HistoricoDTO dto) {
+    public ResponseEntity<?> adicionarHistorico(@RequestBody HistoricoDTO dto, @AuthenticationPrincipal Usuarios usuario) {
 
         Historico historico = new Historico();
-        historico.setEmailTransferencia(dto.getEmailTransferencia());
+        historico.setEmailTransferencia(usuario.getEmailUsuarios());
         historico.setValorTransferencia(dto.getValorTransferencia());
         historico.setDescTransferencia(dto.getDescTransferencia());
         historico.setDataTransferencia(ZonedDateTime.now());
@@ -70,8 +72,8 @@ public class HistoricoController {
 
     @Operation(summary = "Lista todas as transações registradas")
     @GetMapping("/dados")
-    public List<Historico> transações(){
-    	return historicoRepository.findAll();
+    public List<Historico> transações(@AuthenticationPrincipal Usuarios usuario){
+        return historicoRepository.findByEmailTransferencia(usuario.getEmailUsuarios());
     }
 }
 

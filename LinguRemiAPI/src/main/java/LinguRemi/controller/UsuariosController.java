@@ -3,11 +3,11 @@ package LinguRemi.controller;
 import java.util.List;
 import java.util.Map;
 
+import LinguRemi.Enum.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,15 +54,15 @@ public class UsuariosController {
 		
 		
 		
-		return ResponseEntity.ok(new LoginResponseDTO(token, usuario.getNomeUsuarios(), usuario.getEmailUsuarios()));
+		return ResponseEntity.ok(new LoginResponseDTO(token, usuario.getNomeUsuarios(), usuario.getEmailUsuarios(), usuario.getRoleUsuarios().name()));
 	}
 	
 	@Operation(summary = "Cadastra um novo usuário no sistema")
 	@PostMapping(value = "/cadastrar")
 	public ResponseEntity cadastrar(@RequestBody @Valid RegisterDTO data) {
 		if(this.repU.findByEmailUsuarios(data.email()) != null) return ResponseEntity.badRequest().build();
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
-		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, data.role());
+		String encryptedPassword = passwordEncoder.encode(data.senha());
+		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, UserRole.USER);
 		this.repU.save(user);
 		//return ResponseEntity.ok().build();
 		return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso"));

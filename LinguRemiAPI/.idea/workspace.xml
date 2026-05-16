@@ -6,13 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="151ef2c5-22b0-4388-a3cf-775cfc2da281" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/blog.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/blog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/carrinho.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/carrinho.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/item.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/item.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/perfil.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/produtos.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/produtos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/view/receita.html" beforeDir="false" afterPath="$PROJECT_DIR$/../public/view/receita.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/LoginResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/LoginResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/ReceitaQuantidadeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/ReceitaQuantidadeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/RegisterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/DTO/RegisterDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityConfigurations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityConfigurations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/TokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/Infra/Security/TokenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/HistoricoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/HistoricoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/ReceitasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/ReceitasController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/UsuariosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/controller/UsuariosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/HistoricoReceita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/HistoricoReceita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Receitas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Receitas.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Usuarios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/model/Usuarios.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/repository/HistoricoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/repository/HistoricoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LinguRemi/service/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LinguRemi/service/AuthorizationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/WIN_20250729_15_32_09_Pro.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +39,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Eduardo-Urbano"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Eduardo-Urbano/LinguRemi.git",
+    "accountId": "32f534a6-f215-4519-b7eb-7d982d0e1418"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -38,18 +59,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.LinguRemiApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.zLinguRemiApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Dev/MeusProjetos/LinguRemi/LinguRemiAPI&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.LinguRemiApplication.executor": "Run",
+    "Application.zLinguRemiApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Dev/LinguRemi/LinguRemiAPI",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="LinguRemi.controller" />

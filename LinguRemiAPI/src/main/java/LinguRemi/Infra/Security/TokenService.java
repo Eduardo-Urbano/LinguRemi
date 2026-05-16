@@ -27,6 +27,7 @@ public class TokenService {
 					.withSubject(user.getEmailUsuarios())
 					.withClaim("id",user.getIdUsuarios())
 					.withClaim("nome",user.getNomeUsuarios())
+					.withClaim("role",user.getRoleUsuarios().name())
 					.withExpiresAt(genExpirationDate())
 					.sign(alg);
 			return token;
@@ -44,7 +45,7 @@ public class TokenService {
 					.verify(token)
 					.getSubject();
 		}catch (JWTVerificationException e){
-			return "";
+			return null;
 		}
 	}
 	

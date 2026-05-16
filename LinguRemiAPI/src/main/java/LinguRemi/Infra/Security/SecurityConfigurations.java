@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +38,7 @@ public class SecurityConfigurations {
 						.requestMatchers("/", "/health").permitAll()
 						.requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/v3/api-docs","/swagger-resources/**","/webjars/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas/**").hasAnyRole("USER", "ADMIN")
-						.requestMatchers(HttpMethod.GET, "/receitas/**").hasAnyRole("USER", "ADMIN")
+						.requestMatchers(HttpMethod.GET, "/receitas/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/historico/**").hasAnyRole("USER", "ADMIN")
 						.requestMatchers(HttpMethod.GET, "/historico/**").hasAnyRole("USER", "ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
@@ -49,7 +50,7 @@ public class SecurityConfigurations {
 						.anyRequest().authenticated()
 				)
 				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
-				//.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 

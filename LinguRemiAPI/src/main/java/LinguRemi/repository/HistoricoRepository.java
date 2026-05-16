@@ -8,4 +8,5 @@ import LinguRemi.model.Historico;
 
 public interface HistoricoRepository extends JpaRepository<Historico, Long>{
 	List<Historico> findAll();
+	List<Historico> findByEmailTransferencia(String emailTransferencia);
 }

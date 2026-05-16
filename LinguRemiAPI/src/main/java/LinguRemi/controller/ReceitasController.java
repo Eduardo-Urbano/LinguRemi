@@ -3,10 +3,9 @@ package LinguRemi.controller;
 import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -89,14 +88,16 @@ public class ReceitasController {
     @Operation(summary = "Retorna receitas aleatórias para destaque na página inicial")
     @GetMapping("/aleatorios")
     public List<Receitas> receitasAleatorias(){
-    	Random gen = new Random();
-    	Long total = repR.count();
-    	List<Receitas> lista = new ArrayList<>();
-    	
-    	for(int i=0;i<3;i++) {
-    		Long recAle = 1 + gen.nextLong(total);
-    		repR.findById(recAle).ifPresent(lista::add);
-    	}
-    	return lista;
+    	List<Receitas> todas = repR.findAll();
+
+        if (todas.isEmpty()){
+            return List.of();
+        }
+
+        Collections.shuffle(todas);
+
+    	return todas.stream()
+                .limit(3)
+                .toList();
     }
 }
