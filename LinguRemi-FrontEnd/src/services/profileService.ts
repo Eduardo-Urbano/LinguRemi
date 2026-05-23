@@ -3,15 +3,15 @@ import { apiFetch } from './api'
 
 export async function getUserHistory(): Promise<HistoryItem[]> {
   try {
-    const email = localStorage.getItem('emailUser')
+    const token = localStorage.getItem('jwtToken')
 
-    if (!email || email.trim() === '') return []
+    if (!token) return []
 
-    return await apiFetch<HistoryItem[]>(`/historico/${email}`, {
+    return await apiFetch<HistoryItem[]>(`/historico/dados`, {
       auth: true,
     })
   } catch (error) {
     console.error('Erro ao buscar histórico:', error)
-    return []
+    throw error
   }
 }

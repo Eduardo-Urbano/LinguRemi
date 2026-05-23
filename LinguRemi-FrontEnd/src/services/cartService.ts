@@ -1,3 +1,4 @@
+import { apiFetch } from './api'
 import type { CartItem } from '../types/CartItem'
 
 export function getCart(): CartItem[] {
@@ -41,4 +42,32 @@ export function validateCart(cart: CartItem[]): boolean {
       (item.tipoQuantidade === 'peso' || item.tipoQuantidade === 'unidade')
     )
   })
+}
+
+export async function checkout(cart: CartItem[]) {
+
+  if (!validateCart(cart)) {
+    throw new Error('Carrinho inválido')
+  }
+
+  const body = {
+    valorTransferencia: calculateTotal(cart),
+
+    descTransferencia: 'Compra realizada',
+
+    receitasTransferencia: cart.map(item => ({
+      id: item.id,
+      quantidade: item.quantidade
+    }))
+  }
+
+  const response = await apiFetch('/historico/adicionar', {
+    method: 'POST',
+    auth: true,
+    body: JSON.stringify(body)
+  })
+
+  clearCart()
+
+  return response
 }

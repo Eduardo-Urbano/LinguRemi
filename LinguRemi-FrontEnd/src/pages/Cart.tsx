@@ -3,7 +3,7 @@ import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import type { CartItem } from '../types/CartItem'
 import { clearAuthData, isAuthenticated } from '../services/authService'
-import {getCart, saveCart, clearCart, calculateTotal, validateCart,} from '../services/cartService'
+import {getCart, saveCart, clearCart, calculateTotal, validateCart, checkout} from '../services/cartService'
 import { useNavigate } from 'react-router-dom'
 import { useAuthModal } from '../contexts/AuthModalContext'
 
@@ -33,31 +33,43 @@ export function Cart() {
     saveCart(newCart)
   }
 
-  function handleCheckout() {
-    if (!isAuthenticated()) {
+  async function handleCheckout() {
+    try {
+
+      if (!isAuthenticated()) {
+        setMessageType('error')
+        setMessage('Você precisa estar logado para finalizar a compra.')
+        openLogin()
+        return
+      }
+
+      if (cart.length === 0) {
+        setMessageType('error')
+        setMessage('Carrinho vazio!')
+        return
+      }
+
+      if (!validateCart(cart)) {
+        setMessageType('error')
+        setMessage('Carrinho inválido. Atualize a página e tente novamente.')
+        return
+      }
+
+      await checkout(cart)
+
+      setMessageType('success')
+      setMessage('Compra finalizada com sucesso!')
+
+      clearCart()
+      setCart([])
+
+    } catch (error) {
+
+      console.error(error)
+
       setMessageType('error')
-      setMessage('Você precisa estar logado para finalizar a compra.')
-      openLogin()
-      return
+      setMessage('Erro ao finalizar compra.')
     }
-
-    if (cart.length === 0) {
-      setMessageType('error')
-      setMessage('Carrinho vazio!')
-      return
-    }
-
-    if (!validateCart(cart)) {
-      setMessageType('error')
-      setMessage('Carrinho inválido. Atualize a página e tente novamente.')
-      return
-    }
-
-    setMessageType('success')
-    setMessage('Compra finalizada com sucesso!')
-
-    clearCart()
-    setCart([])
   }
 
   const total = calculateTotal(cart)
