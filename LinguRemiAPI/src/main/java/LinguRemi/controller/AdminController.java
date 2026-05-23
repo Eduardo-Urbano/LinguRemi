@@ -2,13 +2,11 @@ package LinguRemi.controller;
 
 import java.util.Optional;
 
+import LinguRemi.DTO.ProdutoDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import LinguRemi.DTO.ReceitaQuantidadeDTO;
 import LinguRemi.model.Receitas;
@@ -28,6 +26,60 @@ public class AdminController {
     private ReceitasRepository repR;
     @Autowired
     private ReceitaBlogRepository repRP;
+
+	//Exclui um usuario
+	@DeleteMapping(value="/delUser")
+	public ResponseEntity<String> matarUser(@RequestBody long id){
+		if(!repU.existsById(id)) {
+			return ResponseEntity.notFound().build();
+		}
+		repU.deleteById(id);
+		return ResponseEntity.ok("Usuario excluido");
+	}
+
+	@PostMapping("/produtos")
+	public ResponseEntity<Receitas> criarProduto(@RequestBody @Valid ProdutoDTO dto) {
+		Receitas produto = new Receitas();
+
+		produto.setNomeReceitas(dto.nome());
+		produto.setDescReceitas(dto.descricao());
+		produto.setValorReceitas(dto.valor());
+		produto.setImgReceitas(dto.imagem());
+		produto.setAvaliacaoReceitas(0.0);
+		produto.setDisponivelReceitas(dto.disponivel());
+		produto.setTipoquantidadeReceitas(dto.tipoQuantidade());
+
+		repR.save(produto);
+
+		return ResponseEntity.ok(produto);
+	}
+
+	@GetMapping("/produtos")
+	public ResponseEntity<?> listarProdutos(){
+		return ResponseEntity.ok(repR.findAll());
+	}
+
+	@PutMapping("/produtos/{id}")
+	public ResponseEntity<Receitas> editarProduto(@PathVariable Long id, @RequestBody @Valid ProdutoDTO dto){
+		Optional<Receitas> produtoExistente = repR.findById(id);
+
+		if (produtoExistente.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
+
+		Receitas produto = produtoExistente.get();
+
+		produto.setNomeReceitas(dto.nome());
+		produto.setDescReceitas(dto.descricao());
+		produto.setValorReceitas(dto.valor());
+		produto.setImgReceitas(dto.imagem());
+		produto.setDisponivelReceitas(dto.disponivel());
+		produto.setTipoquantidadeReceitas(dto.tipoQuantidade());
+
+		repR.save(produto);
+
+		return ResponseEntity.ok(produto);
+	}
     
 	@PutMapping(value="/qtd")
 	public ResponseEntity<Receitas> mudarQtd(@RequestBody ReceitaQuantidadeDTO dto) {
@@ -45,15 +97,17 @@ public class AdminController {
 	}
 	
 	//apaga receita dos produtos
-	@DeleteMapping(value="/delProduto")
-	public ResponseEntity<String> apagarProduto(@RequestBody long id){
-		if(!repR.existsById(id)) {
+	@DeleteMapping("/produtos/{id}")
+	public ResponseEntity<String> deletarProdutoPorId(@PathVariable Long id) {
+		if (!repR.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
+
 		repR.deleteById(id);
-		return ResponseEntity.ok("Produto Apagado");
+
+		return ResponseEntity.ok("Produto apagado");
 	}
-	
+
 	//apaga receita do blog
 	@DeleteMapping(value="/delReceita")
 	public ResponseEntity<String> apagarReceitaBlog(@RequestBody long id){
@@ -63,16 +117,4 @@ public class AdminController {
 		repRP.deleteById(id);
 		return ResponseEntity.ok("Receita Apagada do blog");
 	}
-	
-	//Exclui um usuario
-	@DeleteMapping(value="/delUser")
-	public ResponseEntity<String> matarUser(@RequestBody long id){
-		if(!repU.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		repU.deleteById(id);
-		return ResponseEntity.ok("Usuario excluido");
-	}
-	
-	
 }
