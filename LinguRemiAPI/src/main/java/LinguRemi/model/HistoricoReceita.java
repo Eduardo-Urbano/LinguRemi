@@ -14,7 +14,7 @@ public class HistoricoReceita {
     @JoinColumn(name = "idHistorico")
     @JsonBackReference
     private Historico historico;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idReceita")
     private Receitas receita;
     private double quantidade;
@@ -33,7 +33,7 @@ public class HistoricoReceita {
 	
 	public Long getId() {
 		return id;
-	}
+	} 
 	public void setId(Long id) {
 		this.id = id;
 	}

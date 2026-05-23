@@ -73,6 +73,7 @@ public class HistoricoController {
     @Operation(summary = "Lista todas as transações registradas")
     @GetMapping("/dados")
     public List<Historico> transações(@AuthenticationPrincipal Usuarios usuario){
+    	System.out.println("aaaaaaaaaaaaaaaaa");
         return historicoRepository.findByEmailTransferencia(usuario.getEmailUsuarios());
     }
 }
