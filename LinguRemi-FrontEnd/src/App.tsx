@@ -7,6 +7,7 @@ import { Profile } from './pages/Profile'
 import { Products } from './pages/Products'
 import { Blog } from './pages/Blog'
 import { RecipeBlogDetails } from './pages/RecipeBlogDetails'
+import { AdminProducts } from './pages/AdminProducts'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/perfil" element={<Profile />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/receita/:id" element={<RecipeBlogDetails />} />
+      <Route path="/admin/produtos" element={<AdminProducts />} />
     </Routes>
   )
 }

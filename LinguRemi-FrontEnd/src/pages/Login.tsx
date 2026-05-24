@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { loginUser, saveAuthData } from '../services/authService'
+import { useNavigate } from 'react-router-dom'
 
 type LoginProps = {
   onSuccess?: () => void
@@ -13,6 +14,7 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const navigate = useNavigate()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -48,6 +50,7 @@ export function Login({ onSuccess, onOpenRegister }: LoginProps) {
       })
 
       saveAuthData(data)
+      navigate(0)
 
       setLogin('')
       setPassword('')
