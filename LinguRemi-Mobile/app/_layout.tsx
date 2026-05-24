@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler'
 
 import { Drawer } from 'expo-router/drawer'
+import {HeaderLogo} from '../assets/components/HeaderLogo'
 
 export default function RootLayout() {
   return (
@@ -22,35 +23,35 @@ export default function RootLayout() {
       <Drawer.Screen
         name="index"
         options={{
-          title: 'Início',
+          headerTitle: () => <HeaderLogo />,
         }}
       />
 
       <Drawer.Screen
         name="products/index"
         options={{
-          title: 'Produtos',
+          headerTitle: () => <HeaderLogo />,
         }}
       />
 
       <Drawer.Screen
         name="cart"
         options={{
-          title: 'Carrinho',
+          headerTitle: () => <HeaderLogo />,
         }}
       />
 
       <Drawer.Screen
         name="profile"
         options={{
-          title: 'Perfil',
+          headerTitle: () => <HeaderLogo />,
         }}
       />
 
       <Drawer.Screen
         name="blog/index"
         options={{
-          title: 'Blog',
+          headerTitle: () => <HeaderLogo />,
         }}
       />
 

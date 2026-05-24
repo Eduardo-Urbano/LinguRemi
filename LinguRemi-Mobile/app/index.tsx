@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native'
+import {VideoView, useVideoPlayer} from 'expo-video'
 
 import { getRandomRecipes, getRecipeImageUrl } from '../src/services/recipeService'
 import type { Recipe } from '../src/types/Recipe'
@@ -23,14 +24,30 @@ export default function HomeScreen() {
       const data = await getRandomRecipes()
       setRecipes(data)
       setIsLoading(false)
+      player.play()
     }
 
     loadRecipes()
   }, [])
 
+  const player = useVideoPlayer(
+  require('../assets/videos/65692-515098526.mp4'),
+  (player) => {
+      player.loop = true
+      player.muted = true
+      player.play()
+    },
+  )
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.hero}>
+        <VideoView
+          player={player}
+          style={styles.backgroundVideo}
+          contentFit='cover'
+          nativeControls={false}
+        />
         <View style={styles.overlay} />
 
         <View style={styles.heroContent}>
@@ -130,6 +147,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 24,
     position: 'relative',
+  },
+
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
 
   overlay: {
