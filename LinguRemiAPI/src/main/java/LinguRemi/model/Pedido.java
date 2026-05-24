@@ -1,6 +1,7 @@
 package LinguRemi.model;
 
 import LinguRemi.Enum.PedidoStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class Pedido {
     public PedidoStatus getStatus() { return status; }
     public void setStatus(PedidoStatus status) { this.status = status; }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     public ZonedDateTime getCriadoEm() { return criadoEm; }
     public void setCriadoEm(ZonedDateTime criadoEm) { this.criadoEm = criadoEm; }
 

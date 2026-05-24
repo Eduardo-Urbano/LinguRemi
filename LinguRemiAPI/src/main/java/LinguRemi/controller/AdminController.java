@@ -3,6 +3,9 @@ package LinguRemi.controller;
 import java.util.Optional;
 
 import LinguRemi.DTO.ProdutoDTO;
+import LinguRemi.Enum.PedidoStatus;
+import LinguRemi.model.Pedido;
+import LinguRemi.repository.PedidoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,8 @@ public class AdminController {
     private ReceitasRepository repR;
     @Autowired
     private ReceitaBlogRepository repRP;
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
 	//Exclui um usuario
 	@DeleteMapping(value="/delUser")
@@ -57,6 +62,31 @@ public class AdminController {
 	@GetMapping("/produtos")
 	public ResponseEntity<?> listarProdutos(){
 		return ResponseEntity.ok(repR.findAll());
+	}
+
+	@GetMapping("/pedidos")
+	public ResponseEntity<?> listarPedidos() {
+		return ResponseEntity.ok(pedidoRepository.findAll());
+	}
+
+	@PutMapping("/pedidos/{id}/cancelar")
+	public ResponseEntity<?> cancelarPedidoAdmin(@PathVariable Long id) {
+		Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+
+		if (pedidoOpt.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Pedido pedido = pedidoOpt.get();
+
+		if (pedido.getStatus() == PedidoStatus.PAGO) {
+			return ResponseEntity.badRequest().body("Pedido pago exige fluxo de reembolso");
+		}
+
+		pedido.setStatus(PedidoStatus.CANCELADO);
+		pedidoRepository.save(pedido);
+
+		return ResponseEntity.ok(pedido);
 	}
 
 	@PutMapping("/produtos/{id}")
