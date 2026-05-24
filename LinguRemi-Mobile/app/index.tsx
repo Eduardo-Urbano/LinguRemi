@@ -80,7 +80,11 @@ export default function HomeScreen() {
       </View>
 
       <Text style={styles.sectionTitle}>Descubra novos sabores</Text>
-
+      
+{/*///////////////////////////////////////////////////////////////////////////////////*/}
+{/*Area que exibe as receitas*/}
+{/*///////////////////////////////////////////////////////////////////////////////////*/}
+ 
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" />
@@ -92,9 +96,10 @@ export default function HomeScreen() {
         <FlatList
           data={recipes}
           keyExtractor={(item) => String(item.idReceitas)}
-          horizontal
+          numColumns={2}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.recipeList}
+          columnWrapperStyle={styles.recipeRow}
           renderItem={({ item }) => (
             <Pressable
               style={styles.recipeCard}
@@ -127,6 +132,8 @@ export default function HomeScreen() {
           )}
         />
       )}
+
+
     </ScrollView>
   )
 }
@@ -240,11 +247,17 @@ const styles = StyleSheet.create({
 
   recipeList: {
     paddingHorizontal: 16,
+    paddingBottom:24,
     gap: 16,
   },
 
+  recipeRow: {
+    justifyContent:'space-between',
+    marginBottom: 16,
+  },
+
   recipeCard: {
-    width: 240,
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',

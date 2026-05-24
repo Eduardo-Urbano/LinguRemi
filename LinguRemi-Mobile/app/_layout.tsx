@@ -23,6 +23,7 @@ export default function RootLayout() {
       <Drawer.Screen
         name="index"
         options={{
+          title:'Inicio',
           headerTitle: () => <HeaderLogo />,
         }}
       />
@@ -30,6 +31,7 @@ export default function RootLayout() {
       <Drawer.Screen
         name="products/index"
         options={{
+          title:'Nossos produtos',
           headerTitle: () => <HeaderLogo />,
         }}
       />
@@ -37,6 +39,7 @@ export default function RootLayout() {
       <Drawer.Screen
         name="cart"
         options={{
+          title:'Carrinho',
           headerTitle: () => <HeaderLogo />,
         }}
       />
@@ -44,6 +47,7 @@ export default function RootLayout() {
       <Drawer.Screen
         name="profile"
         options={{
+          title:'Perfil',
           headerTitle: () => <HeaderLogo />,
         }}
       />
@@ -51,6 +55,7 @@ export default function RootLayout() {
       <Drawer.Screen
         name="blog/index"
         options={{
+          title:'Blog',
           headerTitle: () => <HeaderLogo />,
         }}
       />
