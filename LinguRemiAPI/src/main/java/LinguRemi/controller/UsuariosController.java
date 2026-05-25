@@ -21,6 +21,8 @@ import LinguRemi.DTO.RegisterDTO;
 import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
+import LinguRemi.DTO.RefreshTokenDTO;
+import LinguRemi.service.RefreshTokenService;
 import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +41,8 @@ public class UsuariosController {
 	private AuthenticationManager authM;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 
     UsuariosController(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -47,14 +51,33 @@ public class UsuariosController {
 	@Operation(summary = "Realiza login do usuário e retorna token JWT")
 	@PostMapping(value = "/login")
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(),data.password());
+		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
 		var auth = this.authM.authenticate(usernamePassword);
+
 		var usuario = (Usuarios) auth.getPrincipal();
-		var token = tokenService.generateToken((Usuarios)auth.getPrincipal());
-		
-		
-		
-		return ResponseEntity.ok(new LoginResponseDTO(token, usuario.getNomeUsuarios(), usuario.getEmailUsuarios(), usuario.getRoleUsuarios().name()));
+
+		var accessToken = tokenService.generateToken(usuario);
+		var refreshToken = refreshTokenService.criarRefreshToken(usuario);
+
+		return ResponseEntity.ok(
+				new LoginResponseDTO(
+						accessToken,
+						refreshToken.getToken(),
+						usuario.getNomeUsuarios(),
+						usuario.getEmailUsuarios(),
+						usuario.getRoleUsuarios().name()
+				)
+		);
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity refresh(@RequestBody RefreshTokenDTO dto) {
+		var refreshToken = refreshTokenService.validarRefreshToken(dto.refreshToken());
+		var usuario = refreshToken.getUsuario();
+
+		var novoAccessToken = tokenService.generateToken(usuario);
+
+		return ResponseEntity.ok(Map.of("accessToken", novoAccessToken));
 	}
 	
 	@Operation(summary = "Cadastra um novo usuário no sistema")
@@ -66,6 +89,13 @@ public class UsuariosController {
 		this.repU.save(user);
 		//return ResponseEntity.ok().build();
 		return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso"));
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(@RequestBody RefreshTokenDTO dto){
+		refreshTokenService.revogarRefreshToken(dto.refreshToken());
+
+		return ResponseEntity.ok(Map.of("message","Logout realizado com sucesso"));
 	}
 
 	@Operation(summary = "Lista todos os usuários cadastrados")

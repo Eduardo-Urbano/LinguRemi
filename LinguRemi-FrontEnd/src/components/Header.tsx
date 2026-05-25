@@ -1,4 +1,4 @@
-import { getUserData, clearAuthData } from '../services/authService'
+import { getUserData, clearAuthData, isAdmin } from '../services/authService'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -10,13 +10,17 @@ type HeaderProps = {
 
 export function Header({ onLoginClick, isAuthenticated, onLogout }: HeaderProps) {
   const [userName, setUserName] = useState<string | null>(null)
+  const [admin, setAdmin] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated) {
       const user = getUserData()
+
       setUserName(user.nome || 'Meu Perfil')
+      setAdmin(isAdmin())
     } else {
       setUserName(null)
+      setAdmin(false)
     }
   }, [isAuthenticated])
 
@@ -46,10 +50,10 @@ export function Header({ onLoginClick, isAuthenticated, onLogout }: HeaderProps)
         </div>
 
         <nav className="flex w-auto flex-row justify-end gap-x-6 text-base md:w-1/3 md:text-xl">
-          <ul className="flex flex-row cursor-pointer items-center space-x-4 md:space-x-6">
+          <ul className="flex flex-row items-center space-x-4 md:space-x-6">
             {!userName ? (
               <li>
-                <button type="button" onClick={onLoginClick}>
+                <button type="button" onClick={onLoginClick} className="cursor-pointer">
                   Login
                 </button>
               </li>
@@ -59,16 +63,22 @@ export function Header({ onLoginClick, isAuthenticated, onLogout }: HeaderProps)
                   <Link to="/perfil">{userName}</Link>
                 </li>
                 <li>
-                  <button type="button" onClick={handleLogout}>
+                  <button type="button" onClick={handleLogout} className="cursor-pointer">
                     Sair
                   </button>
                 </li>
               </>
             )}
 
+            {admin && (
+              <li className="cursor-pointer">
+                <Link to="/admin/produtos">Admin</Link>
+              </li>
+            )}
+
             <li>
               <Link to="/" aria-label="Página inicial">
-                <img src="/assets/icons/Home.png" alt="" className="h-6 w-6" />
+                <img src="/assets/icons/Home.png" alt="" className="h-6 w-6 cursor-pointer" />
               </Link>
             </li>
 
