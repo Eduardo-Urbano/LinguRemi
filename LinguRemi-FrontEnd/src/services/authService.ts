@@ -8,7 +8,7 @@ type LoginRequest = {
 type UserRole = 'USER' | 'ADMIN';
 
 type LoginResponse = {
-  accessToken: string
+  acessToken: string
   refreshToken: string
   nome?: string
   email?: string
@@ -21,7 +21,7 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
     body: JSON.stringify({ login, password }),
   })
 
-  if (!data?.accessToken) {
+  if (!data?.acessToken) {
     throw new Error('Token não recebido pela API')
   }
 
@@ -29,7 +29,7 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
 }
 
 export function saveAuthData(data: LoginResponse) {
-  localStorage.setItem('jwtToken', data.accessToken)
+  localStorage.setItem('jwtToken', data.acessToken)
   localStorage.setItem('refreshToken', data.refreshToken)
 
   if (data.nome) {
