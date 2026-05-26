@@ -8,7 +8,8 @@ type LoginRequest = {
 type UserRole = 'USER' | 'ADMIN';
 
 type LoginResponse = {
-  token: string
+  accessToken: string
+  refreshToken: string
   nome?: string
   email?: string
   role?: UserRole
@@ -20,7 +21,7 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
     body: JSON.stringify({ login, password }),
   })
 
-  if (!data?.token) {
+  if (!data?.accessToken) {
     throw new Error('Token não recebido pela API')
   }
 
@@ -28,7 +29,8 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
 }
 
 export function saveAuthData(data: LoginResponse) {
-  localStorage.setItem('jwtToken', data.token)
+  localStorage.setItem('jwtToken', data.accessToken)
+  localStorage.setItem('refreshToken', data.refreshToken)
 
   if (data.nome) {
     localStorage.setItem('nomeUser', data.nome)
@@ -45,6 +47,7 @@ export function saveAuthData(data: LoginResponse) {
 
 export function clearAuthData() {
   localStorage.removeItem('jwtToken')
+  localStorage.removeItem('refreshToken')
   localStorage.removeItem('nomeUser')
   localStorage.removeItem('emailUser')
   localStorage.removeItem('roleUser')
@@ -52,6 +55,10 @@ export function clearAuthData() {
 
 export function getAuthToken() {
   return localStorage.getItem('jwtToken')
+}
+
+export function getRefreshToken() {
+  return localStorage.getItem('refreshToken')
 }
 
 export function getUserRole(): UserRole | ''{
