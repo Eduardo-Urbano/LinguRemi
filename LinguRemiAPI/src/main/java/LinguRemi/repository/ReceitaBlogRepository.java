@@ -9,4 +9,5 @@ import LinguRemi.model.Receitablog;
 
 public interface ReceitaBlogRepository extends JpaRepository<Receitablog, Long>{
 	List<Receitablog> findAll();
+	List<Receitablog> findTop4ByOrderByDataReceitablogDesc();
 }
