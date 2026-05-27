@@ -1,8 +1,10 @@
 import { router } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
 import {
   FlatList,
   Image,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -18,20 +20,27 @@ import {
   validateCart,
   type CartItem,
 } from '../src/services/cartService'
+import * as Linking from 'expo-linking'
+import { createCheckout } from '../src/services/checkoutService'
+import * as Clipboard from 'expo-clipboard'
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState<'success' | 'error'>('success')
+  const [paymentLink, setPaymentLink] = useState('')
+  const [paymentModalVisible, setPaymentModalVisible] = useState(false)
 
-  useEffect(() => {
-    async function loadCart() {
-      const data = await getCart()
-      setCart(data)
-    }
+  useFocusEffect(
+    useCallback(() => {
+      async function loadCart() {
+        const data = await getCart()
+        setCart(data)
+      }
 
-    loadCart()
-  }, [])
+      loadCart()
+    }, [])
+  )
 
   async function updateQuantity(index: number, value: number) {
     if (value < 1) return
@@ -51,23 +60,27 @@ export default function CartScreen() {
   }
 
   async function handleCheckout() {
-    if (cart.length === 0) {
-      setMessageType('error')
-      setMessage('Carrinho vazio!')
-      return
+    try {
+      const itens = cart.map((item) => ({
+        produtoId: item.id,
+        quantidade: item.quantidade,
+      }))
+
+      const response = await createCheckout({
+        itens,
+      })
+
+      if (response.linkPagamento) {
+        setPaymentLink(response.linkPagamento)
+        setPaymentModalVisible(true)
+      }
+
+      await clearCart()
+
+      setCart([])
+    } catch (error) {
+      console.error(error)
     }
-
-    if (!validateCart(cart)) {
-      setMessageType('error')
-      setMessage('Carrinho inválido. Tente novamente.')
-      return
-    }
-
-    setMessageType('success')
-    setMessage('Compra finalizada com sucesso!')
-
-    await clearCart()
-    setCart([])
   }
 
   const total = calculateTotal(cart)
@@ -164,6 +177,52 @@ export default function CartScreen() {
           </View>
         </>
       )}
+      <Modal
+        visible={paymentModalVisible}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>
+              Pedido criado com sucesso
+            </Text>
+
+            <Pressable
+              style={styles.modalButton}
+              onPress={() =>
+                Linking.openURL(paymentLink)
+              }
+            >
+              <Text style={styles.modalButtonText}>
+                Abrir pagamento
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.modalButton}
+              onPress={async () => {
+                await Clipboard.setStringAsync(
+                  paymentLink,
+                )
+              }}
+            >
+              <Text style={styles.modalButtonText}>
+                Copiar link
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={() =>
+                setPaymentModalVisible(false)
+              }
+            >
+              <Text>Fechar</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -332,4 +391,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
+
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 20,
+},
+
+modal: {
+  width: '100%',
+  backgroundColor: '#fff',
+  borderRadius: 18,
+  padding: 20,
+},
+
+modalTitle: {
+  fontSize: 22,
+  fontWeight: '700',
+  marginBottom: 20,
+  textAlign: 'center',
+},
+
+modalButton: {
+  backgroundColor: '#222',
+  padding: 14,
+  borderRadius: 12,
+  alignItems: 'center',
+  marginBottom: 12,
+},
+
+modalButtonText: {
+  color: '#fff',
+  fontWeight: '700',
+  fontSize: 16,
+},
+
+closeButton: {
+  marginTop: 8,
+  alignItems: 'center',
+},
 })

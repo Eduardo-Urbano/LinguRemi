@@ -31,12 +31,20 @@ export async function apiFetch<T>(
   })
 
   if (!response.ok) {
-    const errorText = await response.text()
+    let errorMessage = 'Erro na requisição'
 
-    console.log('STATUS:', response.status)
-    console.log('ERRO API:', errorText)
+    try {
+      const errorData = await response.json()
 
-    throw new Error(errorText || 'Erro na requisição')
+      errorMessage =
+        errorData.message ||
+        errorData.error ||
+        errorMessage
+    } catch {
+      // ignora erro do parse
+    }
+
+    throw new Error(errorMessage)
   }
 
   return response.json()

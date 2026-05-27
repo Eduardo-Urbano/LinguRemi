@@ -2,7 +2,13 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
 } from 'react'
+
+import {
+  isAuthenticated,
+  isAdmin,
+} from '../services/authService'
 
 type AuthContextType = {
   authenticated: boolean
@@ -24,6 +30,18 @@ export function AuthProvider({
     useState(false)
 
   const [admin, setAdmin] = useState(false)
+
+  useEffect(() => {
+    async function loadAuth() {
+      const auth = await isAuthenticated()
+      const adminUser = await isAdmin()
+
+      setAuthenticated(auth)
+      setAdmin(adminUser)
+    }
+
+    loadAuth()
+  }, [])
 
   return (
     <AuthContext.Provider
