@@ -3,7 +3,17 @@ import 'react-native-gesture-handler'
 import { Drawer } from 'expo-router/drawer'
 import {HeaderLogo} from '../assets/components/HeaderLogo'
 
-export default function RootLayout() {
+import {
+  AuthProvider,
+  useAuth,
+} from '../src/context/AuthContext'
+
+function DrawerLayout() {
+  const {
+    authenticated,
+    admin,
+  } = useAuth()
+
   return (
     <Drawer
       screenOptions={{
@@ -47,8 +57,10 @@ export default function RootLayout() {
       <Drawer.Screen
         name="profile"
         options={{
-          title:'Perfil',
-          headerTitle: () => <HeaderLogo />,
+          title: 'Perfil',
+          drawerItemStyle: authenticated
+            ? undefined
+            : { display: 'none' },
         }}
       />
 
@@ -63,14 +75,30 @@ export default function RootLayout() {
       <Drawer.Screen
         name="login"
         options={{
-          drawerItemStyle: { display: 'none' },
+          title: 'Login',
+          drawerItemStyle: !authenticated
+            ? undefined
+            : { display: 'none' },
         }}
       />
 
       <Drawer.Screen
         name="register"
         options={{
-          drawerItemStyle: { display: 'none' },
+          title: 'Cadastro',
+          drawerItemStyle: !authenticated
+            ? undefined
+            : { display: 'none' },
+        }}
+      />
+
+      <Drawer.Screen
+        name="admin/index"
+        options={{
+          title: 'Admin',
+          drawerItemStyle: admin
+            ? undefined
+            : { display: 'none' },
         }}
       />
 
@@ -87,6 +115,25 @@ export default function RootLayout() {
           drawerItemStyle: { display: 'none' },
         }}
       />
+
+      <Drawer.Screen
+        name="logout"
+        options={{
+          title: 'Sair',
+          drawerItemStyle: authenticated
+            ? undefined
+            : { display: 'none' },
+        }}
+      />
     </Drawer>
+    
+  )
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <DrawerLayout />
+    </AuthProvider>
   )
 }

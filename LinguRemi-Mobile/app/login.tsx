@@ -11,8 +11,10 @@ import {
 } from 'react-native'
 
 import { loginUser, saveAuthData } from '../src/services/authService'
+import { useAuth } from '../src/context/AuthContext'
 
 export default function LoginScreen() {
+  const { setAuthenticated, setAdmin } = useAuth()
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
@@ -53,6 +55,8 @@ export default function LoginScreen() {
 
       await saveAuthData(data)
 
+      setAuthenticated(true)
+      setAdmin(data.role === 'ADMIN')
       router.replace('/')
     } catch (error) {
       const message =

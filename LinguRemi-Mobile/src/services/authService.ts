@@ -8,9 +8,11 @@ type LoginRequest = {
 }
 
 type LoginResponse = {
-  token: string
+  acessToken: string
+  refreshToken: string
   nome?: string
   email?: string
+  role?: 'USER' | 'ADMIN'
 }
 
 type RegisterRequest = {
@@ -21,8 +23,10 @@ type RegisterRequest = {
 }
 
 const TOKEN_KEY = '@linguremi:token'
+const REFRESH_TOKEN_KEY = '@linguremi:refreshToken'
 const NAME_KEY = '@linguremi:name'
 const EMAIL_KEY = '@linguremi:email'
+const ROLE_KEY = '@linguremi:role'
 
 export async function loginUser({
   login,
@@ -36,7 +40,7 @@ export async function loginUser({
     }),
   })
 
-  if (!data?.token) {
+  if (!data?.acessToken) {
     throw new Error('Token não recebido pela API')
   }
 
@@ -51,7 +55,9 @@ export async function registerUser(user: RegisterRequest) {
 }
 
 export async function saveAuthData(data: LoginResponse) {
-  await AsyncStorage.setItem(TOKEN_KEY, data.token)
+  await AsyncStorage.setItem(TOKEN_KEY, data.acessToken)
+  await AsyncStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken)
+  await AsyncStorage.setItem(ROLE_KEY, data.role || 'USER')
 
   if (data.nome) {
     await AsyncStorage.setItem(NAME_KEY, data.nome)
@@ -62,10 +68,44 @@ export async function saveAuthData(data: LoginResponse) {
   }
 }
 
+export async function getUserRole() {
+  return await AsyncStorage.getItem(ROLE_KEY)
+}
+
+export async function isAdmin() {
+  const role = await getUserRole()
+  return role === 'ADMIN'
+}
+
 export async function clearAuthData() {
-  await AsyncStorage.removeItem(TOKEN_KEY)
-  await AsyncStorage.removeItem(NAME_KEY)
-  await AsyncStorage.removeItem(EMAIL_KEY)
+  await AsyncStorage.multiRemove([
+    TOKEN_KEY,
+    REFRESH_TOKEN_KEY,
+    NAME_KEY,
+    EMAIL_KEY,
+    ROLE_KEY,
+  ])
+}
+
+export async function logoutUser() {
+  const refreshToken = await AsyncStorage.getItem(
+    REFRESH_TOKEN_KEY,
+  )
+
+  if (refreshToken) {
+    try {
+      await apiFetch('/usuarios/logout', {
+        method: 'POST',
+        body: JSON.stringify({
+          refreshToken,
+        }),
+      })
+    } catch {
+      // ignora erro da API
+    }
+  }
+
+  await clearAuthData()
 }
 
 export async function getAuthToken() {
@@ -83,5 +123,8 @@ export async function getUserData() {
     nome: (await AsyncStorage.getItem(NAME_KEY)) || '',
     email: (await AsyncStorage.getItem(EMAIL_KEY)) || '',
     token: (await AsyncStorage.getItem(TOKEN_KEY)) || '',
+    refreshToken:
+      (await AsyncStorage.getItem(REFRESH_TOKEN_KEY)) || '',
+    role: (await AsyncStorage.getItem(ROLE_KEY)) || 'USER',
   }
 }

@@ -12,12 +12,15 @@ import {
 import { clearAuthData, getUserData, isAuthenticated } from '../src/services/authService'
 import { getUserHistory } from '../src/services/profileService'
 import type { HistoryItem } from '../src/types/History'
+import { useAuth } from '../src/context/AuthContext'
+import { logoutUser } from '../src/services/authService'
 
 export default function ProfileScreen() {
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const {setAuthenticated,setAdmin,} = useAuth()
 
   useEffect(() => {
     async function loadProfile() {
@@ -43,10 +46,13 @@ export default function ProfileScreen() {
   }, [])
 
   async function handleLogout() {
-    await clearAuthData()
+    await logoutUser()
+
+    setAuthenticated(false)
+    setAdmin(false)
+
     router.replace('/')
   }
-
   if (isLoading) {
     return (
       <View style={styles.center}>
