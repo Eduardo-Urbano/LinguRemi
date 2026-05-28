@@ -5,10 +5,14 @@ type LoginRequest = {
   password: string
 }
 
+type UserRole = 'USER' | 'ADMIN';
+
 type LoginResponse = {
-  token: string
+  acessToken: string
+  refreshToken: string
   nome?: string
   email?: string
+  role?: UserRole
 }
 
 export async function loginUser({ login, password }: LoginRequest): Promise<LoginResponse> {
@@ -17,7 +21,7 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
     body: JSON.stringify({ login, password }),
   })
 
-  if (!data?.token) {
+  if (!data?.acessToken) {
     throw new Error('Token não recebido pela API')
   }
 
@@ -25,7 +29,8 @@ export async function loginUser({ login, password }: LoginRequest): Promise<Logi
 }
 
 export function saveAuthData(data: LoginResponse) {
-  localStorage.setItem('jwtToken', data.token)
+  localStorage.setItem('jwtToken', data.acessToken)
+  localStorage.setItem('refreshToken', data.refreshToken)
 
   if (data.nome) {
     localStorage.setItem('nomeUser', data.nome)
@@ -34,20 +39,44 @@ export function saveAuthData(data: LoginResponse) {
   if (data.email) {
     localStorage.setItem('emailUser', data.email)
   }
+
+  if (data.role) {
+    localStorage.setItem('roleUser', data.role)
+  }
 }
 
 export function clearAuthData() {
   localStorage.removeItem('jwtToken')
+  localStorage.removeItem('refreshToken')
   localStorage.removeItem('nomeUser')
   localStorage.removeItem('emailUser')
+  localStorage.removeItem('roleUser')
 }
 
 export function getAuthToken() {
   return localStorage.getItem('jwtToken')
 }
 
+export function getRefreshToken() {
+  return localStorage.getItem('refreshToken')
+}
+
+export function getUserRole(): UserRole | ''{
+  const role = localStorage.getItem('roleUser')
+
+  if (role === 'ADMIN' || role === 'USER'){
+    return role
+  }
+
+  return ''
+}
+
 export function isAuthenticated() {
   return Boolean(getAuthToken())
+}
+
+export function isAdmin() {
+  return getUserRole() === 'ADMIN'
 }
 
 export function getUserData() {
@@ -55,6 +84,7 @@ export function getUserData() {
     nome: localStorage.getItem('nomeUser') || '',
     email: localStorage.getItem('emailUser') || '',
     token: localStorage.getItem('jwtToken') || '',
+    role: getUserRole(),
   }
 }
 

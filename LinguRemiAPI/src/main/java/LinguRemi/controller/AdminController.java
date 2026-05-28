@@ -2,13 +2,14 @@ package LinguRemi.controller;
 
 import java.util.Optional;
 
+import LinguRemi.DTO.ProdutoDTO;
+import LinguRemi.Enum.PedidoStatus;
+import LinguRemi.model.Pedido;
+import LinguRemi.repository.PedidoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import LinguRemi.DTO.ReceitaQuantidadeDTO;
 import LinguRemi.model.Receitas;
@@ -28,6 +29,87 @@ public class AdminController {
     private ReceitasRepository repR;
     @Autowired
     private ReceitaBlogRepository repRP;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+
+	//Exclui um usuario
+	@DeleteMapping(value="/delUser")
+	public ResponseEntity<String> matarUser(@RequestBody long id){
+		if(!repU.existsById(id)) {
+			return ResponseEntity.notFound().build();
+		}
+		repU.deleteById(id);
+		return ResponseEntity.ok("Usuario excluido");
+	}
+
+	@PostMapping("/produtos")
+	public ResponseEntity<Receitas> criarProduto(@RequestBody @Valid ProdutoDTO dto) {
+		Receitas produto = new Receitas();
+
+		produto.setNomeReceitas(dto.nome());
+		produto.setDescReceitas(dto.descricao());
+		produto.setValorReceitas(dto.valor());
+		produto.setImgReceitas(dto.imagem());
+		produto.setAvaliacaoReceitas(0.0);
+		produto.setDisponivelReceitas(dto.disponivel());
+		produto.setTipoquantidadeReceitas(dto.tipoQuantidade());
+
+		repR.save(produto);
+
+		return ResponseEntity.ok(produto);
+	}
+
+	@GetMapping("/produtos")
+	public ResponseEntity<?> listarProdutos(){
+		return ResponseEntity.ok(repR.findAll());
+	}
+
+	@GetMapping("/pedidos")
+	public ResponseEntity<?> listarPedidos() {
+		return ResponseEntity.ok(pedidoRepository.findAll());
+	}
+
+	@PutMapping("/pedidos/{id}/cancelar")
+	public ResponseEntity<?> cancelarPedidoAdmin(@PathVariable Long id) {
+		Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+
+		if (pedidoOpt.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Pedido pedido = pedidoOpt.get();
+
+		if (pedido.getStatus() == PedidoStatus.PAGO) {
+			return ResponseEntity.badRequest().body("Pedido pago exige fluxo de reembolso");
+		}
+
+		pedido.setStatus(PedidoStatus.CANCELADO);
+		pedidoRepository.save(pedido);
+
+		return ResponseEntity.ok(pedido);
+	}
+
+	@PutMapping("/produtos/{id}")
+	public ResponseEntity<Receitas> editarProduto(@PathVariable Long id, @RequestBody @Valid ProdutoDTO dto){
+		Optional<Receitas> produtoExistente = repR.findById(id);
+
+		if (produtoExistente.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
+
+		Receitas produto = produtoExistente.get();
+
+		produto.setNomeReceitas(dto.nome());
+		produto.setDescReceitas(dto.descricao());
+		produto.setValorReceitas(dto.valor());
+		produto.setImgReceitas(dto.imagem());
+		produto.setDisponivelReceitas(dto.disponivel());
+		produto.setTipoquantidadeReceitas(dto.tipoQuantidade());
+
+		repR.save(produto);
+
+		return ResponseEntity.ok(produto);
+	}
     
 	@PutMapping(value="/qtd")
 	public ResponseEntity<Receitas> mudarQtd(@RequestBody ReceitaQuantidadeDTO dto) {
@@ -45,15 +127,17 @@ public class AdminController {
 	}
 	
 	//apaga receita dos produtos
-	@DeleteMapping(value="/delProduto")
-	public ResponseEntity<String> apagarProduto(@RequestBody long id){
-		if(!repR.existsById(id)) {
+	@DeleteMapping("/produtos/{id}")
+	public ResponseEntity<String> deletarProdutoPorId(@PathVariable Long id) {
+		if (!repR.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
+
 		repR.deleteById(id);
-		return ResponseEntity.ok("Produto Apagado");
+
+		return ResponseEntity.ok("Produto apagado");
 	}
-	
+
 	//apaga receita do blog
 	@DeleteMapping(value="/delReceita")
 	public ResponseEntity<String> apagarReceitaBlog(@RequestBody long id){
@@ -63,16 +147,4 @@ public class AdminController {
 		repRP.deleteById(id);
 		return ResponseEntity.ok("Receita Apagada do blog");
 	}
-	
-	//Exclui um usuario
-	@DeleteMapping(value="/delUser")
-	public ResponseEntity<String> matarUser(@RequestBody long id){
-		if(!repU.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		repU.deleteById(id);
-		return ResponseEntity.ok("Usuario excluido");
-	}
-	
-	
 }

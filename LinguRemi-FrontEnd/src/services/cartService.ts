@@ -51,17 +51,13 @@ export async function checkout(cart: CartItem[]) {
   }
 
   const body = {
-    valorTransferencia: calculateTotal(cart),
-
-    descTransferencia: 'Compra realizada',
-
-    receitasTransferencia: cart.map(item => ({
-      id: item.id,
+    itens: cart.map(item => ({
+      produtoId: item.id,
       quantidade: item.quantidade
     }))
   }
 
-  const response = await apiFetch('/historico/adicionar', {
+  const response = await apiFetch('/checkout/criar', {
     method: 'POST',
     auth: true,
     body: JSON.stringify(body)

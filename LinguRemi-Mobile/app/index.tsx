@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native'
+import {VideoView, useVideoPlayer} from 'expo-video'
 
 import { getRandomRecipes, getRecipeImageUrl } from '../src/services/recipeService'
 import type { Recipe } from '../src/types/Recipe'
@@ -23,14 +24,30 @@ export default function HomeScreen() {
       const data = await getRandomRecipes()
       setRecipes(data)
       setIsLoading(false)
+      player.play()
     }
 
     loadRecipes()
   }, [])
 
+  const player = useVideoPlayer(
+  require('../assets/videos/65692-515098526.mp4'),
+  (player) => {
+      player.loop = true
+      player.muted = true
+      player.play()
+    },
+  )
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.hero}>
+        <VideoView
+          player={player}
+          style={styles.backgroundVideo}
+          contentFit='cover'
+          nativeControls={false}
+        />
         <View style={styles.overlay} />
 
         <View style={styles.heroContent}>
@@ -63,7 +80,11 @@ export default function HomeScreen() {
       </View>
 
       <Text style={styles.sectionTitle}>Descubra novos sabores</Text>
-
+      
+{/*///////////////////////////////////////////////////////////////////////////////////*/}
+{/*Area que exibe as receitas*/}
+{/*///////////////////////////////////////////////////////////////////////////////////*/}
+ 
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" />
@@ -75,9 +96,10 @@ export default function HomeScreen() {
         <FlatList
           data={recipes}
           keyExtractor={(item) => String(item.idReceitas)}
-          horizontal
+          numColumns={2}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.recipeList}
+          columnWrapperStyle={styles.recipeRow}
           renderItem={({ item }) => (
             <Pressable
               style={styles.recipeCard}
@@ -110,6 +132,8 @@ export default function HomeScreen() {
           )}
         />
       )}
+
+
     </ScrollView>
   )
 }
@@ -130,6 +154,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 24,
     position: 'relative',
+  },
+
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
 
   overlay: {
@@ -215,11 +247,17 @@ const styles = StyleSheet.create({
 
   recipeList: {
     paddingHorizontal: 16,
+    paddingBottom:24,
     gap: 16,
   },
 
+  recipeRow: {
+    justifyContent:'space-between',
+    marginBottom: 16,
+  },
+
   recipeCard: {
-    width: 240,
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',

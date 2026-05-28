@@ -1,5 +1,9 @@
 package LinguRemi.DTO;
 
-public record LoginResponseDTO(String token, String nome, String email, String role) {
-
-}
+public record LoginResponseDTO(
+        String acessToken,
+        String refreshToken,
+        String nome,
+        String email,
+        String role
+) {}

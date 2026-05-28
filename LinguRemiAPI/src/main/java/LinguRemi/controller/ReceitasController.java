@@ -21,9 +21,8 @@ import LinguRemi.model.Receitablog;
 import LinguRemi.model.Receitas;
 import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Receitas", description = "Endpoints relacionados às receitas do blog, produtos à venda e cadastro de novas receitas")
 @RestController
@@ -49,6 +48,16 @@ public class ReceitasController {
     @GetMapping("/buscar/{id}")
     public Optional<Receitablog> findbyIdReceitablog(@PathVariable Long id) {
     	return repRP.findById(id);
+    }
+    
+    @GetMapping("/blogAleatorio")
+    public List<Receitablog> blogAleatorias(){
+    	List<Receitablog> todas = repRP.findTop4ByOrderByDataReceitablogDesc();
+    	if(todas.isEmpty()) {
+    		return List.of();
+    	}
+    	
+    	return todas;
     }
     
     @Operation(summary = "Lista todos os produtos disponíveis para venda")
@@ -97,7 +106,7 @@ public class ReceitasController {
         Collections.shuffle(todas);
 
     	return todas.stream()
-                .limit(3)
+                .limit(4)
                 .toList();
     }
 }
