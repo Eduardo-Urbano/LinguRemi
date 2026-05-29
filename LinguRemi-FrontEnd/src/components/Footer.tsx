@@ -78,7 +78,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mt-1 pb-10 text-center">©LinguRémi 2025</div>
+      <div className="mt-1 pb-10 text-center">©LinguRémi {new Date().getFullYear()}</div>
     </footer>
   )
 }
