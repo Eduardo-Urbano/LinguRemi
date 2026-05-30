@@ -104,4 +104,9 @@ public class UsuariosController {
 		List<Usuarios> op = repU.findAll();
 		return op;
 	}
+
+	@PutMapping("/resetPassword")
+	public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO dto){
+		
+	}
 }
