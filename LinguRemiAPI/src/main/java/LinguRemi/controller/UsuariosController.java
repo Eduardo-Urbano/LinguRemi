@@ -3,30 +3,32 @@ package LinguRemi.controller;
 import java.util.List;
 import java.util.Map;
 
-import LinguRemi.Enum.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import LinguRemi.DTO.AuthenticationDTO;
 import LinguRemi.DTO.LoginResponseDTO;
+import LinguRemi.DTO.RefreshTokenDTO;
 import LinguRemi.DTO.RegisterDTO;
+import LinguRemi.DTO.ResetPasswordDTO;
+import LinguRemi.Enum.UserRole;
 import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
-import LinguRemi.DTO.RefreshTokenDTO;
 import LinguRemi.service.RefreshTokenService;
-import jakarta.validation.Valid;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Usuários", description = "Endpoints relacionados ao gerenciamento de usuários, autenticação, cadastro e listagem")
 @RestController
@@ -107,6 +109,20 @@ public class UsuariosController {
 
 	@PutMapping("/resetPassword")
 	public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO dto){
+		if(!dto.novaSenha().equals(dto.confirmarSenha()) || dto.novaSenha().isBlank()) {
+			return ResponseEntity.badRequest().body("As senhas não coincidem");
+		}
 		
+		UserDetails UD = repU.findByEmailUsuarios(dto.email());
+		if(UD == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		Usuarios user = (Usuarios) UD;
+		user.setSenhaUsuarios(passwordEncoder.encode(dto.novaSenha()));
+		repU.save(user);
+		
+		return ResponseEntity.ok("Senha alterada");
 	}
+	
 }
