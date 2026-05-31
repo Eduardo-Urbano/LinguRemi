@@ -79,6 +79,7 @@ function DrawerLayout() {
           drawerItemStyle: !authenticated
             ? undefined
             : { display: 'none' },
+            headerTitle: () => <HeaderLogo />,
         }}
       />
 
@@ -89,6 +90,7 @@ function DrawerLayout() {
           drawerItemStyle: !authenticated
             ? undefined
             : { display: 'none' },
+            headerTitle: () => <HeaderLogo />,
         }}
       />
 
@@ -125,6 +127,15 @@ function DrawerLayout() {
             : { display: 'none' },
         }}
       />
+
+      <Drawer.Screen
+        name="resetSenha"
+        options={{
+          drawerItemStyle: {display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
     </Drawer>
     
   )
