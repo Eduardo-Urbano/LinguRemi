@@ -99,7 +99,7 @@ export default function LoginScreen() {
           style={styles.input}
         />
 
-        <Pressable onPress={() => router.push('/resetSenha')}>
+        <Pressable onPress={() => router.push('/forgotPassword')}>
           <Text style={styles.esqueciSenha}>
             Esqueceu sua senha? Clique aqui
           </Text>

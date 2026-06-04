@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler'
 
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import {
     KeyboardAvoidingView,
@@ -13,17 +13,18 @@ import {
     Alert,
 } from 'react-native'
 
-import { HeaderLogo } from '../assets/components/HeaderLogo'
-
+import { forgotPassword } from '@/src/services/authService'
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    async function handleRecover() {
+    async function handleForgotPassword() {
         if (isLoading) return
         
         setErrorMessage('')
@@ -31,17 +32,36 @@ export default function ForgotPassword() {
         const sanitizedEmail = email.trim()
 
         if (!sanitizedEmail) {
-            setErrorMessage('Preencha todos os campos.')
+            setErrorMessage('Insira seu e-mail.')
             return
         }
 
         if (!emailRegex.test(sanitizedEmail)) {
             setErrorMessage('Insira um email válido.')
             return
-        }
+        }        
 
-        
-    }
+        try{
+            setIsLoading(true)
+
+            await forgotPassword({
+                email: sanitizedEmail,
+            })
+
+            setSuccessMessage(
+                'Enviamos as instruções de recuperação para o seu e-mail.'
+            )
+        } catch (error) {
+            const message = 
+                error instanceof Error
+                ? error.message
+                : 'Erro ao solicitar recuperação de senha.'
+
+                setErrorMessage(message)
+        } finally{
+            setIsLoading(false)
+        }
+}
 
     return (
         <KeyboardAvoidingView
@@ -49,10 +69,14 @@ export default function ForgotPassword() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <View style={styles.card}>
-                <Text style={styles.title}>Resetar Senha</Text>
+                <Text style={styles.title}>Esqueci Minha Senha</Text>
 
                 {errorMessage ? (
                     <Text style={styles.error}>{errorMessage}</Text>
+                ) : null}
+
+                {successMessage ? (
+                    <Text style={styles.sucess}>{successMessage}</Text>
                 ) : null}
 
                 <TextInput
@@ -66,11 +90,11 @@ export default function ForgotPassword() {
 
                 <Pressable
                     style={styles.button}
-                    onPress={handleRecover}
+                    onPress={handleForgotPassword}
                     disabled={isLoading}
                 >
                     <Text style={styles.buttonText}>
-                        {isLoading ? 'Entrando...' : 'Solicitar troca de senha'}
+                        {isLoading ? 'Aguarde...' : 'Solicitar troca de senha'}
                     </Text>
                 </Pressable>
 
@@ -119,6 +143,13 @@ const styles = StyleSheet.create({
     },
     error: {
         backgroundColor: '#fee2e2',
+        color: '#991b1b',
+        padding: 12,
+        borderRadius: 12,
+        marginBottom: 12,
+    },
+    sucess: {
+        backgroundColor: '#80c684',
         color: '#991b1b',
         padding: 12,
         borderRadius: 12,
