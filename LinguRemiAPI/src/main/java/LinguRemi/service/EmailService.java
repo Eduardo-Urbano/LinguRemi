@@ -15,7 +15,7 @@ public class EmailService {
 		String link = "http://localhost:8081/resetPassword?token=" + token;
 		
 		SimpleMailMessage mensagem = new SimpleMailMessage();
-		mensagem.setFrom("LinguRémi <onboarding@resend.dev>");
+		mensagem.setFrom("LinguRémi <linguremi@gmail.com>");
 		mensagem.setTo(destinatario);
 		mensagem.setSubject("Recuperação de senha - LinguRémi");
 		mensagem.setText("Para redefinir sua senha use o link abaixo:\n\n" 
