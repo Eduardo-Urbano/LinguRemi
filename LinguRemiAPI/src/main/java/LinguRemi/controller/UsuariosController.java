@@ -21,10 +21,13 @@ import LinguRemi.DTO.LoginResponseDTO;
 import LinguRemi.DTO.RefreshTokenDTO;
 import LinguRemi.DTO.RegisterDTO;
 import LinguRemi.DTO.ResetPasswordDTO;
+import LinguRemi.DTO.forgotPasswordDTO;
 import LinguRemi.Enum.UserRole;
+import LinguRemi.Infra.Security.ResetTokenService;
 import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
+import LinguRemi.service.EmailService;
 import LinguRemi.service.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,6 +48,9 @@ public class UsuariosController {
 	private TokenService tokenService;
 	@Autowired
 	private RefreshTokenService refreshTokenService;
+	@Autowired
+	private ResetTokenService resetTokenService;
+	@Autowired EmailService emailService;
 
     UsuariosController(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -107,22 +113,36 @@ public class UsuariosController {
 		return op;
 	}
 
+	@PostMapping("/forgotPassword")
+	public ResponseEntity forgotPassword(@RequestBody forgotPasswordDTO dto) {
+		UserDetails UD = repU.findByEmailUsuarios(dto.email());
+		Usuarios user = (Usuarios) UD;
+		if(user != null) {
+			String token = resetTokenService.generateResetPasswordToken(user);
+			
+			emailService.enviarEmailRecuperacao(user.getEmailUsuarios(),token);
+		}
+		
+		return ResponseEntity.ok(Map.of("message","Se o e-mail existir enviaremos as instruções"));
+	}
+	
 	@PutMapping("/resetPassword")
 	public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO dto){
 		if(!dto.novaSenha().equals(dto.confirmarSenha()) || dto.novaSenha().isBlank()) {
 			return ResponseEntity.badRequest().body("As senhas não coincidem");
 		}
 		
-		UserDetails UD = repU.findByEmailUsuarios(dto.email());
-		if(UD == null) {
-			return ResponseEntity.badRequest().build();
+		String email = resetTokenService.validateResetPasswordToken(dto.token());
+		if(email == null) {
+			return ResponseEntity.badRequest().body(Map.of("message", "As senhas não coincidem"));
 		}
-		
+		UserDetails UD = repU.findByEmailUsuarios(email);
 		Usuarios user = (Usuarios) UD;
+		
 		user.setSenhaUsuarios(passwordEncoder.encode(dto.novaSenha()));
 		repU.save(user);
 		
-		return ResponseEntity.ok("Senha alterada");
+		return ResponseEntity.ok(Map.of("message", "Senha alterada com sucesso!"));
 	}
 	
 }

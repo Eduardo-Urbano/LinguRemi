@@ -129,13 +129,20 @@ function DrawerLayout() {
       />
 
       <Drawer.Screen
-        name="resetSenha"
+        name="forgotPassword"
         options={{
           drawerItemStyle: {display: 'none'},
           headerTitle: () => <HeaderLogo />,
         }}
       />
 
+      <Drawer.Screen
+        name="resetPassword"
+        options={{
+          drawerItemStyle: {display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
     </Drawer>
     
   )
