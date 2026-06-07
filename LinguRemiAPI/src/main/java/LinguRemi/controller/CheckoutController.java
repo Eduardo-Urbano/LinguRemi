@@ -18,6 +18,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import LinguRemi.service.MercadoPagoService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,9 @@ public class CheckoutController {
 
     @Autowired
     private MercadoPagoService mercadoPagoService;
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(CheckoutController.class);
 
     @PostMapping("/criar")
     public ResponseEntity<?> criarCheckout(
@@ -101,50 +107,130 @@ public class CheckoutController {
 
     @PostMapping("/webhook")
     public ResponseEntity<?> receberWebhook(@RequestBody Map<String, Object> body) {
+
+        logger.info("[WEBHOOK] Notificação recebida: {}", body);
+
         try {
+
             Object type = body.get("type");
             Object dataObj = body.get("data");
 
+            logger.info(
+                    "[WEBHOOK] Tipo recebido: {}",
+                    type
+            );
+
             if (!"payment".equals(type) || dataObj == null) {
+
+                logger.warn(
+                        "[WEBHOOK] Ignorado - tipo inválido"
+                );
+
                 return ResponseEntity.ok().build();
             }
 
             Map<String, Object> data = (Map<String, Object>) dataObj;
-            Long paymentId = Long.valueOf(data.get("id").toString());
 
-            var pagamento = mercadoPagoService.buscarPagamento(paymentId);
+            Long paymentId =
+                    Long.valueOf(data.get("id").toString());
+
+            logger.info(
+                    "[WEBHOOK] Payment ID: {}",
+                    paymentId
+            );
+
+            var pagamento =
+                    mercadoPagoService.buscarPagamento(paymentId);
+
+            logger.info(
+                    "[WEBHOOK] Status pagamento: {}",
+                    pagamento.getStatus()
+            );
 
             if ("approved".equals(pagamento.getStatus())) {
-                Long pedidoId = Long.valueOf(pagamento.getExternalReference());
 
-                Pedido pedido = pedidoRepository.findById(pedidoId)
-                        .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+                Long pedidoId =
+                        Long.valueOf(
+                                pagamento.getExternalReference()
+                        );
+
+                logger.info(
+                        "[WEBHOOK] Pedido {} aprovado",
+                        pedidoId
+                );
+
+                Pedido pedido =
+                        pedidoRepository.findById(pedidoId)
+                                .orElseThrow(() ->
+                                        new RuntimeException(
+                                                "Pedido não encontrado"
+                                        )
+                                );
+
                 if (pedido.getStatus() != PedidoStatus.PAGO) {
+
                     for (PedidoItem item : pedido.getItens()) {
+
                         Receitas produto = item.getProduto();
 
-                        if (produto.getDisponivelReceitas() < item.getQuantidade()) {
-                            pedido.setStatus(PedidoStatus.CANCELADO);
+                        logger.info(
+                                "[ESTOQUE] {} | Atual: {} | Baixa: {}",
+                                produto.getNomeReceitas(),
+                                produto.getDisponivelReceitas(),
+                                item.getQuantidade()
+                        );
+
+                        if (produto.getDisponivelReceitas()
+                                < item.getQuantidade()) {
+
+                            logger.error(
+                                    "[ESTOQUE] Estoque insuficiente para {}",
+                                    produto.getNomeReceitas()
+                            );
+
+                            pedido.setStatus(
+                                    PedidoStatus.CANCELADO
+                            );
+
                             pedidoRepository.save(pedido);
-                            return ResponseEntity.badRequest().body("Estoque insuficiente");
+
+                            return ResponseEntity.badRequest()
+                                    .body("Estoque insuficiente");
                         }
 
                         produto.setDisponivelReceitas(
-                                produto.getDisponivelReceitas() - item.getQuantidade()
+                                produto.getDisponivelReceitas()
+                                        - item.getQuantidade()
                         );
 
                         receitasRepository.save(produto);
                     }
 
                     pedido.setStatus(PedidoStatus.PAGO);
+
                     pedidoRepository.save(pedido);
+
+                    logger.info(
+                            "[PEDIDO] Pedido {} marcado como PAGO",
+                            pedidoId
+                    );
                 }
             }
+
             return ResponseEntity.ok().build();
 
         } catch (Exception e) {
+
+            logger.error(
+                    "[WEBHOOK ERROR]",
+                    e
+            );
+
             return ResponseEntity.internalServerError()
-                    .body("Erro ao processar webhook: " + e.getMessage());
+                    .body(
+                            "Erro ao processar webhook: "
+                                    + e.getMessage()
+                    );
         }
     }
 
