@@ -3,6 +3,7 @@ package LinguRemi.controller;
 import java.util.List;
 import java.util.Map;
 
+import LinguRemi.DTO.*;
 import LinguRemi.Enum.UserRole;
 import LinguRemi.Infra.Security.LoginAttemptService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,14 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import LinguRemi.DTO.AuthenticationDTO;
-import LinguRemi.DTO.LoginResponseDTO;
-import LinguRemi.DTO.RegisterDTO;
 import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.Infra.Exception.AccountLockedException;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
-import LinguRemi.DTO.RefreshTokenDTO;
 import LinguRemi.service.RefreshTokenService;
 import jakarta.validation.Valid;
 
@@ -61,7 +58,7 @@ public class UsuariosController {
 	
 	@Operation(summary = "Realiza login do usuário e retorna token JWT")
 	@PostMapping(value = "/login")
-	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data, HttpServletRequest request) {
+	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data, HttpServletRequest request) {
 
 		String ip = request.getRemoteAddr();
 		if (loginAttemptService.isBlocked(data.login())) {
@@ -139,8 +136,15 @@ public class UsuariosController {
 	
 	@Operation(summary = "Cadastra um novo usuário no sistema")
 	@PostMapping(value = "/cadastrar")
-	public ResponseEntity cadastrar(@RequestBody @Valid RegisterDTO data) {
-		if(this.repU.findByEmailUsuarios(data.email()) != null) return ResponseEntity.badRequest().build();
+	public ResponseEntity<Map<String, String>> cadastrar(@RequestBody @Valid RegisterDTO data) {
+		if (this.repU.findByEmailUsuarios(data.email()) != null) {
+			return ResponseEntity.badRequest().body(
+					Map.of(
+							"message",
+							"Email já cadastrado"
+					)
+			);
+		}
 		String encryptedPassword = passwordEncoder.encode(data.senha());
 		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, UserRole.USER);
 		this.repU.save(user);
@@ -152,19 +156,46 @@ public class UsuariosController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<?> logout(@RequestBody RefreshTokenDTO dto){
-		logger.info(
-				"Solicitação de logout recebida"
-		);
-		refreshTokenService.revogarRefreshToken(dto.refreshToken());
+	public ResponseEntity<Map<String, String>> logout(
+			@RequestBody RefreshTokenDTO dto
+	){
 
-		return ResponseEntity.ok(Map.of("message","Logout realizado com sucesso"));
+		var refreshToken =
+				refreshTokenService.validarRefreshToken(
+						dto.refreshToken()
+				);
+
+		logger.info(
+				"Logout realizado para {}",
+				refreshToken.getUsuario().getEmailUsuarios()
+		);
+
+		refreshTokenService.revogarRefreshToken(
+				dto.refreshToken()
+		);
+
+		return ResponseEntity.ok(
+				Map.of(
+						"message",
+						"Logout realizado com sucesso"
+				)
+		);
 	}
 
 	@Operation(summary = "Lista todos os usuários cadastrados")
-	@GetMapping(value = "/todos")
-	public List<Usuarios> users() {
-		List<Usuarios> op = repU.findAll();
-		return op;
+	@GetMapping("/todos")
+	public List<UsuarioResponseDTO> users() {
+
+		return repU.findAll()
+				.stream()
+				.map(usuario ->
+						new UsuarioResponseDTO(
+								usuario.getIdUsuarios(),
+								usuario.getNomeUsuarios(),
+								usuario.getEmailUsuarios(),
+								usuario.getRoleUsuarios().name()
+						)
+				)
+				.toList();
 	}
 }
