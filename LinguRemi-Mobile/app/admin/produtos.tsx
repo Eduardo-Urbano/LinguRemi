@@ -43,7 +43,7 @@ const stockStyle = (lvl: StockLevel) =>
     ? { bg: COLORS.warningSoft, fg: COLORS.warning, label: 'Estoque baixo' }
     : { bg: COLORS.successSoft, fg: COLORS.success, label: 'Em estoque' }
 
-export default function adminProdutos() {
+export default function AdminProdutos() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -53,10 +53,10 @@ export default function adminProdutos() {
   const load = useCallback(async () => {
     try {
       const data = await getAdminProducts()
-      setProducts(data)
+      setProducts(Array.isArray(data) ? data : [])
     } catch (error) {
       console.log('Erro ao carregar produtos admin:', error)
-      router.replace('/')
+      
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -64,14 +64,30 @@ export default function adminProdutos() {
   }, [])
 
   useEffect(() => {
-    ;(async () => {
-      if (!(await isAuthenticated()) || !(await isAdmin())) {
-        router.replace('/')
-        return
-      }
-      load()
-    })()
-  }, [load])
+  let mounted = true
+
+  async function init() {
+    setLoading(true)
+
+    const auth = await isAuthenticated()
+    const admin = await isAdmin()
+
+    if (!mounted) return
+
+    if (!auth || !admin) {
+      router.replace('/')
+      return
+    }
+
+    await load()
+  }
+
+  init()
+
+  return () => {
+    mounted = false
+  }
+}, [load])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()

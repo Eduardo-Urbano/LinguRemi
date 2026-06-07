@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 
-export default function adminUsuarios(){
+export default function AdminUsuarios(){
 
     return(
         <View>

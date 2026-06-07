@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 
-export default function adminBlog(){
+export default function AdminBlog(){
 
     return(
         <View>
