@@ -1,0 +1,36 @@
+# ENV
+.env
+.env.*
+!.env.example
+
+# NODE / REACT (Vite)
+node_modules/
+dist/
+.vite/
+*.local
+
+# JAVA / SPRING BOOT
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+#SISTEMA OPERACIONAL
+.DS_Store
+Thumbs.db
+
+# ========================
+# 🧾 LOGS
+# ========================
+*.log
+
+# BUILD / TEMP
+
+tmp/
+temp/
