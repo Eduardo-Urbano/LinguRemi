@@ -1,21 +1,60 @@
 import 'react-native-gesture-handler'
 
 import { Drawer } from 'expo-router/drawer'
-import {HeaderLogo} from '../assets/components/HeaderLogo'
+import { router } from 'expo-router'
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer'
+
+import { HeaderLogo } from '../assets/components/HeaderLogo'
+import { logoutUser,lockApp } from '../src/services/authService'
 
 import {
   AuthProvider,
   useAuth,
 } from '../src/context/AuthContext'
 
-function DrawerLayout() {
+
+function CustomDrawerContent(props: any) {
+  const { authenticated, setAuthenticated, setAdmin } = useAuth()
+
+  async function handleLogout() {
+    await lockApp()
+
+    setAuthenticated(false)
+    setAdmin(false)
+
+    router.replace('/login')
+  }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+
+      {authenticated ? (
+        <DrawerItem
+          label="Sair"
+          onPress={handleLogout}
+        />
+      ) : null}
+    </DrawerContentScrollView>
+  )
+}
+
+  function DrawerLayout() {
   const {
     authenticated,
     admin,
   } = useAuth()
 
+  
   return (
     <Drawer
+      drawerContent={(props) => (
+        <CustomDrawerContent {...props}/>
+      )}
       screenOptions={{
         headerShown: true,
         drawerActiveTintColor: '#8b4513',
@@ -58,6 +97,7 @@ function DrawerLayout() {
         name="profile"
         options={{
           title: 'Perfil',
+          headerTitle: () => <HeaderLogo/>,
           drawerItemStyle: authenticated
             ? undefined
             : { display: 'none' },
@@ -115,16 +155,6 @@ function DrawerLayout() {
         name="blog/[id]"
         options={{
           drawerItemStyle: { display: 'none' },
-        }}
-      />
-
-      <Drawer.Screen
-        name="logout"
-        options={{
-          title: 'Sair',
-          drawerItemStyle: authenticated
-            ? undefined
-            : { display: 'none' },
         }}
       />
 

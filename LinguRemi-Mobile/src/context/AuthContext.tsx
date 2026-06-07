@@ -8,6 +8,7 @@ import {
 import {
   isAuthenticated,
   isAdmin,
+  isAppLocked,
 } from '../services/authService'
 
 type AuthContextType = {
@@ -35,9 +36,9 @@ export function AuthProvider({
     async function loadAuth() {
       const auth = await isAuthenticated()
       const adminUser = await isAdmin()
-
-      setAuthenticated(auth)
-      setAdmin(adminUser)
+      const locked = await isAppLocked()      
+      setAuthenticated(auth && !locked)
+      setAdmin(adminUser && !locked ? adminUser: false)
     }
 
     loadAuth()

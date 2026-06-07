@@ -37,6 +37,8 @@ const REFRESH_TOKEN_KEY = '@linguremi:refreshToken'
 const NAME_KEY = '@linguremi:name'
 const EMAIL_KEY = '@linguremi:email'
 const ROLE_KEY = '@linguremi:role'
+const BIOMETRIC_KEY = '@linguremi:biometricEnabled'
+const APP_LOCKED_KEY = '@linguremi:appLocked'
 
 export async function loginUser({
   login,
@@ -113,6 +115,8 @@ export async function isAdmin() {
 
 export async function clearAuthData() {
   await AsyncStorage.multiRemove([
+    APP_LOCKED_KEY,
+    BIOMETRIC_KEY,
     TOKEN_KEY,
     REFRESH_TOKEN_KEY,
     NAME_KEY,
@@ -134,12 +138,23 @@ export async function logoutUser() {
           refreshToken,
         }),
       })
-    } catch {
-      // ignora erro da API
-    }
+    } catch (error) {}
   }
 
   await clearAuthData()
+}
+
+export async function lockApp() {
+  await AsyncStorage.setItem(APP_LOCKED_KEY, 'true')
+}
+
+export async function unlockApp() {
+  await AsyncStorage.removeItem(APP_LOCKED_KEY)
+}
+
+export async function isAppLocked() {
+  const value = await AsyncStorage.getItem(APP_LOCKED_KEY)
+  return value === 'true'
 }
 
 export async function getAuthToken() {
@@ -161,4 +176,13 @@ export async function getUserData() {
       (await AsyncStorage.getItem(REFRESH_TOKEN_KEY)) || '',
     role: (await AsyncStorage.getItem(ROLE_KEY)) || 'USER',
   }
+}
+
+export async function enableBiometricLogin() {
+  await AsyncStorage.setItem(BIOMETRIC_KEY, 'true')
+}
+
+export async function isBiometricEnabled() {
+  const value = await AsyncStorage.getItem(BIOMETRIC_KEY)
+  return value === 'true'
 }
