@@ -179,6 +179,31 @@ function CustomDrawerContent(props: any) {
           headerTitle: () => <HeaderLogo />,
         }}
       />
+
+      <Drawer.Screen
+        name="admin/produtos"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="admin/blog"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="admin/usuarios"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
     </Drawer>
     
   )
