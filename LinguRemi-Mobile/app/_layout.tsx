@@ -36,6 +36,7 @@ function CustomDrawerContent(props: any) {
       {authenticated ? (
         <DrawerItem
           label="Sair"
+          labelStyle={{fontSize:16, fontWeight:'600', alignContent:'center'}}
           onPress={handleLogout}
         />
       ) : null}
