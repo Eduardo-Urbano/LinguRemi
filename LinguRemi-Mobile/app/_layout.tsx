@@ -139,6 +139,7 @@ function CustomDrawerContent(props: any) {
         name="admin/index"
         options={{
           title: 'Admin',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: admin
             ? undefined
             : { display: 'none' },

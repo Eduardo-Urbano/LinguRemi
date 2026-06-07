@@ -348,14 +348,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 12,
     marginBottom: 14,
     elevation: 3,
   },
 
   image: {
-    width: 110,
-    height: 100,
+    width: 130,
+    height: 120,
     borderRadius: 12,
   },
 
