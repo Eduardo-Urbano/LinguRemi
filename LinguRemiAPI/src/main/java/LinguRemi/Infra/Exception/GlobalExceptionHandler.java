@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -94,5 +95,17 @@ public class GlobalExceptionHandler {
                 );
 
         return ResponseEntity.badRequest().body(erros);
+    }
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidRefreshToken(
+            InvalidRefreshTokenException ex
+    ) {
+        return ResponseEntity.status(401)
+                .body(new ErrorResponseDTO(
+                        401,
+                        "INVALID_REFRESH_TOKEN",
+                        ex.getMessage(),
+                        LocalDateTime.now().toString()
+                ));
     }
 }
