@@ -147,6 +147,8 @@ function CustomDrawerContent(props: any) {
       <Drawer.Screen
         name="products/[id]"
         options={{
+          title: 'produtoId',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: { display: 'none' },
         }}
       />
@@ -154,6 +156,8 @@ function CustomDrawerContent(props: any) {
       <Drawer.Screen
         name="blog/[id]"
         options={{
+          title: 'blogId',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: { display: 'none' },
         }}
       />

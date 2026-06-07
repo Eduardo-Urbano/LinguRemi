@@ -50,8 +50,8 @@ public class ReceitasController {
     	return repRP.findById(id);
     }
     
-    @GetMapping("/blogAleatorio")
-    public List<Receitablog> blogAleatorias(){
+    @GetMapping("/blog4Ultimas")
+    public List<Receitablog> blog4Ultimas(){
     	List<Receitablog> todas = repRP.findTop4ByOrderByDataReceitablogDesc();
     	if(todas.isEmpty()) {
     		return List.of();

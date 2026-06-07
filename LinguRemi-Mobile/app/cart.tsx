@@ -83,6 +83,46 @@ export default function CartScreen() {
     }
   }
 
+  async function increaseQuantity(index: number) {
+    const newCart = [...cart]
+
+    if (newCart[index].tipoQuantidade === 'peso') {
+      newCart[index].quantidade = Number(
+        (newCart[index].quantidade + 0.1).toFixed(1)
+      )
+    } else {
+      newCart[index].quantidade += 1
+    }
+
+    setCart(newCart)
+    await saveCart(newCart)
+  }
+
+  async function decreaseQuantity(index: number) {
+    const newCart = [...cart]
+
+    const step =
+      newCart[index].tipoQuantidade === 'peso'
+        ? 0.1
+        : 1
+
+    const min =
+      newCart[index].tipoQuantidade === 'peso'
+        ? 0.1
+        : 5
+
+    if (newCart[index].quantidade <= min) {
+      return
+    }
+
+    newCart[index].quantidade = Number(
+      (newCart[index].quantidade - step).toFixed(1)
+    )
+
+    setCart(newCart)
+    await saveCart(newCart)
+  }
+
   const total = calculateTotal(cart)
 
   return (
@@ -137,11 +177,14 @@ export default function CartScreen() {
                   <View style={styles.itemInfo}>
                     <Text style={styles.itemName}>{item.nome}</Text>
 
-                    <Pressable onPress={() => removeItem(index)}>
-                      <Text style={styles.removeText}>Remover</Text>
-                    </Pressable>
 
                     <View style={styles.quantityRow}>
+                      <Pressable
+                        style={styles.quantityButton}
+                        onPress={() => decreaseQuantity(index)}
+                      >
+                      <Text style={styles.quantityButtonText}>-</Text>
+                      </Pressable>
                       <TextInput
                         style={styles.input}
                         keyboardType="numeric"
@@ -152,6 +195,13 @@ export default function CartScreen() {
                         }}
                       />
 
+                      <Pressable
+                        style={styles.quantityButton}
+                        onPress={() => increaseQuantity(index)}
+                      >
+                        <Text style={styles.quantityButtonText}>+</Text>
+                      </Pressable>
+
                       <Text style={styles.unit}>
                         {item.tipoQuantidade === 'peso' ? 'kg' : 'un'}
                       </Text>
@@ -161,6 +211,13 @@ export default function CartScreen() {
                       R$ {itemTotal.toFixed(2)}
                     </Text>
                   </View>
+
+                    <Pressable 
+                      style={styles.removeButton} 
+                      onPress={() => removeItem(index)}>
+                      <Text style={styles.removeText}>Remover</Text>
+                    </Pressable>
+
                 </View>
               )
             }}
@@ -326,8 +383,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
+  removeButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+
   removeText: {
-    marginTop: 6,
     color: '#dc2626',
     fontWeight: '600',
   },
@@ -432,4 +494,22 @@ closeButton: {
   marginTop: 8,
   alignItems: 'center',
 },
+
+quantityButton: {
+  width: 32,
+  height: 32,
+  borderRadius: 8,
+  backgroundColor: '#222',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginLeft: 5,
+  marginRight: 5,
+},
+
+quantityButtonText: {
+  color: '#fff',
+  fontSize: 18,
+  fontWeight: '700',
+},
+
 })

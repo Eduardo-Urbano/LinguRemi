@@ -113,7 +113,7 @@ export default function ProductDetailsScreen() {
         </Text>
       ) : null}
 
-      <Pressable style={styles.backButton} onPress={() => router.back()}>
+      <Pressable style={styles.backButton} onPress={() => router.push('/products')}>
         <Text style={styles.backButtonText}>Voltar</Text>
       </Pressable>
 

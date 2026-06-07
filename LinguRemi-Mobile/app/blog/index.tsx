@@ -67,7 +67,10 @@ export default function BlogScreen() {
         <FlatList
           data={filteredRecipes}
           keyExtractor={(item) => String(item.idReceitaBlog)}
+          numColumns={2}
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.list}
+          columnWrapperStyle={styles.recipeRow}
           renderItem={({ item }) => (
             <Pressable
               style={styles.card}
@@ -146,6 +149,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',
@@ -188,5 +192,9 @@ const styles = StyleSheet.create({
   description: {
     color: '#666',
     lineHeight: 20,
+  },
+  recipeRow: {
+    justifyContent:'space-between',
+    marginBottom: 16,
   },
 })
