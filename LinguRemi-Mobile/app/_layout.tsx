@@ -79,6 +79,7 @@ function DrawerLayout() {
           drawerItemStyle: !authenticated
             ? undefined
             : { display: 'none' },
+            headerTitle: () => <HeaderLogo />,
         }}
       />
 
@@ -89,6 +90,7 @@ function DrawerLayout() {
           drawerItemStyle: !authenticated
             ? undefined
             : { display: 'none' },
+            headerTitle: () => <HeaderLogo />,
         }}
       />
 
@@ -123,6 +125,22 @@ function DrawerLayout() {
           drawerItemStyle: authenticated
             ? undefined
             : { display: 'none' },
+        }}
+      />
+
+      <Drawer.Screen
+        name="forgotPassword"
+        options={{
+          drawerItemStyle: {display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="resetPassword"
+        options={{
+          drawerItemStyle: {display: 'none'},
+          headerTitle: () => <HeaderLogo />,
         }}
       />
     </Drawer>

@@ -22,6 +22,16 @@ type RegisterRequest = {
   senha: string
 }
 
+type ForgotPasswordRequest = {
+  email:string
+}
+
+type ResetPasswordRequest = {
+  token:string
+  novaSenha: string
+  confirmarSenha:string
+}
+
 const TOKEN_KEY = '@linguremi:token'
 const REFRESH_TOKEN_KEY = '@linguremi:refreshToken'
 const NAME_KEY = '@linguremi:name'
@@ -51,6 +61,30 @@ export async function registerUser(user: RegisterRequest) {
   return await apiFetch<unknown>('/usuarios/cadastrar', {
     method: 'POST',
     body: JSON.stringify(user),
+  })
+}
+
+export async function forgotPassword({email,}:ForgotPasswordRequest) {
+  return await apiFetch<unknown>('/usuarios/forgotPassword', {
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+    })
+  })
+}
+
+export async function resetPassword({
+  token,
+  novaSenha,
+  confirmarSenha,
+}: ResetPasswordRequest) {
+  return await apiFetch<unknown>('/usuarios/resetPassword', {
+    method: 'PUT',
+    body: JSON.stringify({
+      token,
+      novaSenha,
+      confirmarSenha,
+    }),
   })
 }
 

@@ -99,6 +99,12 @@ export default function LoginScreen() {
           style={styles.input}
         />
 
+        <Pressable onPress={() => router.push('/forgotPassword')}>
+          <Text style={styles.esqueciSenha}>
+            Esqueceu sua senha? Clique aqui
+          </Text>
+        </Pressable>
+
         <Pressable
           style={styles.button}
           onPress={handleLogin}
@@ -178,5 +184,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: 16,
+  },
+
+  esqueciSenha: {
+    color: '#FA003F',
+    paddingBottom: 20,
+    textAlign: 'center',
   },
 })

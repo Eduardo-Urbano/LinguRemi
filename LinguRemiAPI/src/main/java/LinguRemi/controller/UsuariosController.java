@@ -6,14 +6,17 @@ import java.util.Map;
 import LinguRemi.DTO.*;
 import LinguRemi.Enum.UserRole;
 import LinguRemi.Infra.Security.LoginAttemptService;
+import LinguRemi.Infra.Security.ResetTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,7 @@ import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.Infra.Exception.AccountLockedException;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
+import LinguRemi.service.EmailService;
 import LinguRemi.service.RefreshTokenService;
 import jakarta.validation.Valid;
 
@@ -49,6 +53,10 @@ public class UsuariosController {
 	private TokenService tokenService;
 	@Autowired
 	private RefreshTokenService refreshTokenService;
+	@Autowired
+	private ResetTokenService resetTokenService;
+	@Autowired 
+	EmailService emailService;
 	@Autowired
 	private LoginAttemptService loginAttemptService;
 
@@ -208,5 +216,97 @@ public class UsuariosController {
 						)
 				)
 				.toList();
+	}
+
+	@Operation(summary = "Solicita recuperação de senha")
+	@PostMapping("/forgotPassword")
+	public ResponseEntity<Map<String, String>> forgotPassword(
+			@Valid @RequestBody ForgotPasswordDTO dto
+	) {
+
+		var usuarioOpt = repU.findByEmailUsuarios(dto.email());
+
+		if (usuarioOpt.isPresent()) {
+
+			Usuarios usuario = usuarioOpt.get();
+
+			String token =
+					resetTokenService.generateResetPasswordToken(usuario);
+
+			emailService.enviarEmailRecuperacao(
+					usuario.getEmailUsuarios(),
+					token
+			);
+
+			logger.info(
+					"Solicitação de recuperação de senha para {}",
+					usuario.getEmailUsuarios()
+			);
+		}
+
+		return ResponseEntity.ok(
+				Map.of(
+						"message",
+						"Se o e-mail existir enviaremos as instruções"
+				)
+		);
+	}
+	
+	@Operation(summary = "Redefine a senha do usuário")
+	@PutMapping("/resetPassword")
+	public ResponseEntity<Map<String, String>> resetPassword(
+			@Valid @RequestBody ResetPasswordDTO dto
+	) {
+
+		if (!dto.novaSenha().equals(dto.confirmarSenha())) {
+
+			return ResponseEntity.badRequest().body(
+					Map.of(
+							"message",
+							"As senhas não coincidem"
+					)
+			);
+		}
+
+		String email =
+				resetTokenService.validateResetPasswordToken(
+						dto.token()
+				);
+
+		if (email == null) {
+			return ResponseEntity.badRequest().body(
+					Map.of(
+							"message",
+							"Token inválido ou expirado"
+					)
+			);
+		}
+
+		Usuarios usuario = repU.findByEmailUsuarios(email)
+				.orElseThrow(
+						() -> new RuntimeException(
+								"Usuário não encontrado"
+						)
+				);
+
+		usuario.setSenhaUsuarios(
+				passwordEncoder.encode(
+						dto.novaSenha()
+				)
+		);
+
+		repU.save(usuario);
+
+		logger.info(
+				"Senha redefinida para {}",
+				usuario.getEmailUsuarios()
+		);
+
+		return ResponseEntity.ok(
+				Map.of(
+						"message",
+						"Senha alterada com sucesso"
+				)
+		);
 	}
 }

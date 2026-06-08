@@ -38,6 +38,8 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/refresh").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/logout").hasAnyRole("USER", "ADMIN")
+						.requestMatchers(HttpMethod.POST, "/usuarios/forgotPassword").permitAll()
+						.requestMatchers(HttpMethod.PUT, "/usuarios/resetPassword").permitAll()
 						.requestMatchers("/", "/health").permitAll()
 						.requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/v3/api-docs","/swagger-resources/**","/webjars/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas/**").hasAnyRole("USER", "ADMIN")
