@@ -18,6 +18,26 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleGeneric(Exception ex) {
+
+        logger.error(
+                "[ERRO INTERNO]",
+                ex
+        );
+
+        return ResponseEntity.status(500)
+                .body(new ErrorResponseDTO(
+                            500,
+                            "INTERNAL_ERROR",
+                            "Erro interno do servidor",
+                            LocalDateTime.now().toString()
+                ));
+    }
+
     @ExceptionHandler(RateLimitException.class)
     public ResponseEntity<ErrorResponseDTO> handleRateLimit(RateLimitException ex) {
         return ResponseEntity.status(429)
@@ -36,17 +56,6 @@ public class GlobalExceptionHandler {
                         401,
                         "INVALID_CREDENTIALS",
                         "Usuário ou senha inválidos",
-                        LocalDateTime.now().toString()
-                ));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleGeneric(Exception ex) {
-        return ResponseEntity.status(500)
-                .body(new ErrorResponseDTO(
-                        500,
-                        "INTERNAL_ERROR",
-                        ex.getMessage(),
                         LocalDateTime.now().toString()
                 ));
     }
@@ -96,6 +105,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(erros);
     }
+
     @ExceptionHandler(InvalidRefreshTokenException.class)
     public ResponseEntity<ErrorResponseDTO> handleInvalidRefreshToken(
             InvalidRefreshTokenException ex
@@ -106,6 +116,32 @@ public class GlobalExceptionHandler {
                         "INVALID_REFRESH_TOKEN",
                         ex.getMessage(),
                         LocalDateTime.now().toString()
+                ));
+    }
+
+    @ExceptionHandler(ExpiredRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDTO>handleExpiredRefreshToken(
+            ExpiredRefreshTokenException ex
+    ){
+        return ResponseEntity.status(401)
+                .body(new ErrorResponseDTO(
+                        401,
+                        "EXPIRED_REFRESH_TOKEN",
+                        ex.getMessage(),
+                        LocalDateTime.now().toString()
+                ));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgument(
+            IllegalArgumentException ex
+    ) {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponseDTO(
+                            400,
+                            "INVALID_ARGUMENT",
+                            ex.getMessage(),
+                            LocalDateTime.now().toString()
                 ));
     }
 }

@@ -2,11 +2,20 @@ package LinguRemi.DTO;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+
 public class HistoricoDTO {
-	private String emailTransferencia;
-    private double valorTransferencia;
-    private String descTransferencia;
-    private List<ReceitaQuantidadeDTO> receitasTransferencia;
+	@NotBlank(message = "Descrição é obrigatória")
+	private String descTransferencia;
+
+	@Positive(message = "Valor deve ser maior que zero")
+	private double valorTransferencia;
+
+	@NotEmpty(message = "O histórico deve conter pelo menos uma receita")
+	private List<@Valid ReceitaQuantidadeDTO> receitasTransferencia;
 	
 	public HistoricoDTO() {
 		super();
@@ -15,18 +24,9 @@ public class HistoricoDTO {
 	public HistoricoDTO(String emailTransferencia, double valorTransferencia, String descTransferencia,
 			List<ReceitaQuantidadeDTO> receitasTransferencia) {
 		super();
-		this.emailTransferencia = emailTransferencia;
 		this.valorTransferencia = valorTransferencia;
 		this.descTransferencia = descTransferencia;
 		this.receitasTransferencia = receitasTransferencia;
-	}
-
-	public String getEmailTransferencia() {
-		return emailTransferencia;
-	}
-
-	public void setEmailTransferencia(String emailTransferencia) {
-		this.emailTransferencia = emailTransferencia;
 	}
 
 	public double getValorTransferencia() {
@@ -52,7 +52,4 @@ public class HistoricoDTO {
 	public void setReceitasTransferencia(List<ReceitaQuantidadeDTO> receitasTransferencia) {
 		this.receitasTransferencia = receitasTransferencia;
 	}
-
-	
-	
 }

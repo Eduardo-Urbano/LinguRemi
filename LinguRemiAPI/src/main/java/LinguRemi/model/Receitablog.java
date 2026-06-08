@@ -1,14 +1,9 @@
 package LinguRemi.model;
 
-import java.time.ZonedDateTime;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "Receitablog")
@@ -17,13 +12,26 @@ public class Receitablog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idReceitaBlog;
+
+	@Column(nullable = false)
 	private String nomeReceitablog;
+
+	@Column(nullable = false)
 	private String descricaoReceitablog;
+
 	private String imgReceitablog;
+
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String ingredientesReceitablog;
+
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String preparoReceitaBlog;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+	@Column(nullable = false)
 	private ZonedDateTime dataReceitablog;
+
+	@Column(nullable = false)
 	private String tempoReceitablog;
 		
 	public Receitablog(long idReceitaBlog, String nomeReceitablog, String descricaoReceitablog, String imgReceitablog,

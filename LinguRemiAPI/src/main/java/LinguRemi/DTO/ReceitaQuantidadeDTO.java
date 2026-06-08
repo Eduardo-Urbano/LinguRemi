@@ -1,7 +1,15 @@
 package LinguRemi.DTO;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class ReceitaQuantidadeDTO {
+
+	@NotNull(message = "Receita é obrigatória")
 	private Long id;
+
+	@NotNull(message = "Quantidade é obrigatória")
+	@Positive(message = "Quantidade deve ser maior que zero")
 	private Double quantidade;
 	
 	public ReceitaQuantidadeDTO() {
@@ -30,6 +38,4 @@ public class ReceitaQuantidadeDTO {
 
 		this.quantidade = quantidade;
 	}
-	
-	
 }

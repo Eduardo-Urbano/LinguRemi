@@ -1,7 +1,12 @@
 package LinguRemi.Infra.Security;
 
-import java.io.IOException;
-
+import LinguRemi.repository.UsuariosRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,14 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import LinguRemi.repository.UsuariosRepository;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter{
@@ -39,24 +37,40 @@ public class SecurityFilter extends OncePerRequestFilter{
 				request.getRequestURI()
 		);
 
-		var token = this.recoverToken(request);
+		try {
 
-		if(token != null) {
-			var login = tokenService.validateToken(token);
+			var token = recoverToken(request);
 
-			if (login != null && !login.isBlank()){
-				UserDetails usuarios = repU.findByEmailUsuarios(login);
+			if (token != null) {
 
-				if (usuarios != null){
-					var authentication = new UsernamePasswordAuthenticationToken(
-							usuarios,
-							null,
-							usuarios.getAuthorities()
-					);
+				var login = tokenService.validateToken(token);
 
-					SecurityContextHolder.getContext().setAuthentication(authentication);
+				if (login != null && !login.isBlank()) {
+
+					var usuario = repU.findByEmailUsuarios(login);
+
+					if (usuario.isPresent()) {
+
+						var authentication =
+								new UsernamePasswordAuthenticationToken(
+										usuario.get(),
+										null,
+										usuario.get().getAuthorities()
+								);
+
+						SecurityContextHolder
+								.getContext()
+								.setAuthentication(authentication);
+					}
 				}
 			}
+
+		} catch (Exception e) {
+
+			logger.warn(
+					"[JWT INVALIDO] {}",
+					e.getMessage()
+			);
 		}
 		filterChain.doFilter(request,response);
 		logger.info(

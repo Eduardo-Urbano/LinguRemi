@@ -1,12 +1,9 @@
 package LinguRemi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -16,13 +13,26 @@ public class Receitas {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idReceitas;
+
+	@Column(nullable = false)
 	private String nomeReceitas;
+
+	@Column(nullable = false)
 	private String descReceitas;
-	private double valorReceitas;
+
+	@Column(nullable = false)
+	private String tipoquantidadeReceitas;
+
+	private double valorReceitas
+			;
 	private String imgReceitas;
+
+	@DecimalMin("0.0")
+	@DecimalMax("5.0")
 	private double avaliacaoReceitas;
+
+	@Column(nullable = false)
 	private Double disponivelReceitas;
-	private String tipoquantidadeReceitas;	
 
 	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, Double disponivelReceitas, String tipoquantidadeReceitas) {
 		super();

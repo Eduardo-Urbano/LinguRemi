@@ -1,34 +1,31 @@
 package LinguRemi.Infra.Security;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import LinguRemi.model.Usuarios;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import LinguRemi.model.Usuarios;
+import java.time.Instant;
 
 @Service
 public class TokenService {
 	@Value("${api.security.token.secret}")
 	private String secret;
-	private static final Logger logger =
-			LoggerFactory.getLogger(TokenService.class);
+	@Value("${jwt.access.expiration}")
+	private Long expirationMinutes;
+	private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+	private static final String ISSUER = "auth-api";
 	
 	public String generateToken(Usuarios user) {
 		try {
 			Algorithm alg = Algorithm.HMAC256(secret);
 			String token = JWT.create()
-					.withIssuer("auth-api")
+					.withIssuer(ISSUER)
 					.withSubject(user.getEmailUsuarios())
 					.withClaim("id",user.getIdUsuarios())
 					.withClaim("nome",user.getNomeUsuarios())
@@ -54,7 +51,7 @@ public class TokenService {
 		try {
 			Algorithm alg = Algorithm.HMAC256(secret);
 			return JWT.require(alg)
-					.withIssuer("auth-api")
+					.withIssuer(ISSUER)
 					.build()
 					.verify(token)
 					.getSubject();
@@ -68,9 +65,9 @@ public class TokenService {
 			return null;
 		}
 	}
-	
+
 	private Instant genExpirationDate() {
-		return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
+		return Instant.now().plusSeconds(expirationMinutes * 60);
 	}
 	
 }

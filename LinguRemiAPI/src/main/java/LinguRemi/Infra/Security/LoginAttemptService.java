@@ -8,11 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LoginAttemptService {
 
     private static final int MAX_ATTEMPTS = 3;
+    private static final long MINUTE = 60_000L;
 
     private final ConcurrentHashMap<String, LoginAttemptData> attempts =
             new ConcurrentHashMap<>();
 
     public boolean isBlocked(String email) {
+
+        email = email.toLowerCase().trim();
 
         LoginAttemptData data = attempts.get(email);
 
@@ -22,7 +25,7 @@ public class LoginAttemptService {
 
         if (System.currentTimeMillis() >= data.getLockedUntil()) {
 
-            data.setLockedUntil(0);
+            attempts.remove(email);
 
             return false;
         }
@@ -64,16 +67,11 @@ public class LoginAttemptService {
     }
 
     private long getBlockTime(int lockCount) {
-
         return switch (lockCount) {
-
-            case 1 -> 60_000L;      // 1 minuto
-
-            case 2 -> 300_000L;     // 5 minutos
-
-            case 3 -> 900_000L;     // 15 minutos
-
-            default -> 1_800_000L;  // 30 minutos
+            case 1 -> MINUTE;           // 1 minuto
+            case 2 -> 5 * MINUTE;       // 5 minutos
+            case 3 -> 15 * MINUTE;      // 15 minutos
+            default -> 30 * MINUTE;     // 30 minutos
         };
     }
 }

@@ -31,8 +31,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 public class ReceitasController {
 
-    private final String diretorioImagem = "uploads/";
-
     @Autowired
     private ReceitasRepository repR;
     @Autowired
@@ -71,24 +69,81 @@ public class ReceitasController {
     public Optional<Receitas> buscarReceita(@PathVariable Long id) {
     	return repR.findById(id);
     }
-    
+
     @Operation(summary = "Cadastra uma nova receita no blog com upload de imagem")
     @PostMapping("/cadastrar")
     public Receitablog cadastrarBlog(@ModelAttribute CadastroDTO dto) throws IOException {
+
         Receitablog receita = new Receitablog();
 
+        String pastaUploads =
+                System.getProperty("user.dir") + "/uploads/";
 
-        String pastaUploads = System.getProperty("user.dir") + "/uploads/";
-        String caminho = pastaUploads + dto.getImgReceita().getOriginalFilename();
-        dto.getImgReceita().transferTo(new File(caminho));
-        
-        receita.setNomeReceitablog(dto.getNomeReceita());
-        receita.setIngredientesReceitablog(dto.getIngReceita());
-        receita.setDescricaoReceitablog(dto.getDescReceita());
-        receita.setPreparoReceitaBlog(dto.getPreparoReceita());
-        receita.setDataReceitablog(ZonedDateTime.now());
-        receita.setTempoReceitablog(dto.getTempoReceita());
-        receita.setImgReceitablog("uploads/" + dto.getImgReceita().getOriginalFilename());
+        File pasta = new File(pastaUploads);
+
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+
+        String contentType =
+                dto.getImgReceita().getContentType();
+
+        if (
+                !"image/jpeg".equals(contentType)
+                        && !"image/jpg".equals(contentType)
+                        && !"image/png".equals(contentType)
+                        && !"image/webp".equals(contentType)
+        ) {
+            throw new RuntimeException(
+                    "Formato de imagem inválido"
+            );
+        }
+
+        String nomeOriginal =
+                dto.getImgReceita().getOriginalFilename();
+
+        String extensao =
+                nomeOriginal.substring(
+                        nomeOriginal.lastIndexOf(".")
+                );
+
+        String nomeArquivo =
+                java.util.UUID.randomUUID() + extensao;
+
+        String caminho =
+                pastaUploads + nomeArquivo;
+
+        dto.getImgReceita()
+                .transferTo(new File(caminho));
+
+        receita.setNomeReceitablog(
+                dto.getNomeReceita()
+        );
+
+        receita.setIngredientesReceitablog(
+                dto.getIngReceita()
+        );
+
+        receita.setDescricaoReceitablog(
+                dto.getDescReceita()
+        );
+
+        receita.setPreparoReceitaBlog(
+                dto.getPreparoReceita()
+        );
+
+        receita.setDataReceitablog(
+                ZonedDateTime.now()
+        );
+
+        receita.setTempoReceitablog(
+                dto.getTempoReceita()
+        );
+
+        receita.setImgReceitablog(
+                "uploads/" + nomeArquivo
+        );
+
         repRP.save(receita);
 
         return receita;

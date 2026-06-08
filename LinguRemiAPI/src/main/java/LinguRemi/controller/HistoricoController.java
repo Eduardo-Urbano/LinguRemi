@@ -1,18 +1,5 @@
 package LinguRemi.controller;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import LinguRemi.DTO.HistoricoDTO;
 import LinguRemi.DTO.ReceitaQuantidadeDTO;
 import LinguRemi.model.Historico;
@@ -21,10 +8,19 @@ import LinguRemi.model.Receitas;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.HistoricoRepository;
 import LinguRemi.repository.ReceitasRepository;
-import LinguRemi.repository.UsuariosRepository;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "Histórico", description = "Endpoints relacionados ao histórico de transações e compras")
 @RestController
@@ -35,12 +31,12 @@ public class HistoricoController {
     private HistoricoRepository historicoRepository;
     @Autowired
     private ReceitasRepository repR;
-    @Autowired
-    private UsuariosRepository usuariosRepository;
+    private static final Logger logger =
+            LoggerFactory.getLogger(HistoricoController.class);
 
     @Operation(summary = "Adiciona uma nova transação ao histórico")
     @PostMapping("/adicionar")
-    public ResponseEntity<?> adicionarHistorico(@RequestBody HistoricoDTO dto, @AuthenticationPrincipal Usuarios usuario) {
+    public ResponseEntity<?> adicionarHistorico(@Valid @RequestBody HistoricoDTO dto, @AuthenticationPrincipal Usuarios usuario) {
 
         Historico historico = new Historico();
         historico.setEmailTransferencia(usuario.getEmailUsuarios());
@@ -52,7 +48,8 @@ public class HistoricoController {
 
         for (ReceitaQuantidadeDTO rq : dto.getReceitasTransferencia()) {
             Receitas receita = repR.findById(rq.getId())
-                                   .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Receita não encontrada"));
 
             HistoricoReceita item = new HistoricoReceita();
             item.setHistorico(historico);
@@ -69,11 +66,13 @@ public class HistoricoController {
         return ResponseEntity.ok(historico);
     }
 
-
     @Operation(summary = "Lista todas as transações registradas")
     @GetMapping("/dados")
     public List<Historico> transações(@AuthenticationPrincipal Usuarios usuario){
-    	System.out.println("aaaaaaaaaaaaaaaaa");
+        logger.info(
+                "Consultando histórico de {}",
+                usuario.getEmailUsuarios()
+        );
         return historicoRepository.findByEmailTransferencia(usuario.getEmailUsuarios());
     }
 }

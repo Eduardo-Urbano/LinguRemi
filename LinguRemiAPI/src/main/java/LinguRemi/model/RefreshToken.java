@@ -1,6 +1,7 @@
 package LinguRemi.model;
 
 import jakarta.persistence.*;
+
 import java.time.Instant;
 
 @Entity

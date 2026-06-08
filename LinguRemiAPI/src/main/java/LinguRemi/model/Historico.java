@@ -1,19 +1,13 @@
 package LinguRemi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Historico")
@@ -22,12 +16,24 @@ public class Historico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idHistorico;
+	@Column(nullable = false)
 	private String emailTransferencia;
+
+	@Positive
+	@Column(nullable = false)
 	private Double valorTransferencia;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+	@Column(nullable = false)
 	private ZonedDateTime dataTransferencia;
+
+	@Column(nullable = false)
 	private String descTransferencia;
+
+	@Positive
+	@Column(nullable = false)
 	private double quantidadeTransferencia;
+
 	@OneToMany(mappedBy = "historico", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<HistoricoReceita> itens = new ArrayList<>();

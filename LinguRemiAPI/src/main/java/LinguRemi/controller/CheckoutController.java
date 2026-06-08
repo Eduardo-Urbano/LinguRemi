@@ -1,29 +1,28 @@
 package LinguRemi.controller;
 
-import java.util.Map;
-
 import LinguRemi.DTO.CheckoutDTO;
 import LinguRemi.DTO.CheckoutItemDTO;
 import LinguRemi.Enum.PedidoStatus;
+import LinguRemi.mapper.PedidoMapper;
 import LinguRemi.model.Pedido;
 import LinguRemi.model.PedidoItem;
 import LinguRemi.model.Receitas;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.PedidoRepository;
 import LinguRemi.repository.ReceitasRepository;
+import LinguRemi.service.CheckoutService;
+import LinguRemi.service.MercadoPagoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import LinguRemi.service.MercadoPagoService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -39,8 +38,14 @@ public class CheckoutController {
     @Autowired
     private MercadoPagoService mercadoPagoService;
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(CheckoutController.class);
+    @Autowired
+    private PedidoMapper pedidoMapper;
+
+    @Autowired
+    private CheckoutService checkoutService;
+
+    @Value("${mercadopago.webhook.secret}")
+    private String webhookSecret;
 
     @PostMapping("/criar")
     public ResponseEntity<?> criarCheckout(
@@ -83,7 +88,7 @@ public class CheckoutController {
             pedido.setLinkPagamento(linkPagamento);
             pedidoRepository.save(pedido);
 
-            return ResponseEntity.ok(pedido);
+            return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
 
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
@@ -100,138 +105,28 @@ public class CheckoutController {
 
     @GetMapping("/meus-pedidos")
     public ResponseEntity<?> meusPedidos(@AuthenticationPrincipal Usuarios usuario) {
+
+        List<Pedido> pedidos =
+                pedidoRepository.findByEmailUsuario(usuario.getEmailUsuarios());
+
         return ResponseEntity.ok(
-                pedidoRepository.findByEmailUsuario(usuario.getEmailUsuarios())
+                pedidos.stream().map(pedidoMapper::toDTO).toList()
         );
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<?> receberWebhook(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<?> receberWebhook(
+            @RequestBody Map<String, Object> body,
+            @RequestParam String token
+    ) {
 
-        logger.info("[WEBHOOK] Notificação recebida: {}", body);
-
-        try {
-
-            Object type = body.get("type");
-            Object dataObj = body.get("data");
-
-            logger.info(
-                    "[WEBHOOK] Tipo recebido: {}",
-                    type
-            );
-
-            if (!"payment".equals(type) || dataObj == null) {
-
-                logger.warn(
-                        "[WEBHOOK] Ignorado - tipo inválido"
-                );
-
-                return ResponseEntity.ok().build();
-            }
-
-            Map<String, Object> data = (Map<String, Object>) dataObj;
-
-            Long paymentId =
-                    Long.valueOf(data.get("id").toString());
-
-            logger.info(
-                    "[WEBHOOK] Payment ID: {}",
-                    paymentId
-            );
-
-            var pagamento =
-                    mercadoPagoService.buscarPagamento(paymentId);
-
-            logger.info(
-                    "[WEBHOOK] Status pagamento: {}",
-                    pagamento.getStatus()
-            );
-
-            if ("approved".equals(pagamento.getStatus())) {
-
-                Long pedidoId =
-                        Long.valueOf(
-                                pagamento.getExternalReference()
-                        );
-
-                logger.info(
-                        "[WEBHOOK] Pedido {} aprovado",
-                        pedidoId
-                );
-
-                Pedido pedido =
-                        pedidoRepository.findById(pedidoId)
-                                .orElseThrow(() ->
-                                        new RuntimeException(
-                                                "Pedido não encontrado"
-                                        )
-                                );
-
-                if (pedido.getStatus() != PedidoStatus.PAGO) {
-
-                    for (PedidoItem item : pedido.getItens()) {
-
-                        Receitas produto = item.getProduto();
-
-                        logger.info(
-                                "[ESTOQUE] {} | Atual: {} | Baixa: {}",
-                                produto.getNomeReceitas(),
-                                produto.getDisponivelReceitas(),
-                                item.getQuantidade()
-                        );
-
-                        if (produto.getDisponivelReceitas()
-                                < item.getQuantidade()) {
-
-                            logger.error(
-                                    "[ESTOQUE] Estoque insuficiente para {}",
-                                    produto.getNomeReceitas()
-                            );
-
-                            pedido.setStatus(
-                                    PedidoStatus.CANCELADO
-                            );
-
-                            pedidoRepository.save(pedido);
-
-                            return ResponseEntity.badRequest()
-                                    .body("Estoque insuficiente");
-                        }
-
-                        produto.setDisponivelReceitas(
-                                produto.getDisponivelReceitas()
-                                        - item.getQuantidade()
-                        );
-
-                        receitasRepository.save(produto);
-                    }
-
-                    pedido.setStatus(PedidoStatus.PAGO);
-
-                    pedidoRepository.save(pedido);
-
-                    logger.info(
-                            "[PEDIDO] Pedido {} marcado como PAGO",
-                            pedidoId
-                    );
-                }
-            }
-
-            return ResponseEntity.ok().build();
-
-        } catch (Exception e) {
-
-            logger.error(
-                    "[WEBHOOK ERROR]",
-                    e
-            );
-
-            return ResponseEntity.internalServerError()
-                    .body(
-                            "Erro ao processar webhook: "
-                                    + e.getMessage()
-                    );
+        if (!token.equals(webhookSecret)) {
+            return ResponseEntity.status(403).build();
         }
+
+        checkoutService.processarWebhook(body);
+
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/pedido/{id}/cancelar")
@@ -262,6 +157,6 @@ public class CheckoutController {
         pedido.setStatus(PedidoStatus.CANCELADO);
         pedidoRepository.save(pedido);
 
-        return ResponseEntity.ok(pedido);
+        return ResponseEntity.ok(pedidoMapper.toDTO(pedido));
     }
 }

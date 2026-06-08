@@ -12,10 +12,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +37,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll()
 						.requestMatchers(HttpMethod.POST, "/usuarios/refresh").permitAll()
-						.requestMatchers(HttpMethod.POST, "/usuarios/logout").permitAll()
+						.requestMatchers(HttpMethod.POST, "/usuarios/logout").hasAnyRole("USER", "ADMIN")
 						.requestMatchers("/", "/health").permitAll()
 						.requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/v3/api-docs","/swagger-resources/**","/webjars/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/receitas/**").hasAnyRole("USER", "ADMIN")
@@ -52,10 +54,9 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/usuarios/todos").hasRole("ADMIN")
 						.requestMatchers("/uploads/**").permitAll()
-						.requestMatchers("/h2-console/**").permitAll()
 						.anyRequest().authenticated()
 				)
-				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
+//				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
@@ -65,9 +66,16 @@ public class SecurityConfigurations {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.setAllowCredentials(true);
-		configuration.addAllowedOriginPattern("*");
-		configuration.addAllowedHeader("*");
-		configuration.addAllowedMethod("*");
+
+		configuration.setAllowedOrigins(List.of(
+				"http://localhost:5173",
+				"http://localhost:3000",
+				"https://linguremi.vercel.app"
+		));
+
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		configuration.setAllowedHeaders(List.of("*"));
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

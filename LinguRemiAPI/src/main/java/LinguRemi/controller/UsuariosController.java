@@ -60,7 +60,14 @@ public class UsuariosController {
 	@PostMapping(value = "/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data, HttpServletRequest request) {
 
-		String ip = request.getRemoteAddr();
+		String ip = request.getHeader("X-Forwarded-For");
+
+		if (ip == null) {
+			ip = request.getRemoteAddr();
+		}
+
+		data.login().trim();
+
 		if (loginAttemptService.isBlocked(data.login())) {
 
 			logger.warn(
@@ -125,19 +132,23 @@ public class UsuariosController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity refresh(@RequestBody RefreshTokenDTO dto) {
+	public ResponseEntity<Map<String, String>> refresh(
+			@RequestBody RefreshTokenDTO dto
+	) {
 		var refreshToken = refreshTokenService.validarRefreshToken(dto.refreshToken());
 		var usuario = refreshToken.getUsuario();
 
 		var novoAccessToken = tokenService.generateToken(usuario);
 
-		return ResponseEntity.ok(Map.of("accessToken", novoAccessToken));
+		return ResponseEntity.ok(
+				Map.of("accessToken", novoAccessToken)
+		);
 	}
 	
 	@Operation(summary = "Cadastra um novo usuário no sistema")
 	@PostMapping(value = "/cadastrar")
 	public ResponseEntity<Map<String, String>> cadastrar(@RequestBody @Valid RegisterDTO data) {
-		if (this.repU.findByEmailUsuarios(data.email()) != null) {
+		if (this.repU.findByEmailUsuarios(data.email()).isPresent()) {
 			return ResponseEntity.badRequest().body(
 					Map.of(
 							"message",

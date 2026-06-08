@@ -1,18 +1,17 @@
 package LinguRemi.service;
 
+import LinguRemi.model.Pedido;
+import LinguRemi.model.PedidoItem;
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
-import LinguRemi.model.Pedido;
-import LinguRemi.model.PedidoItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.mercadopago.client.payment.PaymentClient;
-import com.mercadopago.resources.payment.Payment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

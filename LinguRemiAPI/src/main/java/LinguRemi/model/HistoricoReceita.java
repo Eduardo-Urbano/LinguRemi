@@ -1,8 +1,8 @@
 package LinguRemi.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "HistoricoReceita")
@@ -10,14 +10,19 @@ public class HistoricoReceita {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "idHistorico")
-    @JsonBackReference
-    private Historico historico;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idReceita")
-    private Receitas receita;
-    private double quantidade;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idHistorico", nullable = false)
+	@JsonBackReference
+	private Historico historico;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idReceita", nullable = false)
+	private Receitas receita;
+
+	@Positive
+	@Column(nullable = false)
+	private double quantidade;
     
 	public HistoricoReceita() {
 		super();
@@ -55,8 +60,4 @@ public class HistoricoReceita {
 	public void setQuantidade(double quantidade) {
 		this.quantidade = quantidade;
 	}
-
-
 }
-
-
