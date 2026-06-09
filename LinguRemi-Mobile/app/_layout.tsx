@@ -18,13 +18,12 @@ import {
 
 
 function CustomDrawerContent(props: any) {
-  const { authenticated, setAuthenticated, setAdmin } = useAuth()
+  const { authenticated, setAuthenticated } = useAuth()
 
   async function handleLogout() {
     await lockApp()
 
     setAuthenticated(false)
-    setAdmin(false)
 
     router.replace('/login')
   }

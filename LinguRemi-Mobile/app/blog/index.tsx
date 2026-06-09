@@ -72,6 +72,7 @@ export default function BlogScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.list}
           columnWrapperStyle={styles.recipeRow}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <Pressable
               style={styles.card}

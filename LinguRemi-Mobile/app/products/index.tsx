@@ -83,9 +83,7 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    paddingHorizontal: 16,
     paddingBottom:24,
-    gap: 16,
   },
   recipeRow: {
     justifyContent:'space-between',

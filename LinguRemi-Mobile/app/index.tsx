@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
     height: 360,
     backgroundColor: '#3b2417',
     justifyContent: 'center',
-    padding: 24,
     position: 'relative',
   },
 
@@ -234,6 +233,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    
     width: '100%',
     height: '100%',
   },
@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
 
   heroContent: {
     position: 'relative',
+    padding: 24,
   },
 
   brand: {

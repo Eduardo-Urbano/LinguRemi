@@ -350,11 +350,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 14,
     elevation: 3,
+    overflow: 'hidden',
+    justifyContent:'center',
+    alignItems:'center'
   },
 
   image: {
-    width: 130,
-    height: 120,
+    margin: 10,
+    width: 100,
+    height: 100,
     borderRadius: 12,
   },
 
