@@ -70,6 +70,7 @@ public class SecurityConfigurations {
 		configuration.setAllowCredentials(true);
 
 		configuration.setAllowedOrigins(List.of(
+				"http://localhost:8081",
 				"http://localhost:5173",
 				"http://localhost:3000",
 				"https://linguremi.vercel.app"

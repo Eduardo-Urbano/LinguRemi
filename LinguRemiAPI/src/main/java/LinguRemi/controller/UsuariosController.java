@@ -163,7 +163,9 @@ public class UsuariosController {
 	@Operation(summary = "Cadastra um novo usuário no sistema")
 	@PostMapping(value = "/cadastrar")
 	public ResponseEntity<Map<String, String>> cadastrar(@RequestBody @Valid RegisterDTO data) {
-		if (this.repU.findByEmailUsuarios(data.email()).isPresent()) {
+		if(this.repU.findByEmailUsuarios(data.email()) != null) return ResponseEntity.badRequest().build();
+
+		if (this.repU.findByEmailUsuarios(data.email()) != null) {
 			return ResponseEntity.badRequest().body(
 					Map.of(
 							"message",
@@ -231,11 +233,12 @@ public class UsuariosController {
 			@Valid @RequestBody ForgotPasswordDTO dto
 	) {
 
-		var usuarioOpt = repU.findByEmailUsuarios(dto.email());
+		UserDetails ud = repU.findByEmailUsuarios(dto.email());
+		
 
-		if (usuarioOpt.isPresent()) {
+		if (ud != null) {
 
-			Usuarios usuario = usuarioOpt.get();
+			Usuarios usuario = (Usuarios) ud;
 
 			String token =
 					resetTokenService.generateResetPasswordToken(usuario);
@@ -289,13 +292,14 @@ public class UsuariosController {
 			);
 		}
 
-		Usuarios usuario = repU.findByEmailUsuarios(email)
-				.orElseThrow(
-						() -> new RuntimeException(
-								"Usuário não encontrado"
-						)
-				);
+		UserDetails ud= repU.findByEmailUsuarios(email);
+		if (ud == null) {
+	        return ResponseEntity.badRequest().body(
+	                Map.of("message", "Usuário não encontrado")
+	        );
+	    }
 
+		Usuarios usuario = (Usuarios) ud;
 		usuario.setSenhaUsuarios(
 				passwordEncoder.encode(
 						dto.novaSenha()

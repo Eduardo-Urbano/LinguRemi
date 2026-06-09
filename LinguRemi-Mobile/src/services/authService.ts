@@ -8,7 +8,7 @@ type LoginRequest = {
 }
 
 type LoginResponse = {
-  acessToken: string
+  accessToken: string
   refreshToken: string
   nome?: string
   email?: string
@@ -52,7 +52,7 @@ export async function loginUser({
     }),
   })
 
-  if (!data?.acessToken) {
+  if (!data?.accessToken) {
     throw new Error('Token não recebido pela API')
   }
 
@@ -91,7 +91,7 @@ export async function resetPassword({
 }
 
 export async function saveAuthData(data: LoginResponse) {
-  await AsyncStorage.setItem(TOKEN_KEY, data.acessToken)
+  await AsyncStorage.setItem(TOKEN_KEY, data.accessToken)
   await AsyncStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken)
   await AsyncStorage.setItem(ROLE_KEY, data.role || 'USER')
 

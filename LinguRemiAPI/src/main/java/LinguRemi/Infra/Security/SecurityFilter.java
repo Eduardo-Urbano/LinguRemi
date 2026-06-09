@@ -1,10 +1,7 @@
 package LinguRemi.Infra.Security;
 
-import LinguRemi.repository.UsuariosRepository;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import LinguRemi.model.Usuarios;
+import LinguRemi.repository.UsuariosRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter{
@@ -47,15 +49,16 @@ public class SecurityFilter extends OncePerRequestFilter{
 
 				if (login != null && !login.isBlank()) {
 
-					var usuario = repU.findByEmailUsuarios(login);
+					UserDetails ud = repU.findByEmailUsuarios(login);
+					Usuarios usuario = (Usuarios) ud;
 
-					if (usuario.isPresent()) {
+					if (usuario != null) {
 
 						var authentication =
 								new UsernamePasswordAuthenticationToken(
-										usuario.get(),
+										usuario,
 										null,
-										usuario.get().getAuthorities()
+										usuario.getAuthorities()
 								);
 
 						SecurityContextHolder
