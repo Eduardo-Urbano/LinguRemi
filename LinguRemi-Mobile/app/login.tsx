@@ -1,5 +1,5 @@
-import { router } from 'expo-router'
-import { useState } from 'react'
+import { router, useFocusEffect } from 'expo-router'
+import { useEffect, useState, useCallback } from 'react'
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,8 +10,10 @@ import {
   View,
 } from 'react-native'
 
-import { loginUser, saveAuthData } from '../src/services/authService'
+import { enableBiometricLogin, getAuthToken, isAppLocked, loginUser, saveAuthData, unlockApp } from '../src/services/authService'
 import { useAuth } from '../src/context/AuthContext'
+import * as LocalAuthentication from 'expo-local-authentication'
+import { isBiometricEnabled, logoutUser } from '../src/services/authService'
 
 export default function LoginScreen() {
   const { setAuthenticated, setAdmin } = useAuth()
@@ -19,8 +21,20 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isLocked,setIsLocked] = useState(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  useFocusEffect(
+    useCallback(() => {
+      async function checkLock() {
+        const locked = await isAppLocked()
+        setIsLocked(locked)
+      }
+
+      checkLock()
+    }, [])
+  )
 
   async function handleLogin() {
     if (isLoading) return
@@ -54,6 +68,7 @@ export default function LoginScreen() {
       })
 
       await saveAuthData(data)
+      await enableBiometricLogin()
 
       setAuthenticated(true)
       setAdmin(data.role === 'ADMIN')
@@ -70,12 +85,93 @@ export default function LoginScreen() {
     }
   }
 
+  async function handleBiometricLogin() {
+    const enabled = await isBiometricEnabled()
+
+    if(!enabled){
+      setErrorMessage('Login por biometria não ativado.')
+      return
+    }
+
+    const compatible = await LocalAuthentication.hasHardwareAsync()
+    const enrolled = await LocalAuthentication.isEnrolledAsync()
+
+    if(!compatible || !enrolled){
+      setErrorMessage('Biometria não disponivel no dispositivo.')
+      return
+    }
+
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: 'Entrar com biometria',
+      fallbackLabel: 'Usar senha',
+    })
+
+    if(!result.success){
+      setErrorMessage('Autenticação cancelada ou não reconhecida.')
+      return
+    }
+
+    const token = await getAuthToken()
+
+    if(!token){
+      setErrorMessage('Faça login com e-mail e senha primeiro.')
+      return
+    }
+
+    await unlockApp()
+    setAuthenticated(true)
+    router.replace('/')
+  }
+
+  async function handleUseAnotherUser() {
+    await logoutUser()
+    await unlockApp()
+    setIsLocked(false)
+    setAuthenticated(false)
+    setIsLocked(false)
+  }
+
+  useEffect(()=>{
+    async function checkLock() {
+      const locked = await isAppLocked()
+      setIsLocked(locked)
+    }
+    checkLock()
+  },[])
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.card}>
+
+        {isLocked ? (
+          <>
+          {errorMessage ? (
+            <Text style={styles.error}>{errorMessage}</Text>
+          ) : null}
+
+          <Pressable
+            style={styles.button}
+            onPress={handleBiometricLogin}
+          >
+            <Text style={styles.buttonText}>
+              Login com biometria
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.secondaryButton}
+            onPress={handleUseAnotherUser}
+          >
+            <Text style={styles.buttonText}>
+              Usar uma conta diferente
+            </Text>
+          </Pressable>
+          </>
+        ) : (
+          <>
         <Text style={styles.title}>Login</Text>
 
         {errorMessage ? (
@@ -116,11 +212,23 @@ export default function LoginScreen() {
         </Pressable>
 
         <Pressable
+          style={styles.button}
+          onPress={handleBiometricLogin}
+          >
+          <Text style={styles.buttonText}>
+            Login com biometria
+          </Text>
+
+        </Pressable>
+
+        <Pressable
           style={styles.secondaryButton}
           onPress={() => router.push('/register')}
         >
           <Text style={styles.buttonText}>Cadastre-se</Text>
         </Pressable>
+        </>
+        )}
       </View>
     </KeyboardAvoidingView>
   )
@@ -168,6 +276,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#000',
     padding: 14,
+    marginBottom:10,
     borderRadius: 14,
     alignItems: 'center',
   },

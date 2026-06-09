@@ -43,9 +43,12 @@ export default function ProductsScreen() {
         <FlatList
           data={products}
           keyExtractor={(item) => String(item.idReceitas)}
-          renderItem={({ item }) => <ProductCard product={item} />}
+          numColumns={2}
+          showsHorizontalScrollIndicator={false}
+          columnWrapperStyle={styles.recipeRow}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => <ProductCard product={item} />}
         />
       )}
     </SafeAreaView>
@@ -80,6 +83,12 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    paddingBottom: 24,
+    paddingHorizontal: 16,
+    paddingBottom:24,
+    gap: 16,
+  },
+  recipeRow: {
+    justifyContent:'space-between',
+    marginBottom: 16,
   },
 })

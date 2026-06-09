@@ -21,10 +21,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import LinguRemi.DTO.AuthenticationDTO;
+import LinguRemi.DTO.LoginResponseDTO;
+import LinguRemi.DTO.RefreshTokenDTO;
+import LinguRemi.DTO.RegisterDTO;
+import LinguRemi.DTO.ResetPasswordDTO;
+import LinguRemi.Enum.UserRole;
 import LinguRemi.Infra.Security.TokenService;
 import LinguRemi.Infra.Exception.AccountLockedException;
 import LinguRemi.model.Usuarios;
 import LinguRemi.repository.UsuariosRepository;
+import LinguRemi.service.EmailService;
 import LinguRemi.service.EmailService;
 import LinguRemi.service.RefreshTokenService;
 import jakarta.validation.Valid;

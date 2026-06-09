@@ -1,117 +1,68 @@
+import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-
 import {
-  View,
-  Text,
+  ActivityIndicator,
   FlatList,
-  TouchableOpacity,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native'
 
-import { router } from 'expo-router'
-
-import {
-  isAuthenticated,
-  isAdmin,
-} from '../../src/services/authService'
-
-import {
-  getAdminProducts,
-} from '../../src/services/adminService'
-
-import type { Product } from '../../src/types/Product'
-
-export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        async function loadPage() {
-            try {
-                const authenticated = await isAuthenticated()
-                const admin = await isAdmin()
-
-                if (!authenticated || !admin) {
-                    router.replace('/')
-                    return
-                }
-
-                const data = await getAdminProducts()
-
-                setProducts(data)
-            } catch (error) {
-                console.log(error)
-                router.replace('/')
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadPage()
-    }, [])
-
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+export default function indexAdmin(){
+  
+  return(
+    <View style={styles.container}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/admin/blog')}
       >
-        <Text>Carregando...</Text>
-      </View>
-    )
-  }
+        <Text style={styles.buttonText}>Gerenciar blog</Text>
+      </Pressable>
 
-  return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: 'bold',
-          marginBottom: 20,
-        }}
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/admin/produtos')}
       >
-        Painel Admin
-      </Text>
+        <Text style={styles.buttonText}>Gerenciar Produtos</Text>
+      </Pressable>
 
-      <FlatList
-        data={products}
-        keyExtractor={(item) =>
-          item.idReceitas.toString()
-        }
-        renderItem={({ item }) => (
-          <View
-            style={{
-              padding: 16,
-              borderWidth: 1,
-              borderRadius: 12,
-              marginBottom: 12,
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontSize: 18,
-              }}
-            >
-              {item.nomeReceitas}
-            </Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/admin/usuarios')}
+      >
+        <Text style={styles.buttonText}>Gerenciar usuarios</Text>
+      </Pressable>
 
-            <Text>
-              R$ {item.valorReceitas.toFixed(2)}
-            </Text>
-
-            <TouchableOpacity
-              style={{
-                marginTop: 12,
-              }}
-            >
-              <Text>Excluir</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
     </View>
   )
+
 }
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 18,
+    padding: 20,
+    elevation: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#000',
+    padding: 14,
+    marginBottom:10,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+    justifyContent: 'center',
+    padding: 20,
+  },
+})

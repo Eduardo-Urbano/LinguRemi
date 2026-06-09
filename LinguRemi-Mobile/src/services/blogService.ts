@@ -25,3 +25,12 @@ export function getBlogRecipeImage(path?: string) {
 
   return `${API_URL}/${path}`
 }
+
+export async function blog4Ultimas(): Promise<BlogRecipe[]> {
+  try{
+    return await apiFetch<BlogRecipe[]>('/receitas/blog4Ultimas')
+  } catch (error) {
+    console.error('Erro ao buscar receitas do blog.', error)
+    return []
+  }
+}

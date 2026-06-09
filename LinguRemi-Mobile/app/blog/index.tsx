@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 
 import { getBlogRecipeImage, getBlogRecipes } from '../../src/services/blogService'
 import type { BlogRecipe } from '../../src/types/BlogRecipe'
@@ -67,7 +68,10 @@ export default function BlogScreen() {
         <FlatList
           data={filteredRecipes}
           keyExtractor={(item) => String(item.idReceitaBlog)}
+          numColumns={2}
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.list}
+          columnWrapperStyle={styles.recipeRow}
           renderItem={({ item }) => (
             <Pressable
               style={styles.card}
@@ -102,6 +106,14 @@ export default function BlogScreen() {
           )}
         />
       )}
+      <Pressable
+        style={styles.fab}
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Criar novo produto"
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </Pressable>
     </View>
   )
 }
@@ -146,6 +158,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',
@@ -188,5 +201,25 @@ const styles = StyleSheet.create({
   description: {
     color: '#666',
     lineHeight: 20,
+  },
+  recipeRow: {
+    justifyContent:'space-between',
+    marginBottom: 16,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 24,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#b4513b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#b4513b',
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
   },
 })

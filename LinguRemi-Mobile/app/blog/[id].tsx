@@ -74,7 +74,7 @@ export default function RecipeBlogDetailsScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Pressable style={styles.backButton} onPress={() => router.back()}>
+      <Pressable style={styles.backButton} onPress={() => router.push('/blog')}>
         <Text style={styles.backButtonText}>Voltar</Text>
       </Pressable>
 

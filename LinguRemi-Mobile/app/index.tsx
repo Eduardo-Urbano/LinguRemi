@@ -14,9 +14,12 @@ import {VideoView, useVideoPlayer} from 'expo-video'
 
 import { getRandomRecipes, getRecipeImageUrl } from '../src/services/recipeService'
 import type { Recipe } from '../src/types/Recipe'
+import { BlogRecipe } from '@/src/types/BlogRecipe'
+import {blog4Ultimas, getBlogRecipeImage} from '../src/services/blogService'
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [receitaBlog, setReceitaBlog] = useState<BlogRecipe[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -29,6 +32,16 @@ export default function HomeScreen() {
 
     loadRecipes()
   }, [])
+
+  useEffect(() => {
+    async function loadReceitaBlog() {
+      const data = await blog4Ultimas()
+      setReceitaBlog(data)
+      setIsLoading(false)
+      player.play()
+    }
+    loadReceitaBlog()
+  },[])
 
   const player = useVideoPlayer(
   require('../assets/videos/65692-515098526.mp4'),
@@ -103,7 +116,7 @@ export default function HomeScreen() {
           renderItem={({ item }) => (
             <Pressable
               style={styles.recipeCard}
-              onPress={() => router.push('/products')}
+              onPress={() => router.push(`/products/${item.idReceitas}`)}
             >
               {item.imgReceitas ? (
                 <Image
@@ -131,8 +144,69 @@ export default function HomeScreen() {
             </Pressable>
           )}
         />
+
       )}
 
+
+      <Text style={styles.sectionTitle}>Explore o nosso Blog</Text>
+      
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" />
+          <Text style={styles.message}>Carregando receitas do blog...</Text>
+        </View>
+      ) : recipes.length === 0 ? (
+        <Text style={styles.message}>Nenhuma receita encontrada.</Text>
+      ) : (
+      <FlatList
+        data={receitaBlog}
+        keyExtractor={(item) => String(item.idReceitaBlog)}
+        numColumns={2}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.recipeList}
+        columnWrapperStyle={styles.recipeRow}
+        renderItem={({item}) => (
+          <Pressable
+            style={styles.recipeCard}
+            onPress={() => router.push(`/blog/${item.idReceitaBlog}`)}
+          >
+            {item.imgReceitablog ? (
+              <Image
+                source={{uri: getBlogRecipeImage(item.imgReceitablog)}}
+                style={styles.recipeImage}
+                resizeMode='cover'
+              />
+            ) : (
+
+              
+              <View style={styles.imagePlaceholder}>
+                <Text style={styles.placeholderText}>Sem imagem</Text>
+              </View>
+            )}
+
+            <View style={styles.recipeContent}>
+
+              <Text style={styles.date}>
+                {item.dataReceitablog
+                  ? new Date(item.dataReceitablog).toLocaleDateString('pt-BR')
+                  : 'Data não informada'}
+              </Text>
+
+              <Text style={styles.recipeTitle} numberOfLines={2}>
+                {item.nomeReceitablog}
+              </Text>
+
+              <Text style={styles.recipeDescription} numberOfLines={3}>
+                {item.descricaoReceitablog}
+              </Text>
+
+
+
+            </View>
+          </Pressable>
+        )}
+      />
+      )}
 
     </ScrollView>
   )
@@ -299,5 +373,9 @@ const styles = StyleSheet.create({
   rating: {
     marginTop: 12,
     fontWeight: '700',
+  },
+  date: {
+    color: '#999',
+    marginBottom: 6,
   },
 })

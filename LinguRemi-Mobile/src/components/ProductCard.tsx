@@ -50,16 +50,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
 const styles = StyleSheet.create({
   card: {
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: 20,
-    elevation: 4,
+    elevation: 3,
   },
 
   image: {
     width: '100%',
-    height: 190,
+    height: 150,
   },
 
   imagePlaceholder: {

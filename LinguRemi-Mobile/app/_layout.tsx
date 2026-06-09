@@ -1,21 +1,61 @@
 import 'react-native-gesture-handler'
 
 import { Drawer } from 'expo-router/drawer'
-import {HeaderLogo} from '../assets/components/HeaderLogo'
+import { router } from 'expo-router'
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer'
+
+import { HeaderLogo } from '../assets/components/HeaderLogo'
+import { logoutUser,lockApp } from '../src/services/authService'
 
 import {
   AuthProvider,
   useAuth,
 } from '../src/context/AuthContext'
 
-function DrawerLayout() {
+
+function CustomDrawerContent(props: any) {
+  const { authenticated, setAuthenticated, setAdmin } = useAuth()
+
+  async function handleLogout() {
+    await lockApp()
+
+    setAuthenticated(false)
+    setAdmin(false)
+
+    router.replace('/login')
+  }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+
+      {authenticated ? (
+        <DrawerItem
+          label="Sair"
+          labelStyle={{fontSize:16, fontWeight:'600', alignContent:'center'}}
+          onPress={handleLogout}
+        />
+      ) : null}
+    </DrawerContentScrollView>
+  )
+}
+
+  function DrawerLayout() {
   const {
     authenticated,
     admin,
   } = useAuth()
 
+  
   return (
     <Drawer
+      drawerContent={(props) => (
+        <CustomDrawerContent {...props}/>
+      )}
       screenOptions={{
         headerShown: true,
         drawerActiveTintColor: '#8b4513',
@@ -58,6 +98,7 @@ function DrawerLayout() {
         name="profile"
         options={{
           title: 'Perfil',
+          headerTitle: () => <HeaderLogo/>,
           drawerItemStyle: authenticated
             ? undefined
             : { display: 'none' },
@@ -98,6 +139,7 @@ function DrawerLayout() {
         name="admin/index"
         options={{
           title: 'Admin',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: admin
             ? undefined
             : { display: 'none' },
@@ -107,6 +149,8 @@ function DrawerLayout() {
       <Drawer.Screen
         name="products/[id]"
         options={{
+          title: 'produtoId',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: { display: 'none' },
         }}
       />
@@ -114,17 +158,9 @@ function DrawerLayout() {
       <Drawer.Screen
         name="blog/[id]"
         options={{
+          title: 'blogId',
+          headerTitle: () => <HeaderLogo />,
           drawerItemStyle: { display: 'none' },
-        }}
-      />
-
-      <Drawer.Screen
-        name="logout"
-        options={{
-          title: 'Sair',
-          drawerItemStyle: authenticated
-            ? undefined
-            : { display: 'none' },
         }}
       />
 
@@ -143,6 +179,31 @@ function DrawerLayout() {
           headerTitle: () => <HeaderLogo />,
         }}
       />
+
+      <Drawer.Screen
+        name="admin/produtos"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="admin/blog"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="admin/usuarios"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
     </Drawer>
     
   )
