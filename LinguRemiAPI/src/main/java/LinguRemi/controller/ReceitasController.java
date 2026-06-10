@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,9 +74,8 @@ public class ReceitasController {
     }
 
     @Operation(summary = "Cadastra uma nova receita no blog com upload de imagem")
-    @PostMapping("/cadastrar")
-    public Receitablog cadastrarBlog(@ModelAttribute CadastroDTO dto) throws IOException {
-
+    @PostMapping(value = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity cadastrarBlog(@ModelAttribute CadastroDTO dto) throws IOException {    	
         Receitablog receita = new Receitablog();
 
         String pastaUploads =
@@ -146,7 +148,7 @@ public class ReceitasController {
 
         repRP.save(receita);
 
-        return receita;
+        return ResponseEntity.ok(Map.of("message", "Receita cadastrada com sucesso"));
     }
 
     @Operation(summary = "Retorna receitas aleatórias para destaque na página inicial")
