@@ -2,6 +2,7 @@ import { router } from 'expo-router'
 import { useEffect, useMemo, useState } from 'react'
 import {
   ActivityIndicator,
+  Modal,
   FlatList,
   Image,
   Pressable,
@@ -14,11 +15,13 @@ import { Ionicons } from '@expo/vector-icons'
 
 import { getBlogRecipeImage, getBlogRecipes } from '../../src/services/blogService'
 import type { BlogRecipe } from '../../src/types/BlogRecipe'
+import { isAuthenticated } from '@/src/services/authService'
 
 export default function BlogScreen() {
   const [recipes, setRecipes] = useState<BlogRecipe[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [loginModalVisible, setLoginModalVisible] = useState(false)
 
   useEffect(() => {
     async function loadRecipes() {
@@ -29,6 +32,17 @@ export default function BlogScreen() {
 
     loadRecipes()
   }, [])
+
+  async function handleAdicionarReceita() {
+    const authenticated = await isAuthenticated()
+    console.log(authenticated)
+    if (!authenticated) {
+      setLoginModalVisible(true)
+      return
+    }
+
+    router.push('/blog/adicionar')
+  }
 
   const filteredRecipes = useMemo(() => {
     const term = search.toLowerCase().trim()
@@ -109,12 +123,56 @@ export default function BlogScreen() {
       )}
       <Pressable
         style={styles.fab}
-        onPress={() => router.back()}
+        onPress={handleAdicionarReceita}
         accessibilityRole="button"
         accessibilityLabel="Criar novo produto"
       >
         <Ionicons name="add" size={28} color="#fff" />
       </Pressable>
+      <Modal
+        visible={loginModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLoginModalVisible(false)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setLoginModalVisible(false)}
+        >
+          <Pressable
+            style={styles.modalBox}
+            onPress={(e) => e.stopPropagation()}
+          >
+            <Text style={styles.modalTitle}>
+              Login necessário
+            </Text>
+
+            <Text style={styles.modalText}>
+              Apenas usuários autenticados podem adicionar receitas.
+            </Text>
+
+      
+            <View style={styles.modalActions}>
+              <Pressable
+                style={styles.cancelButton}
+                onPress={() => setLoginModalVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.loginButton}
+                onPress={() => {
+                  setLoginModalVisible(false)
+                  router.push('/login')
+                }}
+              >
+                <Text style={styles.loginButtonText}>Fazer login</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   )
 }
@@ -223,4 +281,64 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.45)',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 24,
+},
+
+modalBox: {
+  width: '100%',
+  maxWidth: 360,
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 24,
+  elevation: 8,
+},
+
+modalTitle: {
+  fontSize: 22,
+  fontWeight: '800',
+  color: '#3b2417',
+  marginBottom: 10,
+},
+
+modalText: {
+  fontSize: 16,
+  color: '#666',
+  lineHeight: 22,
+  marginBottom: 24,
+},
+
+modalActions: {
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  gap: 12,
+},
+
+cancelButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 12,
+  backgroundColor: '#eee',
+},
+
+cancelButtonText: {
+  color: '#444',
+  fontWeight: '700',
+},
+
+loginButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 12,
+  backgroundColor: '#b4513b',
+},
+
+loginButtonText: {
+  color: '#fff',
+  fontWeight: '700',
+},
 })

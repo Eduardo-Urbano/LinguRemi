@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-import { apiFetch } from './api'
+import { apiFetch, API_URL } from './api'
+import { Platform } from 'react-native'
 
 type LoginRequest = {
   login: string
@@ -30,6 +30,19 @@ type ResetPasswordRequest = {
   token:string
   novaSenha: string
   confirmarSenha:string
+}
+
+type AddReceitaBlogRequest = {
+  nomeReceita: string
+  ingReceita: string
+  preparoReceita: string
+  descReceita: string
+  tempoReceita: string
+  imgReceita: {
+    uri: string
+    name: string
+    type: string
+  }
 }
 
 const TOKEN_KEY = '@linguremi:token'
@@ -185,4 +198,50 @@ export async function enableBiometricLogin() {
 export async function isBiometricEnabled() {
   const value = await AsyncStorage.getItem(BIOMETRIC_KEY)
   return value === 'true'
+}
+
+export async function addReceitaBlog({
+  nomeReceita,
+  ingReceita,
+  preparoReceita,
+  descReceita,
+  tempoReceita,
+  imgReceita,
+}: AddReceitaBlogRequest): Promise<void> {
+  const formData = new FormData()
+
+  formData.append('nomeReceita', nomeReceita)
+  formData.append('ingReceita', ingReceita)
+  formData.append('preparoReceita', preparoReceita)
+  formData.append('descReceita', descReceita)
+  formData.append('tempoReceita', tempoReceita)
+
+  if (Platform.OS === 'web') {
+    const fileResponse = await fetch(imgReceita.uri)
+    const blob = await fileResponse.blob()
+
+    formData.append('imgReceita', blob, imgReceita.name || 'receita.jpg')
+  } else {
+    formData.append('imgReceita', {
+      uri: imgReceita.uri,
+      name: imgReceita.name || 'receita.jpg',
+      type: imgReceita.type || 'image/jpeg',
+    } as any)
+  }
+
+  const token = await AsyncStorage.getItem(TOKEN_KEY)
+
+  const response = await fetch(`${API_URL}/receitas/cadastrar`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.log('Erro da API:', response.status, errorText)
+    throw new Error(errorText || 'Erro ao cadastrar receita.')
+  }
 }

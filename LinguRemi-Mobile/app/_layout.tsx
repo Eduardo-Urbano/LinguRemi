@@ -203,6 +203,14 @@ function CustomDrawerContent(props: any) {
         }}
       />
 
+      <Drawer.Screen
+        name="blog/adicionar"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
     </Drawer>
     
   )
