@@ -14,6 +14,9 @@ import { enableBiometricLogin, getAuthToken, isAppLocked, loginUser, saveAuthDat
 import { useAuth } from '../src/context/AuthContext'
 import * as LocalAuthentication from 'expo-local-authentication'
 import { isBiometricEnabled, logoutUser } from '../src/services/authService'
+import LoadingModal from '../src/components/feedback/LoadingModal'
+import SuccessModal from '../src/components/feedback/SuccessModal'
+import ErrorModal from '../src/components/feedback/ErrorModal'
 
 export default function LoginScreen() {
   const { setAuthenticated, setAdmin } = useAuth()
@@ -22,6 +25,8 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isLocked,setIsLocked] = useState(false)
+  const [successVisible, setSuccessVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -36,6 +41,15 @@ export default function LoginScreen() {
     }, [])
   )
 
+  function showError(message: string) {
+    setErrorMessage(message)
+    setErrorVisible(true)
+
+    setTimeout(() => {
+      setErrorVisible(false)
+    }, 2500)
+  }
+
   async function handleLogin() {
     if (isLoading) return
 
@@ -46,16 +60,34 @@ export default function LoginScreen() {
 
     if (!sanitizedLogin || !sanitizedPassword) {
       setErrorMessage('Preencha todos os campos.')
+      setErrorVisible(true)
+
+      setTimeout(() => {
+        setErrorVisible(false)
+      }, 2500)
+
       return
     }
 
     if (!emailRegex.test(sanitizedLogin)) {
       setErrorMessage('Insira um email válido.')
+      setErrorVisible(true)
+
+      setTimeout(() => {
+        setErrorVisible(false)
+      }, 2500)
+
       return
     }
 
     if (sanitizedPassword.length < 6) {
       setErrorMessage('A senha precisa ter pelo menos 6 caracteres.')
+      setErrorVisible(true)
+
+      setTimeout(() => {
+        setErrorVisible(false)
+      }, 2500)
+
       return
     }
 
@@ -70,16 +102,28 @@ export default function LoginScreen() {
       await saveAuthData(data)
       await enableBiometricLogin()
 
-      setAuthenticated(true)
-      setAdmin(data.role === 'ADMIN')
-      router.replace('/')
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Erro ao conectar com a API.'
+      setSuccessVisible(true)
 
-      setErrorMessage(message)
+      setTimeout(() => {
+        setSuccessVisible(false)
+
+        setAuthenticated(true)
+        setAdmin(data.role === 'ADMIN')
+
+        router.replace('/')
+      }, 1500)
+    } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Erro ao conectar com a API.'
+
+        setErrorMessage(message)
+        setErrorVisible(true)
+
+        setTimeout(() => {
+          setErrorVisible(false)
+        }, 2500)
     } finally {
       setIsLoading(false)
     }
@@ -89,7 +133,7 @@ export default function LoginScreen() {
     const enabled = await isBiometricEnabled()
 
     if(!enabled){
-      setErrorMessage('Login por biometria não ativado.')
+      showError('Login por biometria não ativado.')
       return
     }
 
@@ -97,7 +141,7 @@ export default function LoginScreen() {
     const enrolled = await LocalAuthentication.isEnrolledAsync()
 
     if(!compatible || !enrolled){
-      setErrorMessage('Biometria não disponivel no dispositivo.')
+      showError('Login por biometria não ativado.')
       return
     }
 
@@ -107,7 +151,7 @@ export default function LoginScreen() {
     })
 
     if(!result.success){
-      setErrorMessage('Autenticação cancelada ou não reconhecida.')
+      showError('Login por biometria não ativado.')
       return
     }
 
@@ -174,10 +218,6 @@ export default function LoginScreen() {
           <>
         <Text style={styles.title}>Login</Text>
 
-        {errorMessage ? (
-          <Text style={styles.error}>{errorMessage}</Text>
-        ) : null}
-
         <TextInput
           placeholder="Email"
           value={login}
@@ -230,6 +270,22 @@ export default function LoginScreen() {
         </>
         )}
       </View>
+
+      <LoadingModal
+        visible={isLoading}
+        message="Entrando..."
+      />
+
+      <SuccessModal
+        visible={successVisible}
+        message="Login realizado com sucesso"
+      />
+
+      <ErrorModal
+        visible={errorVisible}
+        message={errorMessage}
+      />
+
     </KeyboardAvoidingView>
   )
 }
