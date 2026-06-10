@@ -8,7 +8,7 @@ export async function getUserHistory(): Promise<HistoryItem[]> {
   if (!token) return []
 
   try {
-    return await apiFetch<HistoryItem[]>('/usuarios/historico', {
+    return await apiFetch<HistoryItem[]>('/historico/dados', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

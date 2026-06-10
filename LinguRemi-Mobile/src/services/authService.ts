@@ -230,7 +230,6 @@ export async function addReceitaBlog({
   }
 
   const token = await AsyncStorage.getItem(TOKEN_KEY)
-
   const response = await fetch(`${API_URL}/receitas/cadastrar`, {
     method: 'POST',
     headers: {
