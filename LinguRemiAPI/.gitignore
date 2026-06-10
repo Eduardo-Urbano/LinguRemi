@@ -1,7 +1,8 @@
 uploads/
 .idea/
 target/
-target/* .class
+target/
+*.class
 src/target
 .env
 logs/
