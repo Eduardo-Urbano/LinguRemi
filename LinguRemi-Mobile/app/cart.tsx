@@ -536,7 +536,7 @@ deleteAction: {
   backgroundColor: '#dc2626',
   justifyContent: 'center',
   alignItems: 'center',
-  width: 120,
+  width: "60%",
   marginBottom: 14,
   borderRadius: 16,
 },

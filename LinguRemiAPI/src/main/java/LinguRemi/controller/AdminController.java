@@ -1,22 +1,30 @@
 package LinguRemi.controller;
 
+import java.util.Map;
 import java.util.Optional;
 
-import LinguRemi.DTO.ProdutoDTO;
-import LinguRemi.Enum.PedidoStatus;
-import LinguRemi.model.Pedido;
-import LinguRemi.repository.PedidoRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import LinguRemi.DTO.ReceitaQuantidadeDTO;
+import LinguRemi.DTO.ProdutoDTO;
+import LinguRemi.DTO.ProdutoUpdateDTO;
+import LinguRemi.Enum.PedidoStatus;
+import LinguRemi.model.Pedido;
 import LinguRemi.model.Receitas;
+import LinguRemi.repository.PedidoRepository;
 import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
 import LinguRemi.repository.UsuariosRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "admin", description = "Endpoints relacionados ao gerenciamento de usuários e controle de produtos cadastrados")
 @RestController
@@ -61,7 +69,7 @@ public class AdminController {
 
 	@GetMapping("/produtos")
 	public ResponseEntity<?> listarProdutos(){
-		return ResponseEntity.ok(repR.findAll());
+		return ResponseEntity.ok(repR.findByAtivoReceitasTrue());
 	}
 
 	@GetMapping("/pedidos")
@@ -111,32 +119,45 @@ public class AdminController {
 		return ResponseEntity.ok(produto);
 	}
     
-	@PutMapping(value="/qtd")
-	public ResponseEntity<Receitas> mudarQtd(@RequestBody ReceitaQuantidadeDTO dto) {
-		Optional<Receitas> rAntiga = repR.findById(dto.getId());
+	@PutMapping(value="/editarReceita/{id}")
+	public ResponseEntity<Map<String, String>> editarReceita(@PathVariable Long id, @RequestBody ProdutoUpdateDTO dto) {
+		Optional<Receitas> rAntiga = repR.findById(id);
 
 		if (rAntiga.isEmpty()){
 			return ResponseEntity.notFound().build();
 		}
 
 		Receitas rNova = rAntiga.get();
-		rNova.setDisponivelReceitas(dto.getQuantidade());
+		rNova.setNomeReceitas(dto.nomeReceitas());
+		rNova.setDescReceitas(dto.descReceitas());
+		rNova.setValorReceitas(dto.valorReceitas());
+		rNova.setDisponivelReceitas(dto.disponivelReceitas());
+		rNova.setTipoquantidadeReceitas(dto.tipoquantidadeReceitas());
+		
+
 		repR.save(rNova);
 
-		return ResponseEntity.ok(rNova);
+		return ResponseEntity.ok(
+	            Map.of("message", "Produto alterado com sucesso")
+	    );
 	}
 	
 	//apaga receita dos produtos
 	@DeleteMapping("/produtos/{id}")
-	public ResponseEntity<String> deletarProdutoPorId(@PathVariable Long id) {
-		if (!repR.existsById(id)) {
+	public ResponseEntity<Map<String, String>> deletarProdutoPorId(@PathVariable Long id) {
+		Optional<Receitas> recOpt = repR.findById(id);
+		if (recOpt.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		repR.deleteById(id);
+		Receitas receita = recOpt.get();
+		receita.setAtivoReceitas(false);
+		repR.save(receita);
 
-		return ResponseEntity.ok("Produto apagado");
-	}
+		return ResponseEntity.ok(
+			    Map.of("message", "Produto desativado")
+			);
+		}
 
 	//apaga receita do blog
 	@DeleteMapping(value="/delReceita")

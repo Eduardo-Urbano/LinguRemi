@@ -23,8 +23,7 @@ public class Receitas {
 	@Column(nullable = false)
 	private String tipoquantidadeReceitas;
 
-	private double valorReceitas
-			;
+	private double valorReceitas;
 	private String imgReceitas;
 
 	@DecimalMin("0.0")
@@ -33,8 +32,11 @@ public class Receitas {
 
 	@Column(nullable = false)
 	private Double disponivelReceitas;
+	
+	@Column(nullable = false)
+	private Boolean ativoReceitas;
 
-	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, Double disponivelReceitas, String tipoquantidadeReceitas) {
+	public Receitas(long idReceitas, String nomeReceitas, String descReceitas, double valorReceitas, String imgReceitas, double avaliacaoReceitas, Double disponivelReceitas, String tipoquantidadeReceitas, Boolean ativoReceitas) {
 		super();
 		this.idReceitas = idReceitas;
 		this.nomeReceitas = nomeReceitas;
@@ -44,6 +46,7 @@ public class Receitas {
         this.avaliacaoReceitas = avaliacaoReceitas;
         this.disponivelReceitas = disponivelReceitas;
         this.tipoquantidadeReceitas = tipoquantidadeReceitas;
+        this.ativoReceitas = ativoReceitas;
     }
 
 	public Receitas() {
@@ -109,6 +112,14 @@ public class Receitas {
 
 	public void setTipoquantidadeReceitas(String tipoquantidadeReceitas) {
 		this.tipoquantidadeReceitas = tipoquantidadeReceitas;
+	}
+
+	public Boolean getAtivoReceitas() {
+		return ativoReceitas;
+	}
+
+	public void setAtivoReceitas(Boolean ativoReceitas) {
+		this.ativoReceitas = ativoReceitas;
 	}
 
 	
