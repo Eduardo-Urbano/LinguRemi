@@ -27,9 +27,7 @@ export default function HomeScreen() {
       const data = await getRandomRecipes()
       setRecipes(data)
       setIsLoading(false)
-      player.play()
     }
-
     loadRecipes()
   }, [])
 
@@ -38,7 +36,6 @@ export default function HomeScreen() {
       const data = await blog4Ultimas()
       setReceitaBlog(data)
       setIsLoading(false)
-      player.play()
     }
     loadReceitaBlog()
   },[])

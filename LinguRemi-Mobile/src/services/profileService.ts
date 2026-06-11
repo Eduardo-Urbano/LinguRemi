@@ -8,7 +8,7 @@ export async function getUserHistory(): Promise<HistoryItem[]> {
   if (!token) return []
 
   try {
-    return await apiFetch<HistoryItem[]>('/historico/dados', {
+    return await apiFetch<HistoryItem[]>('/checkout/meus', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -17,4 +17,4 @@ export async function getUserHistory(): Promise<HistoryItem[]> {
     console.error('Erro ao carregar histórico:', error)
     return []
   }
-}
+} 

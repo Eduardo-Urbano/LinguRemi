@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/drawer'
 
 import { HeaderLogo } from '../assets/components/HeaderLogo'
-import { logoutUser,lockApp } from '../src/services/authService'
+import { lockApp } from '../src/services/authService'
 
 import {
   AuthProvider,

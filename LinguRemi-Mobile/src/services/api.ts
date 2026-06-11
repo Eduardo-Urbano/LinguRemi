@@ -13,39 +13,48 @@ export async function apiFetch<T>(
   options?: RequestInit,
 ): Promise<T> {
   const token = await AsyncStorage.getItem(TOKEN_KEY)
+  try{
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      headers: {
+        'Content-Type': 'application/json',
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}),
 
-      ...(token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {}),
+        ...(options?.headers || {}),
+      },
 
-      ...(options?.headers || {}),
-    },
+      ...options,
+    })
+    if (!response.ok) {
+      let errorMessage = 'Erro na requisição'
 
-    ...options,
-  })
+      try {
+        const errorData = await response.json()
 
-  if (!response.ok) {
-    let errorMessage = 'Erro na requisição'
+        errorMessage =
+          errorData.message ||
+          errorData.error ||
+          errorMessage
+      } catch {
+        // ignora erro do parse
+      }
 
-    try {
-      const errorData = await response.json()
-
-      errorMessage =
-        errorData.message ||
-        errorData.error ||
-        errorMessage
-    } catch {
-      // ignora erro do parse
+      throw new Error(errorMessage)
     }
 
-    throw new Error(errorMessage)
-  }
+    return response.json()
+  } catch (error) {
 
-  return response.json()
+    if (error instanceof Error) {
+      throw error
+    }
+
+    throw new Error(
+      'Sem conexão com a internet'
+    )
+  }  
 }

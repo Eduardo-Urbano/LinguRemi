@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Text,
   View,
+  RefreshControl
 } from 'react-native'
 
-import { clearAuthData, getUserData, isAuthenticated } from '../src/services/authService'
+import { getUserData, isAuthenticated, logoutUser } from '../src/services/authService'
 import { getUserHistory } from '../src/services/profileService'
 import type { HistoryItem } from '../src/types/History'
 import { useAuth } from '../src/context/AuthContext'
-import { logoutUser } from '../src/services/authService'
 
 export default function ProfileScreen() {
   const [history, setHistory] = useState<HistoryItem[]>([])
@@ -21,27 +21,39 @@ export default function ProfileScreen() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const {setAuthenticated,setAdmin,} = useAuth()
+  const [refreshing, setRefreshing] = useState(false)
 
-  useEffect(() => {
-    async function loadProfile() {
-      const authenticated = await isAuthenticated()
+  async function loadProfile() {
+    const authenticated = await isAuthenticated()
 
-      if (!authenticated) {
-        router.replace('/login')
-        return
-      }
-
-      const user = await getUserData()
-
-      setNome(user.nome)
-      setEmail(user.email)
-
-      const data = await getUserHistory()
-      setHistory(data)
-
-      setIsLoading(false)
+    if (!authenticated) {
+      router.replace('/login')
+      return
     }
 
+    const user = await getUserData()
+
+    setNome(user.nome)
+    setEmail(user.email)
+
+    const data = await getUserHistory()
+    setHistory(data)
+
+    setIsLoading(false)
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+
+    try {
+      const data = await getUserHistory()
+      setHistory(data)
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
+  useEffect(() => {
     loadProfile()
   }, [])
 
@@ -78,22 +90,39 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.historyCard}>
-        <Text style={styles.historyTitle}>Histórico</Text>
+        <Text style={styles.historyTitle}>
+          Histórico ({history.length})
+        </Text>
 
         {history.length === 0 ? (
           <Text style={styles.emptyText}>Nenhuma compra encontrada.</Text>
         ) : (
           <FlatList
             data={history}
-            keyExtractor={(item, index) => String(item.id ?? index)}
+            keyExtractor={(item) => String(item.id)}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }
             renderItem={({ item }) => (
               <View style={styles.historyItem}>
-                <Text style={styles.historyDescription}>
-                  {item.descTransferencia}
-                </Text>
+                <View style={styles.historyHeader}>
+                  <Text style={styles.historyDescription}>
+                    {item.nomeItem}
+                  </Text>
 
-                <Text style={styles.historyValue}>
-                  R$ {item.valorTransferencia.toFixed(2)}
+                  <Text style={styles.historyValue}>
+                    R$ {item.valorTotal.toFixed(2)}
+                  </Text>
+                </View>
+
+                <Text style={styles.historyDate}>
+                  {new Date(item.dataCompra).toLocaleString('pt-BR', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  })}
                 </Text>
               </View>
             )}
@@ -185,19 +214,34 @@ const styles = StyleSheet.create({
   },
 
   historyItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#6b7280',
-    paddingVertical: 12,
+    backgroundColor: '#4b5563',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+
+  historyHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   historyDescription: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '700',
+    flex: 1,
   },
 
   historyValue: {
-    color: '#fff',
+    color: '#22c55e',
     fontWeight: '700',
-    marginTop: 4,
+    fontSize: 16,
+  },
+
+  historyDate: {
+    color: '#d1d5db',
+    marginTop: 8,
+    fontSize: 13,
   },
 })
