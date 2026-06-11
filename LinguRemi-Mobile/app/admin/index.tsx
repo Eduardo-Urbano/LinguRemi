@@ -17,21 +17,21 @@ export default function indexAdmin(){
     <View style={styles.container}>
       <Pressable
         style={styles.button}
-        onPress={() => router.push('/admin/blog')}
+        onPress={() => router.push('/admin/blog/blog')}
       >
         <Text style={styles.buttonText}>Gerenciar blog</Text>
       </Pressable>
 
       <Pressable
         style={styles.button}
-        onPress={() => router.push('/admin/produtos')}
+        onPress={() => router.push('/admin/produtos/produtos')}
       >
         <Text style={styles.buttonText}>Gerenciar Produtos</Text>
       </Pressable>
 
       <Pressable
         style={styles.button}
-        onPress={() => router.push('/admin/usuarios')}
+        onPress={() => router.push('/admin/usuarios/usuarios')}
       >
         <Text style={styles.buttonText}>Gerenciar usuarios</Text>
       </Pressable>

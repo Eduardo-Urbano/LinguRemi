@@ -164,6 +164,14 @@ function CustomDrawerContent(props: any) {
       />
 
       <Drawer.Screen
+        name="blog/adicionar"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
+
+      <Drawer.Screen
         name="forgotPassword"
         options={{
           drawerItemStyle: {display: 'none'},
@@ -180,7 +188,7 @@ function CustomDrawerContent(props: any) {
       />
 
       <Drawer.Screen
-        name="admin/produtos"
+        name="admin/blog/blog"
         options={{
           drawerItemStyle:{display: 'none'},
           headerTitle: () => <HeaderLogo />,
@@ -188,7 +196,7 @@ function CustomDrawerContent(props: any) {
       />
 
       <Drawer.Screen
-        name="admin/blog"
+        name="admin/usuarios/usuarios"
         options={{
           drawerItemStyle:{display: 'none'},
           headerTitle: () => <HeaderLogo />,
@@ -196,7 +204,7 @@ function CustomDrawerContent(props: any) {
       />
 
       <Drawer.Screen
-        name="admin/usuarios"
+        name="admin/produtos/[id]"
         options={{
           drawerItemStyle:{display: 'none'},
           headerTitle: () => <HeaderLogo />,
@@ -204,15 +212,15 @@ function CustomDrawerContent(props: any) {
       />
 
       <Drawer.Screen
-        name="blog/adicionar"
+        name="admin/produtos/produtos"
         options={{
           drawerItemStyle:{display: 'none'},
           headerTitle: () => <HeaderLogo />,
         }}
       />
 
+      
     </Drawer>
-    
   )
 }
 

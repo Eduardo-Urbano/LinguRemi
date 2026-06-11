@@ -8,13 +8,15 @@ import {
   TextInput,
   RefreshControl,
   Image,
+  Modal,
 } from 'react-native'
 import { router } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
-import { isAuthenticated, isAdmin } from '../../src/services/authService'
-import { getAdminProducts } from '../../src/services/adminService'
-import { getRecipeImageUrl } from '../../src/services/recipeService'
-import type { Product } from '../../src/types/Product'
+import { isAuthenticated, isAdmin } from '../../../src/services/authService'
+import { getAdminProducts, deleteProduct } from '../../../src/services/adminService'
+import { getRecipeImageUrl } from '../../../src/services/recipeService'
+import type { Product } from '../../../src/types/Product'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
 
 const COLORS = {
   bg: '#faf7f2',
@@ -49,6 +51,8 @@ export default function AdminProdutos() {
   const [refreshing, setRefreshing] = useState(false)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<'all' | StockLevel>('all')
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   const load = useCallback(async () => {
     try {
@@ -100,7 +104,28 @@ export default function AdminProdutos() {
   }, [products, query, filter])
 
   const renderItem = useCallback(
-    ({ item }: { item: Product }) => <ProductCard product={item} />,
+    ({ item }: { item: Product }) => (
+      <ReanimatedSwipeable
+        rightThreshold={80}
+        overshootRight={false}
+        renderRightActions={() => (
+          <View style={styles.deleteAction}>
+            <Ionicons
+              name="trash-outline"
+              size={24}
+              color="#fff"
+            />
+            <Text style={styles.deleteText}>Excluir</Text>
+          </View>
+        )}
+        onSwipeableOpen={() => {
+          setSelectedProduct(item)
+          setDeleteModalVisible(true)
+        }}
+      >
+        <ProductCard product={item} />
+      </ReanimatedSwipeable>
+    ),
     []
   )
 
@@ -190,6 +215,52 @@ export default function AdminProdutos() {
       >
         <Ionicons name="add" size={28} color="#fff" />
       </Pressable>
+      <Modal
+      visible={deleteModalVisible}
+      transparent
+      animationType="fade"
+      onRequestClose={() => setDeleteModalVisible(false)}
+    >
+      <Pressable
+        style={styles.modalOverlay}
+        onPress={() => setDeleteModalVisible(false)}
+      >
+        <Pressable
+          style={styles.modalBox}
+          onPress={(e) => e.stopPropagation()}
+        >
+          <Text style={styles.modalTitle}>Excluir produto</Text>
+
+          <Text style={styles.modalText}>
+            Deseja excluir {selectedProduct?.nomeReceitas}?
+          </Text>
+
+          <View style={styles.modalActions}>
+            <Pressable
+              style={styles.cancelButton}
+              onPress={() => setDeleteModalVisible(false)}
+            >
+              <Text style={styles.cancelButtonText}>Cancelar</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.deleteButton}
+              onPress={async () => {
+                if (!selectedProduct) return
+
+                await deleteProduct(selectedProduct.idReceitas)
+
+                setDeleteModalVisible(false)
+                setSelectedProduct(null)
+                load()
+              }}
+            >
+              <Text style={styles.deleteButtonText}>Excluir</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Pressable>
+    </Modal>
     </View>
   )
 }
@@ -214,13 +285,21 @@ function ProductCard({ product }: { product: Product }) {
   const lvl = getStockLevel(product.disponivelReceitas)
   const s = stockStyle(lvl)
 
+  
   return (
     <Pressable
       style={({ pressed }) => [
         styles.card,
         pressed && { transform: [{ scale: 0.98 }], opacity: 0.95 },
       ]}
-      onPress={() => router.back()}
+      onPress={() =>
+        router.push({
+          pathname: '/admin/produtos/[id]',
+          params: {
+            id: String(product.idReceitas),
+          },
+        })
+      }
       accessibilityRole="button"
       accessibilityLabel={`Editar ${product.nomeReceitas}`}
     >
@@ -384,4 +463,87 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
   },
+  deleteAction: {
+  backgroundColor: '#dc2626',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: "60%",
+  borderRadius: 16,
+},
+
+deleteText: {
+  color: '#fff',
+  fontWeight: '700',
+  fontSize: 16,
+},
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.45)',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 24,
+},
+
+modalBox: {
+  width: '100%',
+  maxWidth: 360,
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 24,
+  elevation: 8,
+},
+
+modalTitle: {
+  fontSize: 22,
+  fontWeight: '800',
+  color: '#3b2417',
+  marginBottom: 10,
+},
+
+modalText: {
+  fontSize: 16,
+  color: '#666',
+  lineHeight: 22,
+  marginBottom: 24,
+},
+
+modalActions: {
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  gap: 12,
+},
+cancelButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 12,
+  backgroundColor: '#eee',
+},
+
+cancelButtonText: {
+  color: '#444',
+  fontWeight: '700',
+},
+
+loginButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 12,
+  backgroundColor: '#b4513b',
+},
+
+loginButtonText: {
+  color: '#fff',
+  fontWeight: '700',
+},
+deleteButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 12,
+  backgroundColor: COLORS.danger,
+},
+
+deleteButtonText: {
+  color: '#fff',
+  fontWeight: '700',
+},
 })

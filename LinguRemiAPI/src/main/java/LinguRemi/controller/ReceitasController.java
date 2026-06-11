@@ -64,7 +64,7 @@ public class ReceitasController {
     @Operation(summary = "Lista todos os produtos disponíveis para venda")
     @GetMapping("/produtos")
     public List<Receitas> todasReceitas(){
-    	return repR.findAll();
+    	return repR.findByAtivoReceitasTrue();
     }
     
     @Operation(summary = "Busca um produto por ID")
@@ -154,7 +154,7 @@ public class ReceitasController {
     @Operation(summary = "Retorna receitas aleatórias para destaque na página inicial")
     @GetMapping("/aleatorios")
     public List<Receitas> receitasAleatorias(){
-    	List<Receitas> todas = repR.findAll();
+    	List<Receitas> todas = repR.findByAtivoReceitasTrue();
 
         if (todas.isEmpty()){
             return List.of();
