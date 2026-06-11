@@ -112,7 +112,7 @@ export default function ResetPassword() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#faf7f2',
         justifyContent: 'center',
         padding: 20,
     },

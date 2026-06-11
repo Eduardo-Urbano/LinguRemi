@@ -58,8 +58,9 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#faf7f2',
     paddingHorizontal: 16,
+    
   },
 
   title: {
@@ -83,7 +84,9 @@ const styles = StyleSheet.create({
   },
 
   list: {
+    paddingHorizontal: 16,
     paddingBottom:24,
+    gap: 16,
   },
   recipeRow: {
     justifyContent:'space-between',
