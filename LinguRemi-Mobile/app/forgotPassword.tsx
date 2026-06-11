@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler'
 import { useState } from 'react'
 import {
-    KeyboardAvoidingView,
     Platform,
     Pressable,
     StyleSheet,
@@ -11,6 +10,8 @@ import {
 } from 'react-native'
 
 import { forgotPassword } from '@/src/services/authService'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('')
@@ -61,10 +62,13 @@ export default function ForgotPassword() {
 }
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
+        <KeyboardAwareScrollView 
+                  style={styles.container} 
+                  contentContainerStyle={styles.content} 
+                  keyboardShouldPersistTaps="handled"
+                  enableOnAndroid
+                  extraScrollHeight={30}
+            >
             <View style={styles.card}>
                 <Text style={styles.title}>Esqueci Minha Senha</Text>
 
@@ -96,7 +100,7 @@ export default function ForgotPassword() {
                 </Pressable>
 
             </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -104,8 +108,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#faf7f2',
+    },
+    content: {
+        flexGrow: 1,
         justifyContent: 'center',
         padding: 20,
+        paddingBottom: 40,
     },
     card: {
         backgroundColor: '#fff',

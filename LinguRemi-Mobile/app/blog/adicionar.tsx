@@ -87,39 +87,49 @@ export default function NewBlogRecipeScreen() {
       </Pressable>
       <Text style={styles.title}>Cadastrar receita do blog</Text>
 
+      <Text style={styles.textCategoria}>Nome da receita</Text>
       <TextInput
-        placeholder="Nome da receita"
+        placeholder="Bolo de ..."
+        placeholderTextColor={'#A9A9AC'}
         value={nomeReceita}
         onChangeText={setNomeReceita}
         style={styles.input}
       />
 
+      <Text style={styles.textCategoria}>Ingredientes</Text>
       <TextInput
-        placeholder="Ingredientes"
+        placeholder="1/2 xicara de leite, 2 xicaras de ..."
+        placeholderTextColor={'#A9A9AC'}
         value={ingReceita}
         onChangeText={setIngReceita}
         style={[styles.input, styles.textArea]}
         multiline
       />
-
+      
+      <Text style={styles.textCategoria}>Modo de preparo</Text>
       <TextInput
-        placeholder="Modo de preparo"
+        placeholder="Bata tudo no liquidificador ..."
+        placeholderTextColor={'#A9A9AC'}
         value={preparoReceita}
         onChangeText={setPreparoReceita}
         style={[styles.input, styles.textArea]}
         multiline
       />
 
+      <Text style={styles.textCategoria}>Descrição</Text>
       <TextInput
-        placeholder="Descrição da receita"
+        placeholder="Bolo fofinho e ..."
+        placeholderTextColor={'#A9A9AC'}
         value={descReceita}
         onChangeText={setDescReceita}
         style={[styles.input, styles.textArea]}
         multiline
       />
 
+      <Text style={styles.textCategoria}>Tempo de preparo</Text>
       <TextInput
-        placeholder="Tempo de preparo"
+        placeholder="45 minutos"
+        placeholderTextColor={'#A9A9AC'}
         value={tempoReceita}
         onChangeText={setTempoReceita}
         style={styles.input}
@@ -235,5 +245,10 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontWeight: '700',
+  },
+  textCategoria: {
+    fontSize: 17,
+    fontWeight: '700',
+    marginBottom: 8,
   },
 })

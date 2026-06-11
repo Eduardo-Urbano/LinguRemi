@@ -2,7 +2,6 @@ import { router, useFocusEffect, useNavigation  } from 'expo-router'
 import { Drawer } from 'expo-router/drawer'
 import { useEffect, useState, useCallback } from 'react'
 import {
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
@@ -17,6 +16,7 @@ import * as LocalAuthentication from 'expo-local-authentication'
 import LoadingModal from '../src/components/feedback/LoadingModal'
 import SuccessModal from '../src/components/feedback/SuccessModal'
 import ErrorModal from '../src/components/feedback/ErrorModal'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function LoginScreen() {
   const { setAuthenticated, setAdmin } = useAuth()
@@ -198,9 +198,12 @@ export default function LoginScreen() {
   }, [isLocked])
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    <KeyboardAwareScrollView 
+          style={styles.container} 
+          contentContainerStyle={styles.content} 
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid
+          extraScrollHeight={30}
     >
       <View style={styles.card}>
 
@@ -302,7 +305,7 @@ export default function LoginScreen() {
         message={errorMessage}
       />
 
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -310,10 +313,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#faf7f2',
-    justifyContent: 'center',
-    padding: 20,
   },
 
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 20,
+    paddingBottom: 40,
+  },
+  
   card: {
     backgroundColor: '#fff',
     borderRadius: 18,
