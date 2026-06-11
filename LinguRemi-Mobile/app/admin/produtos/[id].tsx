@@ -177,8 +177,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf7f2',
   },
   content: {
+    flexGrow: 1,
+    justifyContent: 'center',
     padding: 20,
-    paddingBottom: 80,
+    paddingBottom: 40,
   },
   center: {
     flex: 1,
