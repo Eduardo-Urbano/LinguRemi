@@ -20,12 +20,14 @@ import {
   validateCart,
   type CartItem,
 } from '../src/services/cartService'
+
 import * as Linking from 'expo-linking'
 import { createCheckout } from '../src/services/checkoutService'
 import * as Clipboard from 'expo-clipboard'
 import LoadingModal from '../src/components/feedback/LoadingModal'
 import SuccessModal from '../src/components/feedback/SuccessModal'
 import ErrorModal from '../src/components/feedback/ErrorModal'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -176,6 +178,16 @@ export default function CartScreen() {
                   : item.preco * item.quantidade
 
               return (
+                <ReanimatedSwipeable
+                  overshootRight={false}
+                  rightThreshold={80}
+                  renderRightActions={() => (
+                    <View style={styles.deleteAction}>
+                      <Text style={styles.deleteText}>Remover</Text>
+                    </View>
+                  )}
+                  onSwipeableOpen={() => removeItem(index)}
+                >
                 <View style={styles.item}>
                   {item.imagem ? (
                     <Image
@@ -227,13 +239,8 @@ export default function CartScreen() {
                     </Text>
                   </View>
 
-                    <Pressable 
-                      style={styles.removeButton} 
-                      onPress={() => removeItem(index)}>
-                      <Text style={styles.removeText}>Remover</Text>
-                    </Pressable>
-
                 </View>
+              </ReanimatedSwipeable>
               )
             }}
           />
@@ -525,5 +532,18 @@ quantityButtonText: {
   fontSize: 18,
   fontWeight: '700',
 },
+deleteAction: {
+  backgroundColor: '#dc2626',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 120,
+  marginBottom: 14,
+  borderRadius: 16,
+},
 
+deleteText: {
+  color: '#fff',
+  fontWeight: '700',
+  fontSize: 16,
+},
 })

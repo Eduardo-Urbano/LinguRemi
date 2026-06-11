@@ -1,4 +1,5 @@
-import { router, useFocusEffect } from 'expo-router'
+import { router, useFocusEffect, useNavigation  } from 'expo-router'
+import { Drawer } from 'expo-router/drawer'
 import { useEffect, useState, useCallback } from 'react'
 import {
   KeyboardAvoidingView,
@@ -27,6 +28,7 @@ export default function LoginScreen() {
   const [isLocked,setIsLocked] = useState(false)
   const [successVisible, setSuccessVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
+  const navigation = useNavigation()
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -173,6 +175,12 @@ export default function LoginScreen() {
     setIsLocked(false)
     setAuthenticated(false)
     setIsLocked(false)
+
+    navigation.setOptions({
+      swipeEnabled: true,
+      headerLeft: undefined,
+    })
+    
   }
 
   useEffect(()=>{
@@ -182,6 +190,13 @@ export default function LoginScreen() {
     }
     checkLock()
   },[])
+
+  useEffect(() => {
+  navigation.setOptions({
+    swipeEnabled: !isLocked,
+    headerLeft: isLocked ? () => null : undefined,
+    })
+  }, [isLocked])
 
   return (
     <KeyboardAvoidingView
@@ -251,6 +266,7 @@ export default function LoginScreen() {
           </Text>
         </Pressable>
 
+        {/*
         <Pressable
           style={styles.button}
           onPress={handleBiometricLogin}
@@ -258,8 +274,9 @@ export default function LoginScreen() {
           <Text style={styles.buttonText}>
             Login com biometria
           </Text>
-
+        
         </Pressable>
+        */}
 
         <Pressable
           style={styles.secondaryButton}
