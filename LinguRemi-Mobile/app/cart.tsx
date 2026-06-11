@@ -282,6 +282,11 @@ export default function CartScreen() {
                 await Clipboard.setStringAsync(
                   paymentLink,
                 )
+                setMessage('Link copiado!')
+                setSuccessVisible(true)
+                setTimeout(() => {
+                  setSuccessVisible(false)
+                }, 1000)
               }}
             >
               <Text style={styles.modalButtonText}>
