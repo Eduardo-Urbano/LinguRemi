@@ -2,6 +2,7 @@ package LinguRemi.controller;
 
 import LinguRemi.DTO.CheckoutDTO;
 import LinguRemi.DTO.CheckoutItemDTO;
+import LinguRemi.DTO.PedidoHistoricoDTO;
 import LinguRemi.Enum.PedidoStatus;
 import LinguRemi.mapper.PedidoMapper;
 import LinguRemi.model.Pedido;
@@ -20,10 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/checkout")
@@ -103,15 +101,35 @@ public class CheckoutController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/meus-pedidos")
-    public ResponseEntity<?> meusPedidos(@AuthenticationPrincipal Usuarios usuario) {
+    @GetMapping("/meus")
+    public List<PedidoHistoricoDTO> meusPedidos(
+            @AuthenticationPrincipal Usuarios usuario
+    ) {
 
-        List<Pedido> pedidos =
-                pedidoRepository.findByEmailUsuario(usuario.getEmailUsuarios());
+        return pedidoRepository
+                .findByEmailUsuario(
+                        usuario.getEmailUsuarios()
+                )
+                .stream()
+                .sorted(
+                        Comparator.comparing(
+                                Pedido::getCriadoEm
+                        ).reversed()
+                ).map(pedido -> new PedidoHistoricoDTO(
+                        pedido.getId(),
 
-        return ResponseEntity.ok(
-                pedidos.stream().map(pedidoMapper::toDTO).toList()
-        );
+                        pedido.getItens().isEmpty()
+                                ? "Pedido"
+                                : pedido.getItens()
+                                .get(0)
+                                .getProduto()
+                                .getNomeReceitas(),
+
+                        pedido.getValorTotal(),
+
+                        pedido.getCriadoEm().toString()
+                ))
+                .toList();
     }
 
     @PostMapping("/webhook")

@@ -11,10 +11,9 @@ import {
   View,
 } from 'react-native'
 
-import { enableBiometricLogin, getAuthToken, isAppLocked, loginUser, saveAuthData, unlockApp } from '../src/services/authService'
+import { enableBiometricLogin, getAuthToken, isAppLocked, loginUser, saveAuthData, unlockApp, isBiometricEnabled, logoutUser  } from '../src/services/authService'
 import { useAuth } from '../src/context/AuthContext'
 import * as LocalAuthentication from 'expo-local-authentication'
-import { isBiometricEnabled, logoutUser } from '../src/services/authService'
 import LoadingModal from '../src/components/feedback/LoadingModal'
 import SuccessModal from '../src/components/feedback/SuccessModal'
 import ErrorModal from '../src/components/feedback/ErrorModal'

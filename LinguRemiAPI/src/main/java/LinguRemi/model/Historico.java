@@ -16,6 +16,7 @@ public class Historico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idHistorico;
+
 	@Column(nullable = false)
 	private String emailTransferencia;
 

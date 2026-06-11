@@ -1,18 +1,14 @@
-import { router, useFocusEffect } from 'expo-router'
+import { router } from 'expo-router'
 import { addReceitaBlog } from '@/src/services/authService'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
 import {
   Alert,
   Image,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  KeyboardAvoidingView,
-  View,
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 

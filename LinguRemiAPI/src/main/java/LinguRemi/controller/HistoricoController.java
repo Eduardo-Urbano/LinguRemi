@@ -1,6 +1,7 @@
 package LinguRemi.controller;
 
 import LinguRemi.DTO.HistoricoDTO;
+import LinguRemi.DTO.HistoricoResponseDTO;
 import LinguRemi.DTO.ReceitaQuantidadeDTO;
 import LinguRemi.model.Historico;
 import LinguRemi.model.HistoricoReceita;
@@ -68,12 +69,24 @@ public class HistoricoController {
 
     @Operation(summary = "Lista todas as transações registradas")
     @GetMapping("/dados")
-    public List<Historico> transações(@AuthenticationPrincipal Usuarios usuario){
-        logger.info(
-                "Consultando histórico de {}",
-                usuario.getEmailUsuarios()
-        );
-        return historicoRepository.findByEmailTransferencia(usuario.getEmailUsuarios());
+    public List<HistoricoResponseDTO> transacoes(
+            @AuthenticationPrincipal Usuarios usuario
+    ) {
+        return historicoRepository
+                .findByEmailTransferencia(
+                        usuario.getEmailUsuarios()
+                )
+                .stream()
+                .map(h -> new HistoricoResponseDTO(
+                        h.getIdHistorico(),
+                        h.getItens()
+                                .get(0)
+                                .getReceita()
+                                .getNomeReceitas(),
+                        h.getValorTransferencia(),
+                        h.getDataTransferencia()
+                ))
+                .toList();
     }
 }
 

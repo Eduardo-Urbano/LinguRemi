@@ -1,6 +1,5 @@
-import { router } from 'expo-router'
+import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { useFocusEffect } from 'expo-router'
 import {
   FlatList,
   Image,
@@ -17,7 +16,6 @@ import {
   clearCart,
   getCart,
   saveCart,
-  validateCart,
   type CartItem,
 } from '../src/services/cartService'
 

@@ -1,6 +1,6 @@
 export type HistoryItem = {
-  id?: number
-  descTransferencia: string
-  valorTransferencia: number
-  
+  id: number
+  nomeItem: string
+  valorTotal: number
+  dataCompra: string
 }

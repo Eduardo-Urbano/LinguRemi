@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler'
 
-import { router, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import {
     KeyboardAvoidingView,
@@ -10,7 +10,6 @@ import {
     Text,
     TextInput,
     View,
-    Alert,
 } from 'react-native'
 
 import { resetPassword } from '@/src/services/authService'
