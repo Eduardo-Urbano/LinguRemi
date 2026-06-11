@@ -215,7 +215,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#faf7f2',
   },
 
   content: {
@@ -337,6 +337,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     elevation: 3,
+    borderWidth: 1,
+    borderColor: "#ece6dc",
   },
 
   recipeImage: {

@@ -159,7 +159,7 @@ export default function NewBlogRecipeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#faf7f2',
   },
 
   content: {
