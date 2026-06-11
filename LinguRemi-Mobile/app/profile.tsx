@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Text,
   View,
-  RefreshControl
+  RefreshControl,
+  Modal,
 } from 'react-native'
 
 import { getUserData, isAuthenticated, logoutUser } from '../src/services/authService'
@@ -22,6 +23,11 @@ export default function ProfileScreen() {
   const [isLoading, setIsLoading] = useState(true)
   const {setAuthenticated,setAdmin,} = useAuth()
   const [refreshing, setRefreshing] = useState(false)
+  const [selectedOrder, setSelectedOrder] =
+  useState<HistoryItem | null>(null)
+
+  const [detailsVisible, setDetailsVisible] =
+    useState(false)
 
   async function loadProfile() {
     const authenticated = await isAuthenticated()
@@ -107,7 +113,13 @@ export default function ProfileScreen() {
               />
             }
             renderItem={({ item }) => (
-              <View style={styles.historyItem}>
+              <Pressable
+                style={styles.historyItem}
+                onPress={() => {
+                  setSelectedOrder(item)
+                  setDetailsVisible(true)
+                }}
+              >
                 <View style={styles.historyHeader}>
                   <Text style={styles.historyDescription}>
                     {item.nomeItem}
@@ -124,11 +136,62 @@ export default function ProfileScreen() {
                     timeStyle: 'short',
                   })}
                 </Text>
-              </View>
+              </Pressable>
             )}
           />
         )}
       </View>
+      <Modal
+        visible={detailsVisible}
+        transparent
+        animationType="slide"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>
+              Pedido #{selectedOrder?.id}
+            </Text>
+
+            <Text style={styles.modalLabel}>
+              Produto
+            </Text>
+
+            <Text style={styles.modalValue}>
+              {selectedOrder?.nomeItem}
+            </Text>
+
+            <Text style={styles.modalLabel}>
+              Valor Total
+            </Text>
+
+            <Text style={styles.modalValue}>
+              R$ {selectedOrder?.valorTotal.toFixed(2)}
+            </Text>
+
+            <Text style={styles.modalLabel}>
+              Data
+            </Text>
+
+            <Text style={styles.modalValue}>
+              {selectedOrder &&
+                new Date(
+                  selectedOrder.dataCompra,
+                ).toLocaleString('pt-BR')}
+            </Text>
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={() =>
+                setDetailsVisible(false)
+              }
+            >
+              <Text style={styles.closeButtonText}>
+                Fechar
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -243,5 +306,51 @@ const styles = StyleSheet.create({
     color: '#d1d5db',
     marginTop: 8,
     fontSize: 13,
+  },
+  
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+
+  modal: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+  },
+
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+
+  modalLabel: {
+    fontSize: 13,
+    color: '#666',
+    marginTop: 10,
+  },
+
+  modalValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 4,
+  },
+
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#1f2937',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: '700',
   },
 })
