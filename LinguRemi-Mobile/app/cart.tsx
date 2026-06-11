@@ -23,13 +23,18 @@ import {
 import * as Linking from 'expo-linking'
 import { createCheckout } from '../src/services/checkoutService'
 import * as Clipboard from 'expo-clipboard'
+import LoadingModal from '../src/components/feedback/LoadingModal'
+import SuccessModal from '../src/components/feedback/SuccessModal'
+import ErrorModal from '../src/components/feedback/ErrorModal'
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState<'success' | 'error'>('success')
   const [paymentLink, setPaymentLink] = useState('')
   const [paymentModalVisible, setPaymentModalVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [successVisible, setSuccessVisible] = useState(false)
+  const [errorVisible, setErrorVisible] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -61,6 +66,8 @@ export default function CartScreen() {
 
   async function handleCheckout() {
     try {
+      setLoading(true)
+
       const itens = cart.map((item) => ({
         produtoId: item.id,
         quantidade: item.quantidade,
@@ -70,16 +77,35 @@ export default function CartScreen() {
         itens,
       })
 
-      if (response.linkPagamento) {
-        setPaymentLink(response.linkPagamento)
-        setPaymentModalVisible(true)
-      }
+      setSuccessVisible(true)
+
+      setTimeout(() => {
+        setSuccessVisible(false)
+
+        if (response.linkPagamento) {
+          setPaymentLink(response.linkPagamento)
+          setPaymentModalVisible(true)
+        }
+      }, 1500)
 
       await clearCart()
-
       setCart([])
+
     } catch (error) {
-      console.error(error)
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao criar checkout'
+      )
+
+      setErrorVisible(true)
+
+      setTimeout(() => {
+        setErrorVisible(false)
+      }, 2500)
+
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -128,17 +154,6 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Carrinho</Text>
-
-      {message ? (
-        <Text
-          style={[
-            styles.feedback,
-            messageType === 'success' ? styles.success : styles.error,
-          ]}
-        >
-          {message}
-        </Text>
-      ) : null}
 
       {cart.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -242,7 +257,7 @@ export default function CartScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
             <Text style={styles.modalTitle}>
-              Pedido criado com sucesso
+              Finalize seu pagamento
             </Text>
 
             <Pressable
@@ -280,6 +295,20 @@ export default function CartScreen() {
           </View>
         </View>
       </Modal>
+      <LoadingModal
+        visible={loading}
+        message="Criando pedido..."
+      />
+
+      <SuccessModal
+        visible={successVisible}
+        message="Pedido criado com sucesso"
+      />
+
+      <ErrorModal
+        visible={errorVisible}
+        message={message}
+      />
     </View>
   )
 }
@@ -296,24 +325,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 20,
-  },
-
-  feedback: {
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 12,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-
-  success: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-  },
-
-  error: {
-    backgroundColor: '#fee2e2',
-    color: '#991b1b',
   },
 
   emptyContainer: {
