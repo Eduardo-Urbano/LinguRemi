@@ -1,12 +1,17 @@
 package LinguRemi.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import LinguRemi.DTO.ProdutoDTO;
 import LinguRemi.DTO.ProdutoUpdateDTO;
+import LinguRemi.DTO.ProdutoUploadDTO;
 import LinguRemi.Enum.PedidoStatus;
 import LinguRemi.model.Pedido;
 import LinguRemi.model.Receitas;
@@ -50,22 +56,36 @@ public class AdminController {
 		return ResponseEntity.ok("Usuario excluido");
 	}
 
-	@PostMapping("/produtos")
-	public ResponseEntity<Receitas> criarProduto(@RequestBody @Valid ProdutoDTO dto) {
-		Receitas produto = new Receitas();
+	@PostMapping(value = "/produtos",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+		public ResponseEntity<Receitas> criarProduto(@ModelAttribute @Valid ProdutoUploadDTO dto) throws IOException {
+		    Receitas produto = new Receitas();
 
-		produto.setNomeReceitas(dto.nome());
-		produto.setDescReceitas(dto.descricao());
-		produto.setValorReceitas(dto.valor());
-		produto.setImgReceitas(dto.imagem());
-		produto.setAvaliacaoReceitas(0.0);
-		produto.setDisponivelReceitas(dto.disponivel());
-		produto.setTipoquantidadeReceitas(dto.tipoQuantidade());
+		    String pastaUploads = System.getProperty("user.dir") + "/uploads/";
+		    File pasta = new File(pastaUploads);
 
-		repR.save(produto);
+		    if (!pasta.exists()) {
+		        pasta.mkdirs();
+		    }
 
-		return ResponseEntity.ok(produto);
-	}
+		    String nomeOriginal = dto.getImagem().getOriginalFilename();
+		    String extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
+		    String nomeArquivo = UUID.randomUUID() + extensao;
+
+		    dto.getImagem().transferTo(new File(pastaUploads + nomeArquivo));
+
+		    produto.setNomeReceitas(dto.getNome());
+		    produto.setDescReceitas(dto.getDescricao());
+		    produto.setValorReceitas(dto.getValor());
+		    produto.setImgReceitas("uploads/" + nomeArquivo);
+		    produto.setAvaliacaoReceitas(0.0);
+		    produto.setDisponivelReceitas(dto.getDisponivel());
+		    produto.setTipoquantidadeReceitas(dto.getTipoQuantidade());
+		    produto.setAtivoReceitas(true);
+
+		    repR.save(produto);
+
+		    return ResponseEntity.ok(produto);
+		}
 
 	@GetMapping("/produtos")
 	public ResponseEntity<?> listarProdutos(){

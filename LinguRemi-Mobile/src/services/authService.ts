@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { apiFetch, API_URL } from './api'
 import { Platform } from 'react-native'
+import { AddProductRequest } from '../types/AddProductRequest'
 
 type LoginRequest = {
   login: string
@@ -243,4 +244,44 @@ export async function addReceitaBlog({
     console.log('Erro da API:', response.status, errorText)
     throw new Error(errorText || 'Erro ao cadastrar receita.')
   }
+}
+
+export async function addProduct(data: AddProductRequest) {
+  const formData = new FormData()
+
+  formData.append('nome', data.nome)
+  formData.append('descricao', data.descricao)
+  formData.append('valor', String(data.valor))
+  formData.append('disponivel', String(data.disponivel))
+  formData.append('tipoQuantidade', data.tipoQuantidade)
+
+  if (Platform.OS === 'web') {
+    const fileResponse = await fetch(data.imagem.uri)
+    const blob = await fileResponse.blob()
+
+    formData.append('imagem', blob, data.imagem.name)
+  } else {
+    formData.append('imagem', {
+      uri: data.imagem.uri,
+      name: data.imagem.name,
+      type: data.imagem.type,
+    } as any)
+  }
+
+  const token = await AsyncStorage.getItem(TOKEN_KEY)
+
+  const response = await fetch(`${API_URL}/admin/produtos`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || 'Erro ao cadastrar produto.')
+  }
+
+  return response.json()
 }

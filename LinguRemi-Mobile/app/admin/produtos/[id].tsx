@@ -95,6 +95,9 @@ export default function EditProductScreen() {
       enableOnAndroid
       keyboardShouldPersistTaps="handled"
     >
+      <Pressable style={styles.backButton} onPress={() => router.push('/admin/produtos/produtos')}>
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </Pressable>
       <Text style={styles.title}>Editar produto</Text>
 
       <TextInput
@@ -178,7 +181,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'center',
     padding: 20,
     paddingBottom: 40,
   },
@@ -236,5 +238,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     fontSize: 16,
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#222',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    marginBottom: 16,
   },
 })

@@ -209,7 +209,7 @@ export default function AdminProdutos() {
 
       <Pressable
         style={styles.fab}
-        onPress={() => router.back()}
+        onPress={() => router.push(`/admin/produtos/adicionar`)}
         accessibilityRole="button"
         accessibilityLabel="Criar novo produto"
       >
