@@ -219,7 +219,13 @@ function CustomDrawerContent(props: any) {
         }}
       />
 
-      
+      <Drawer.Screen
+        name="admin/produtos/adicionar"
+        options={{
+          drawerItemStyle:{display: 'none'},
+          headerTitle: () => <HeaderLogo />,
+        }}
+      />
     </Drawer>
   )
 }

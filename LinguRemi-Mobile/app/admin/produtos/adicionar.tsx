@@ -79,7 +79,7 @@ export default function AddProductScreen() {
       enableOnAndroid
       keyboardShouldPersistTaps="handled"
     >
-        <Pressable style={styles.backButton} onPress={() => router.push('/admin')}>
+        <Pressable style={styles.backButton} onPress={() => router.push('/admin/produtos/produtos')}>
             <Text style={styles.backButtonText}>Voltar</Text>
         </Pressable>
 
@@ -152,7 +152,7 @@ export default function AddProductScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#faf7f2' },
-  content: { flexGrow: 1, justifyContent: 'center', padding: 20, paddingBottom: 40 },
+  content: { flexGrow: 1, padding: 20, paddingBottom: 40 },
   title: { fontSize: 26, fontWeight: '800', marginBottom: 20 },
   input: {
     backgroundColor: '#fff',

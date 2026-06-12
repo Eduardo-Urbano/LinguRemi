@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -95,6 +96,11 @@ public class AdminController {
 	@GetMapping("/pedidos")
 	public ResponseEntity<?> listarPedidos() {
 		return ResponseEntity.ok(pedidoRepository.findAll());
+	}
+	
+	@GetMapping("/todosBlog")
+	public ResponseEntity<?> listarBlog() {
+		return ResponseEntity.ok(repRP.findAll(Sort.by(Sort.Direction.DESC,"dataReceitablog")));
 	}
 
 	@PutMapping("/pedidos/{id}/cancelar")
