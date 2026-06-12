@@ -32,23 +32,28 @@ public class Usuarios implements UserDetails{
 	@Column(nullable = false)
 	private UserRole roleUsuarios;
 	
+	@Column(nullable = false)
+	private boolean ativoUsuarios;
+	
 	public Usuarios(String nomeUsuarios, String emailUsuarios, String senhaUsuario,
-			UserRole roleUsuarios) {
+			UserRole roleUsuarios, boolean ativoUsuarios) {
 		super();
 		this.nomeUsuarios = nomeUsuarios;
 		this.emailUsuarios = emailUsuarios;
 		this.senhaUsuarios = senhaUsuario;
 		this.roleUsuarios = roleUsuarios;
+		this.ativoUsuarios = ativoUsuarios;
 	}
 	
 	public Usuarios(long idUsuarios, String nomeUsuarios, String emailUsuarios, String senhaUsuarios,
-			UserRole roleUsuarios) {
+			UserRole roleUsuarios, boolean ativoUsuarios) {
 		super();
 		this.idUsuarios = idUsuarios;
 		this.nomeUsuarios = nomeUsuarios;
 		this.emailUsuarios = emailUsuarios;
 		this.senhaUsuarios = senhaUsuarios;
 		this.roleUsuarios = roleUsuarios;
+		this.ativoUsuarios = ativoUsuarios;
 	}
 
 	public Usuarios() {
@@ -87,6 +92,13 @@ public class Usuarios implements UserDetails{
 		this.roleUsuarios = roleUsuarios;
 	}
 	
+	public boolean isAtivoUsuarios() {
+		return ativoUsuarios;
+	}
+	public void setAtivoUsuarios(boolean ativoUsuarios) {
+		this.ativoUsuarios = ativoUsuarios;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if(this.roleUsuarios == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
@@ -124,4 +136,5 @@ public class Usuarios implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
+	
 }

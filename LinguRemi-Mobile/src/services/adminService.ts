@@ -3,6 +3,7 @@ import { apiFetch } from './api'
 import type { Product } from '../types/Product'
 import type { UpdateProductRequest } from '../types/UpdateProductRequest'
 import type { BlogRecipe } from '../types/BlogRecipe'
+import type { AdminUser } from '../types/AdminUser'
 
 export async function getAdminProducts() {
   return await apiFetch<Product[]>('/admin/produtos')
@@ -36,5 +37,17 @@ export async function deleteBlogRecipe(
 ): Promise<{ message: string }> {
   return apiFetch<{ message: string }>(`/admin/blog/${id}`, {
     method: 'DELETE',
+  })
+}
+
+export async function getAdminUsers(): Promise<AdminUser[]> {
+  return apiFetch<AdminUser[]>('/admin/usuarios')
+}
+
+export async function toggleUserStatus(
+  id: number
+): Promise<{ message: string; ativo: boolean }> {
+  return apiFetch(`/admin/usuarios/${id}/status`, {
+    method: 'PUT',
   })
 }

@@ -107,6 +107,17 @@ public class UsuariosController {
 
 			var usuario = (Usuarios) auth.getPrincipal();
 
+			if (!usuario.isAtivoUsuarios()) {
+			    logger.warn(
+			            "[LOGIN BLOCKED - USER DISABLED] {} | IP: {}",
+			            usuario.getEmailUsuarios(),
+			            ip
+			    );
+			    throw new AccountLockedException(
+			            "Usuário bloqueado. Entre em contato com o administrador."
+			    );
+			}
+			
 			loginAttemptService.registerSuccess(
 					usuario.getEmailUsuarios()
 			);
@@ -174,7 +185,7 @@ public class UsuariosController {
 			);
 		}
 		String encryptedPassword = passwordEncoder.encode(data.senha());
-		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, UserRole.USER);
+		Usuarios user = new Usuarios(data.nome(), data.email(), encryptedPassword, UserRole.USER,true);
 		this.repU.save(user);
 		logger.info(
 				"Usuário cadastrado: {}",
@@ -208,23 +219,6 @@ public class UsuariosController {
 						"Logout realizado com sucesso"
 				)
 		);
-	}
-
-	@Operation(summary = "Lista todos os usuários cadastrados")
-	@GetMapping("/todos")
-	public List<UsuarioResponseDTO> users() {
-
-		return repU.findAll()
-				.stream()
-				.map(usuario ->
-						new UsuarioResponseDTO(
-								usuario.getIdUsuarios(),
-								usuario.getNomeUsuarios(),
-								usuario.getEmailUsuarios(),
-								usuario.getRoleUsuarios().name()
-						)
-				)
-				.toList();
 	}
 
 	@Operation(summary = "Solicita recuperação de senha")

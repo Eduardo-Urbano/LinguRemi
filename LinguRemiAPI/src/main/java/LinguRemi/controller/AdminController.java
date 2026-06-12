@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +27,7 @@ import LinguRemi.DTO.ProdutoUploadDTO;
 import LinguRemi.Enum.PedidoStatus;
 import LinguRemi.model.Pedido;
 import LinguRemi.model.Receitas;
+import LinguRemi.model.Usuarios;
 import LinguRemi.repository.PedidoRepository;
 import LinguRemi.repository.ReceitaBlogRepository;
 import LinguRemi.repository.ReceitasRepository;
@@ -47,14 +49,21 @@ public class AdminController {
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
-	//Exclui um usuario
-	@DeleteMapping(value="/delUser")
-	public ResponseEntity<String> matarUser(@RequestBody long id){
-		if(!repU.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		repU.deleteById(id);
-		return ResponseEntity.ok("Usuario excluido");
+	@PutMapping("/usuarios/{id}/status")
+	public ResponseEntity<?> alterarStatus(@PathVariable Long id) {
+	    Usuarios usuario = repU.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+	    usuario.setAtivoUsuarios(!usuario.isAtivoUsuarios());
+	    repU.save(usuario);
+	    return ResponseEntity.ok(
+	        Map.of(
+	            "message", usuario.isAtivoUsuarios()
+	                ? "Usuário desbloqueado"
+	                : "Usuário bloqueado",
+	            "ativo", usuario.isAtivoUsuarios()
+	        )
+	    );
 	}
 
 	@PostMapping(value = "/produtos",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -102,7 +111,12 @@ public class AdminController {
 	public ResponseEntity<?> listarBlog() {
 		return ResponseEntity.ok(repRP.findAll(Sort.by(Sort.Direction.DESC,"dataReceitablog")));
 	}
-
+	
+	@GetMapping("/usuarios")
+	public ResponseEntity<?> listarUsuários(){
+		return ResponseEntity.ok(repU.findAll());
+	}
+	
 	@PutMapping("/pedidos/{id}/cancelar")
 	public ResponseEntity<?> cancelarPedidoAdmin(@PathVariable Long id) {
 		Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
