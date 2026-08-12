@@ -5,8 +5,8 @@ export function HeaderLogo(){
         <Image 
             source={require('../images/LinguRemiLogo.png')}
             style={{
-                width:140,
-                height:100,
+                width: 260,
+                height: 140,
                 resizeMode:'contain',
             }}
             />
