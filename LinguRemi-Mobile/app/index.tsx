@@ -8,9 +8,9 @@ import {
   StyleSheet,
   Text,
   View,
+  Animated,
 } from 'react-native'
 import { VideoView, useVideoPlayer } from 'expo-video'
-
 import { getRandomRecipes } from '../src/services/recipeService'
 import type { Recipe } from '../src/types/Recipe'
 import { BlogRecipe } from '@/src/types/BlogRecipe'
@@ -19,17 +19,19 @@ import {
   getBlogRecipeImage,
 } from '../src/services/blogService'
 import { useResponsive } from '@/src/hooks/useResponsive'
-import { ProductHome } from '@/src/components/ProductHome'
+import { RecipeCard } from '@/src/components/RecipeCard'
+import { BlogRecipeCard } from '@/src/components/BlogRecipeCard'
+import { useRef } from 'react'
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [receitaBlog, setReceitaBlog] = useState<BlogRecipe[]>([])
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true)
   const [isLoadingBlog, setIsLoadingBlog] = useState(true)
-
   const { isMobile, isTablet, isDesktop } = useResponsive()
-
   const styles = createStyles(isTablet, isDesktop)
+  const primaryHover = useRef(new Animated.Value(0)).current
+  const secondaryHover = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     async function loadRecipes() {
@@ -66,6 +68,22 @@ export default function HomeScreen() {
     },
   )
 
+  function animatePrimary(value: number) {
+    Animated.timing(primaryHover, {
+      toValue: value,
+      duration: 180,
+      useNativeDriver: false,
+    }).start()
+  }
+
+  function animateSecondary(value: number) {
+    Animated.timing(secondaryHover, {
+      toValue: value,
+      duration: 180,
+      useNativeDriver: false,
+    }).start()
+  }
+
   return (
     <ScrollView
       style={styles.container}
@@ -97,27 +115,76 @@ export default function HomeScreen() {
 
           <View style={styles.actions}>
             <Pressable
-              style={styles.primaryButton}
               onPress={() => router.push('/products')}
+              onHoverIn={() => animatePrimary(1)}
+              onHoverOut={() => animatePrimary(0)}
             >
-              <Text style={styles.primaryButtonText}>
-                Ver produtos
-              </Text>
+              <Animated.View
+                style={[
+                  styles.primaryButton,
+                  {
+                    backgroundColor: primaryHover.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['#fff', 'transparent'],
+                    }),
+                  },
+                ]}
+              >
+                <Animated.Text
+                  style={[
+                    styles.primaryButtonText,
+                    {
+                      color: primaryHover.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['#3b2417', '#EFEFEF'],
+                      }),
+                    },
+                  ]}
+                >
+                  Ver produtos
+                </Animated.Text>
+              </Animated.View>
             </Pressable>
 
             <Pressable
-              style={styles.secondaryButton}
               onPress={() => router.push('/blog')}
+              onHoverIn={() => animateSecondary(1)}
+              onHoverOut={() => animateSecondary(0)}
             >
-              <Text style={styles.secondaryButtonText}>
-                Ver receitas
-              </Text>
+              <Animated.View
+                style={[
+                  styles.secondaryButton,
+                  {
+                    backgroundColor: secondaryHover.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['transparent', '#fff'],
+                    }),
+                  },
+                ]}
+              >
+                <Animated.Text
+                  style={[
+                    styles.secondaryButtonText,
+                    {
+                      color: secondaryHover.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['#fff', '#3b2417'],
+                      }),
+                    },
+                  ]}
+                >
+                  Ver receitas
+                </Animated.Text>
+              </Animated.View>
             </Pressable>
           </View>
         </View>
       </View>
 
-      {/* RECEITAS */}
+{/* /////////////////////////////////////////////////////////////////
+      Receitas 
+    /////////////////////////////////////////////////////////////////  */}
+
       <Text style={styles.sectionTitle}>
         Descubra novos sabores
       </Text>
@@ -136,18 +203,21 @@ export default function HomeScreen() {
         </Text>
       ) : (
         <View style={styles.recipeList}>
-          {recipes.map((item) => (
+          {(isDesktop ? recipes.slice(0,3) :recipes).map((item) => (
             <View
               key={item.idReceitas}
               style={styles.recipeItem}
             >
-              <ProductHome product={item} />
+              <RecipeCard product={item} />
             </View>
           ))}
         </View>
       )}
 
-      {/* BLOG */}
+{/* /////////////////////////////////////////////////////////////////
+      Blog 
+    /////////////////////////////////////////////////////////////////  */}
+
       <Text style={styles.sectionTitle}>
         Explore o nosso Blog
       </Text>
@@ -166,58 +236,13 @@ export default function HomeScreen() {
         </Text>
       ) : (
         <View style={styles.recipeList}>
-          {receitaBlog.map((item) => (
-            <View
-              key={item.idReceitaBlog}
-              style={styles.recipeItem}
-            >
-              <Pressable
-                style={styles.recipeCard}
-                onPress={() =>
-                  router.push(`/blog/${item.idReceitaBlog}`)
-                }
+          {(isDesktop ? receitaBlog.slice(0,3) :receitaBlog).map((item) => (
+              <View
+                key={item.idReceitaBlog}
+                style={styles.recipeItem}
               >
-                {item.imgReceitablog ? (
-                  <Image
-                    source={{
-                      uri: getBlogRecipeImage(item.imgReceitablog),
-                    }}
-                    style={styles.recipeImage}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <View style={styles.imagePlaceholder}>
-                    <Text style={styles.placeholderText}>
-                      Sem imagem
-                    </Text>
-                  </View>
-                )}
-
-                <View style={styles.recipeContent}>
-                  <Text style={styles.date}>
-                    {item.dataReceitablog
-                      ? new Date(
-                          item.dataReceitablog,
-                        ).toLocaleDateString('pt-BR')
-                      : 'Data não informada'}
-                  </Text>
-
-                  <Text
-                    style={styles.recipeTitle}
-                    numberOfLines={2}
-                  >
-                    {item.nomeReceitablog}
-                  </Text>
-
-                  <Text
-                    style={styles.recipeDescription}
-                    numberOfLines={3}
-                  >
-                    {item.descricaoReceitablog}
-                  </Text>
-                </View>
-              </Pressable>
-            </View>
+                <BlogRecipeCard recipe={item} />
+              </View>
           ))}
         </View>
       )}
@@ -248,11 +273,6 @@ function createStyles(
     isDesktop ? 32 :
     isTablet ? 28 :
     24
-
-  const recipeImageHeight =
-    isDesktop ? 220 :
-    isTablet ? 190 :
-    150
 
   return StyleSheet.create({
     container: {
@@ -319,14 +339,15 @@ function createStyles(
     },
 
     primaryButton: {
-      backgroundColor: '#fff',
+      borderWidth: 1,
       paddingVertical: 12,
       paddingHorizontal: 18,
       borderRadius: 14,
+      borderColor: '#fff',
+  
     },
 
     primaryButtonText: {
-      color: '#3b2417',
       fontWeight: '700',
     },
 
@@ -339,7 +360,6 @@ function createStyles(
     },
 
     secondaryButtonText: {
-      color: '#fff',
       fontWeight: '700',
     },
 
@@ -349,6 +369,7 @@ function createStyles(
       marginTop: isDesktop ? 40 : 24,
       marginBottom: 16,
       paddingHorizontal: isDesktop ? 32 : 16,
+      alignSelf: 'center',
     },
 
     loadingContainer: {
@@ -377,63 +398,21 @@ function createStyles(
     recipeItem: {
       width:
         isDesktop
-          ? '23%'
+          ? '30%'
           : isTablet
             ? '31%'
             : '48%',
     },
 
-    recipeCard: {
-      flex: 1,
-      backgroundColor: '#fff',
-      borderRadius: 16,
-      overflow: 'hidden',
-      elevation: 3,
-      borderWidth: 1,
-      borderColor: '#ece6dc',
+    blogItem: {
+      width:
+        isDesktop
+          ? '30%'
+          : isTablet
+            ? '31%'
+            : '48%',
     },
 
-    recipeImage: {
-      width: '100%',
-      height: recipeImageHeight,
-    },
-
-    imagePlaceholder: {
-      width: '100%',
-      height: recipeImageHeight,
-      backgroundColor: '#eee',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-
-    placeholderText: {
-      color: '#777',
-    },
-
-    recipeContent: {
-      padding: isDesktop ? 18 : 14,
-    },
-
-    recipeTitle: {
-      fontSize: isDesktop ? 19 : 17,
-      fontWeight: '700',
-      marginBottom: 8,
-    },
-
-    recipeDescription: {
-      color: '#666',
-      lineHeight: 20,
-      fontSize: isDesktop ? 15 : 14,
-    },
-
-    rating: {
-      marginTop: 12,
-      fontWeight: '700',
-    },
-
-    date: {
-      color: '#999',
-      marginBottom: 6,
-    },
+    
   })
 }
