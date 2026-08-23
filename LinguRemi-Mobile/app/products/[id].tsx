@@ -14,9 +14,11 @@ import {
 import { getProductById, getProductImage } from '../../src/services/productService'
 import { getCart, saveCart } from '../../src/services/cartService'
 import type { Product } from '../../src/types/Product'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 export default function ProductDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
+  const { isDesktop } = useResponsive()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [quantity, setQuantity] = useState(1)
@@ -101,7 +103,13 @@ export default function ProductDetailsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={[
+        styles.content,
+        isDesktop && styles.contentDesktop,
+      ]}
+    >
       {message ? (
         <Text
           style={[
@@ -113,81 +121,94 @@ export default function ProductDetailsScreen() {
         </Text>
       ) : null}
 
-      <Pressable style={styles.backButton} onPress={() => router.push('/products')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
-      </Pressable>
-
-      {product.imgReceitas ? (
-        <Image
-          source={{ uri: getProductImage(product.imgReceitas) }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      ) : (
-        <View style={styles.imagePlaceholder}>
-          <Text>Sem imagem</Text>
-        </View>
+      {!isDesktop && (
+        <Pressable style={styles.backButton} onPress={() => router.push('/products')}>
+          <Text style={styles.backButtonText}>Voltar</Text>
+        </Pressable>
       )}
 
-      <View style={styles.card}>
-        <Text style={styles.title}>{product.nomeReceitas}</Text>
+      {/* =====================================================
+          IMAGEM + INFORMAÇÕES
+      ===================================================== */}
 
-        <Text style={styles.rating}>★ {product.avaliacaoReceitas} avaliações</Text>
-
-        <Text style={styles.price}>R$ {product.valorReceitas.toFixed(2)}</Text>
-
-        <Text style={styles.label}>
-          {product.tipoquantidadeReceitas === 'peso' ? 'Peso:' : 'Quantidade:'}
-        </Text>
-
-        <View style={styles.quantityRow}>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={String(quantity)}
-            onChangeText={(text) => {
-              const value = Number(text.replace(',', '.'))
-              if (value > 0) setQuantity(value)
-            }}
+      <View style={[styles.infoBox, isDesktop && styles.infoBoxDesktop]}>
+        {product.imgReceitas ? (
+          <Image
+            source={{ uri: getProductImage(product.imgReceitas) }}
+            style={[styles.image, isDesktop && styles.imageDesktop]}
+            resizeMode="cover"
           />
+        ) : (
+          <View
+            style={[
+              styles.imagePlaceholder,
+              isDesktop && styles.imageDesktop,
+            ]}
+          >
+            <Text>Sem imagem</Text>
+          </View>
+        )}
 
-          <Text style={styles.unit}>
-            {product.tipoquantidadeReceitas === 'peso' ? 'kg' : 'un'}
+        <View style={[styles.card, isDesktop && styles.cardDesktop]}>
+          <Text style={styles.title}>{product.nomeReceitas}</Text>
+
+          <Text style={styles.rating}>★ {product.avaliacaoReceitas} avaliações</Text>
+
+          <Text style={styles.price}>R$ {product.valorReceitas.toFixed(2)}</Text>
+
+          <Text style={styles.label}>
+            {product.tipoquantidadeReceitas === 'peso' ? 'Peso:' : 'Quantidade:'}
           </Text>
+
+          <View style={styles.quantityRow}>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={String(quantity)}
+              onChangeText={(text) => {
+                const value = Number(text.replace(',', '.'))
+                if (value > 0) setQuantity(value)
+              }}
+            />
+
+            <Text style={styles.unit}>
+              {product.tipoquantidadeReceitas === 'peso' ? 'kg' : 'un'}
+            </Text>
+          </View>
+
+          <Text
+            style={[
+              styles.stock,
+              product.disponivelReceitas <= 0 && styles.unavailable,
+            ]}
+          >
+            {product.disponivelReceitas > 0
+              ? `Em estoque (${product.disponivelReceitas} disponíveis)`
+              : 'Produto indisponível'}
+          </Text>
+
+          <Pressable
+            style={[
+              styles.button,
+              product.disponivelReceitas <= 0 && styles.disabledButton,
+            ]}
+            disabled={product.disponivelReceitas <= 0}
+            onPress={() => handleAddToCart(false)}
+          >
+            <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.button,
+              product.disponivelReceitas <= 0 && styles.disabledButton,
+            ]}
+            disabled={product.disponivelReceitas <= 0}
+            onPress={() => handleAddToCart(true)}
+          >
+            <Text style={styles.buttonText}>Comprar agora</Text>
+          </Pressable>
         </View>
-
-        <Text
-          style={[
-            styles.stock,
-            product.disponivelReceitas <= 0 && styles.unavailable,
-          ]}
-        >
-          {product.disponivelReceitas > 0
-            ? `Em estoque (${product.disponivelReceitas} disponíveis)`
-            : 'Produto indisponível'}
-        </Text>
-
-        <Pressable
-          style={[
-            styles.button,
-            product.disponivelReceitas <= 0 && styles.disabledButton,
-          ]}
-          disabled={product.disponivelReceitas <= 0}
-          onPress={() => handleAddToCart(false)}
-        >
-          <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.button,
-            product.disponivelReceitas <= 0 && styles.disabledButton,
-          ]}
-          disabled={product.disponivelReceitas <= 0}
-          onPress={() => handleAddToCart(true)}
-        >
-          <Text style={styles.buttonText}>Comprar agora</Text>
-        </Pressable>
       </View>
 
       <View style={styles.descriptionCard}>
@@ -209,6 +230,19 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 32,
+  },
+
+  /*
+   * No desktop, o conteúdo fica centralizado com
+   * largura máxima, evitando texto e cards
+   * esticados demais em telas grandes.
+   */
+  contentDesktop: {
+    width: '100%',
+    maxWidth: 1100,
+    alignSelf: 'center',
+    paddingHorizontal: 32,
+    paddingTop: 24,
   },
 
   center: {
@@ -255,11 +289,40 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
+  /*
+   * CAIXA IMAGEM + INFO
+   *
+   * Mobile: imagem em cima, card embaixo (fundo
+   * transparente, sem padding extra).
+   * Desktop: uma "caixa" cinza com sombra,
+   * imagem à esquerda e card à direita, lado a
+   * lado — igual ao "bg-gray-100 ... lg:flex-row"
+   * da versão web.
+   */
+  infoBox: {},
+
+  infoBoxDesktop: {
+    flexDirection: 'row',
+    gap: 24,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 16,
+    padding: 20,
+    elevation: 3,
+  },
+
   image: {
     width: '100%',
     height: 260,
     borderRadius: 16,
     marginBottom: 16,
+  },
+
+  imageDesktop: {
+    width: 600,
+    height: 'auto',
+    minHeight: 420,
+    marginBottom: 0,
+    flexShrink: 0,
   },
 
   imagePlaceholder: {
@@ -276,6 +339,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     elevation: 3,
+  },
+
+  cardDesktop: {
+    width: 400,
+    flexShrink: 0,
+    padding: 20,
   },
 
   title: {

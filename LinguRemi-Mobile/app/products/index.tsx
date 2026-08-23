@@ -11,10 +11,12 @@ import {
 import { ProductCard } from '../../src/components/ProductCard'
 import { getProducts } from '../../src/services/productService'
 import type { Product } from '../../src/types/Product'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { isDesktop } = useResponsive()
 
   useEffect(() => {
     async function loadProducts() {
@@ -26,9 +28,13 @@ export default function ProductsScreen() {
     loadProducts()
   }, [])
 
+  const numColumns = isDesktop ? 3 : 2
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Nossos Doces</Text>
+      <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+        Nossos Doces
+      </Text>
 
       {isLoading ? (
         <View style={styles.center}>
@@ -42,13 +48,23 @@ export default function ProductsScreen() {
       ) : (
         <FlatList
           data={products}
+          // O key precisa mudar junto com numColumns: o FlatList não
+          // permite trocar a quantidade de colunas sem remontar a lista.
+          key={numColumns}
           keyExtractor={(item) => String(item.idReceitas)}
-          numColumns={2}
+          numColumns={numColumns}
           showsHorizontalScrollIndicator={false}
           columnWrapperStyle={styles.recipeRow}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[
+            styles.list,
+            isDesktop && styles.listDesktop,
+          ]}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <ProductCard product={item} />}
+          renderItem={({ item }) => (
+            <View style={isDesktop ? styles.cardWrapperDesktop : styles.cardWrapper}>
+              <ProductCard product={item} />
+            </View>
+          )}
         />
       )}
     </SafeAreaView>
@@ -60,7 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#faf7f2',
     paddingHorizontal: 16,
-    
   },
 
   title: {
@@ -68,6 +83,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginVertical: 24,
+  },
+
+  titleDesktop: {
+    fontSize: 36,
+    marginVertical: 32,
   },
 
   center: {
@@ -85,11 +105,40 @@ const styles = StyleSheet.create({
 
   list: {
     paddingHorizontal: 16,
-    paddingBottom:24,
+    paddingBottom: 24,
     gap: 16,
   },
+
+  /*
+   * No desktop, o grid fica centralizado com
+   * largura máxima, igual ao "container mx-auto"
+   * da versão web.
+   */
+  listDesktop: {
+    width: '80%',
+    alignSelf: 'center',
+    paddingHorizontal: 0,
+  },
+
   recipeRow: {
-    justifyContent:'space-between',
-    marginBottom: 16,
+    justifyContent: 'space-between',
+  },
+
+  /*
+   * Largura da coluna no mobile (2 colunas).
+   * O ProductCard não define mais width fixo,
+   * então quem controla o tamanho é este wrapper.
+   */
+  cardWrapper: {
+    width: '48%',
+  },
+
+  /*
+   * Cada card ocupa uma fração da linha (3 colunas),
+   * evitando que eles se esticem demais quando a
+   * última linha não está completa.
+   */
+  cardWrapperDesktop: {
+    width: '32%',
   },
 })

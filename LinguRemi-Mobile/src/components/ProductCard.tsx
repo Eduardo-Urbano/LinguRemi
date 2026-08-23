@@ -50,14 +50,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    width: '48%',
+    // A largura da coluna (48% no mobile, 31% no desktop)
+    // é controlada pelo wrapper em ProductsScreen. Aqui o
+    // card sempre preenche 100% do espaço que recebe.
+    width: '100%',
     backgroundColor: '#fff',
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: 20,
     elevation: 3,
     borderWidth: 1,
-    borderColor: "#ece6dc",
+    borderColor: '#ece6dc',
   },
 
   image: {
