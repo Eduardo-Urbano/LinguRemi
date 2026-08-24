@@ -10,13 +10,14 @@ import {
   View,
 } from 'react-native'
 
-import { enableBiometricLogin, getAuthToken, isAppLocked, loginUser, saveAuthData, unlockApp, isBiometricEnabled, logoutUser  } from '../src/services/authService'
+import { enableBiometricLogin, getAuthToken, getUserData, isAppLocked, loginUser, saveAuthData, unlockApp, isBiometricEnabled, logoutUser  } from '../src/services/authService'
 import { useAuth } from '../src/context/AuthContext'
 import * as LocalAuthentication from 'expo-local-authentication'
 import LoadingModal from '../src/components/feedback/LoadingModal'
 import SuccessModal from '../src/components/feedback/SuccessModal'
 import ErrorModal from '../src/components/feedback/ErrorModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 export default function LoginScreen() {
   const { setAuthenticated, setAdmin } = useAuth()
@@ -25,9 +26,11 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isLocked,setIsLocked] = useState(false)
+  const [nomeUsuario, setNomeUsuario] = useState('')
   const [successVisible, setSuccessVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const navigation = useNavigation()
+  const { isDesktop } = useResponsive()
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -36,6 +39,11 @@ export default function LoginScreen() {
       async function checkLock() {
         const locked = await isAppLocked()
         setIsLocked(locked)
+
+        if (locked) {
+          const user = await getUserData()
+          setNomeUsuario(user.nome)
+        }
       }
 
       checkLock()
@@ -174,6 +182,7 @@ export default function LoginScreen() {
     setIsLocked(false)
     setAuthenticated(false)
     setIsLocked(false)
+    setNomeUsuario('')
 
     navigation.setOptions({
       swipeEnabled: true,
@@ -182,137 +191,177 @@ export default function LoginScreen() {
     
   }
 
-  useEffect(()=>{
-    async function checkLock() {
-      const locked = await isAppLocked()
-      setIsLocked(locked)
-    }
-    checkLock()
-  },[])
-
   useEffect(() => {
   navigation.setOptions({
     swipeEnabled: !isLocked,
     headerLeft: isLocked ? () => null : undefined,
     })
   }, [isLocked])
+  const primeiroNome = nomeUsuario.split(' ')[0]
 
   return (
-    <KeyboardAwareScrollView 
-          style={styles.container} 
-          contentContainerStyle={styles.content} 
-          keyboardShouldPersistTaps="handled"
-          enableOnAndroid
-          extraScrollHeight={30}
-    >
-      <View style={styles.card}>
+    <View style={[styles.screen, isDesktop && styles.screenDesktop]}>
+      {/* =====================================================
+          PAINEL DE IMAGEM (desktop)
+          Espaço reservado para uma imagem — por enquanto,
+          preenchido com fundo verde.
+      ===================================================== */}
 
-        {isLocked ? (
-          <>
-          {errorMessage ? (
-            <Text style={styles.error}>{errorMessage}</Text>
-          ) : null}
+      {isDesktop && <View style={styles.imagePanelDesktop} />}
+
+      <KeyboardAwareScrollView
+        style={[styles.container, isDesktop && styles.containerDesktop]}
+        contentContainerStyle={[
+          styles.content,
+          isDesktop && styles.contentDesktop,
+        ]}
+        keyboardShouldPersistTaps="handled"
+        enableOnAndroid
+        extraScrollHeight={30}
+      >
+        <View style={[styles.card, isDesktop && styles.cardDesktop]}>
+
+          {isLocked && !isDesktop ? (
+            <>
+            <Text style={styles.welcomeText}>
+              {nomeUsuario ? `Olá ${primeiroNome}, bom te ver novamente!` : 'Bem-vindo de volta!'}
+            </Text>
+
+            {errorMessage ? (
+              <Text style={styles.error}>{errorMessage}</Text>
+            ) : null}
+
+            <Pressable
+              style={styles.button}
+              onPress={handleBiometricLogin}
+            >
+              <Text style={styles.buttonText}>
+                Login com biometria
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.secondaryButton}
+              onPress={handleUseAnotherUser}
+            >
+              <Text style={styles.buttonText}>
+                Usar uma conta diferente
+              </Text>
+            </Pressable>
+            </>
+          ) : (
+            <>
+          <Text style={styles.title}>Login</Text>
+
+          <TextInput
+            placeholder="Email"
+            value={login}
+            onChangeText={setLogin}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+
+          <Pressable onPress={() => router.push('/forgotPassword')}>
+            <Text style={styles.esqueciSenha}>
+              Esqueceu sua senha? Clique aqui
+            </Text>
+          </Pressable>
 
           <Pressable
             style={styles.button}
-            onPress={handleBiometricLogin}
+            onPress={handleLogin}
+            disabled={isLoading}
           >
+            <Text style={styles.buttonText}>
+              {isLoading ? 'Entrando...' : 'Logar'}
+            </Text>
+          </Pressable>
+
+          {/*
+          <Pressable
+            style={styles.button}
+            onPress={handleBiometricLogin}
+            >
             <Text style={styles.buttonText}>
               Login com biometria
             </Text>
+          
           </Pressable>
+          */}
 
           <Pressable
             style={styles.secondaryButton}
-            onPress={handleUseAnotherUser}
+            onPress={() => router.push('/register')}
           >
-            <Text style={styles.buttonText}>
-              Usar uma conta diferente
-            </Text>
+            <Text style={styles.buttonText}>Cadastre-se</Text>
           </Pressable>
           </>
-        ) : (
-          <>
-        <Text style={styles.title}>Login</Text>
+          )}
+        </View>
 
-        <TextInput
-          placeholder="Email"
-          value={login}
-          onChangeText={setLogin}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          style={styles.input}
+        <LoadingModal
+          visible={isLoading}
+          message="Entrando..."
         />
 
-        <TextInput
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
+        <SuccessModal
+          visible={successVisible}
+          message="Login realizado com sucesso"
         />
 
-        <Pressable onPress={() => router.push('/forgotPassword')}>
-          <Text style={styles.esqueciSenha}>
-            Esqueceu sua senha? Clique aqui
-          </Text>
-        </Pressable>
+        <ErrorModal
+          visible={errorVisible}
+          message={errorMessage}
+        />
 
-        <Pressable
-          style={styles.button}
-          onPress={handleLogin}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>
-            {isLoading ? 'Entrando...' : 'Logar'}
-          </Text>
-        </Pressable>
-
-        {/*
-        <Pressable
-          style={styles.button}
-          onPress={handleBiometricLogin}
-          >
-          <Text style={styles.buttonText}>
-            Login com biometria
-          </Text>
-        
-        </Pressable>
-        */}
-
-        <Pressable
-          style={styles.secondaryButton}
-          onPress={() => router.push('/register')}
-        >
-          <Text style={styles.buttonText}>Cadastre-se</Text>
-        </Pressable>
-        </>
-        )}
-      </View>
-
-      <LoadingModal
-        visible={isLoading}
-        message="Entrando..."
-      />
-
-      <SuccessModal
-        visible={successVisible}
-        message="Login realizado com sucesso"
-      />
-
-      <ErrorModal
-        visible={errorVisible}
-        message={errorMessage}
-      />
-
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  /*
+   * SCREEN
+   *
+   * No mobile, é só um wrapper transparente (o
+   * KeyboardAwareScrollView cuida de tudo, como antes).
+   * No desktop, vira uma linha dividindo a tela em duas
+   * colunas: painel de imagem à esquerda, formulário à
+   * direita.
+   */
+  screen: {
+    flex: 1,
+  },
+
+  screenDesktop: {
+    flexDirection: 'row',
+  },
+
+  /*
+   * Espaço reservado para a imagem, com fundo verde
+   * por enquanto. Ocupa metade da tela no desktop.
+   */
+  imagePanelDesktop: {
+    flex: 1,
+    backgroundColor: '#1f7a4d',
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#faf7f2',
+  },
+
+  containerDesktop: {
+    flex: 1,
   },
 
   content: {
@@ -320,6 +369,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     paddingBottom: 40,
+  },
+
+  contentDesktop: {
+    alignItems: 'center',
+    paddingHorizontal: 48,
   },
   
   card: {
@@ -329,9 +383,22 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
+  cardDesktop: {
+    width: '100%',
+    maxWidth: 420,
+    padding: 32,
+  },
+
   title: {
     fontSize: 28,
     fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: '600',
     textAlign: 'center',
     marginBottom: 20,
   },

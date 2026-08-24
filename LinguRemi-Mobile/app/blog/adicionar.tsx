@@ -9,8 +9,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  View,
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 export default function NewBlogRecipeScreen() {
   const [nomeReceita, setNomeReceita] = useState('')
@@ -20,6 +22,8 @@ export default function NewBlogRecipeScreen() {
   const [tempoReceita, setTempoReceita] = useState('')
   const [imgReceita, setImgReceita] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  const { isDesktop } = useResponsive()
 
   async function pickImage() {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -73,91 +77,129 @@ export default function NewBlogRecipeScreen() {
     }
   }
 
-  return (
-    
-    <KeyboardAwareScrollView 
-      style={styles.container} 
-      contentContainerStyle={styles.content} 
-      keyboardShouldPersistTaps="handled"
-      enableOnAndroid
-      extraScrollHeight={30}
-      >
-      <Pressable style={styles.backButton} onPress={() => router.push('/blog')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
-      </Pressable>
-      <Text style={styles.title}>Cadastrar receita do blog</Text>
-
-      <Text style={styles.textCategoria}>Nome da receita</Text>
-      <TextInput
-        placeholder="Bolo de ..."
-        placeholderTextColor={'#A9A9AC'}
-        value={nomeReceita}
-        onChangeText={setNomeReceita}
-        style={styles.input}
-      />
-
-      <Text style={styles.textCategoria}>Ingredientes</Text>
-      <TextInput
-        placeholder="1/2 xicara de leite, 2 xicaras de ..."
-        placeholderTextColor={'#A9A9AC'}
-        value={ingReceita}
-        onChangeText={setIngReceita}
-        style={[styles.input, styles.textArea]}
-        multiline
-      />
-      
-      <Text style={styles.textCategoria}>Modo de preparo</Text>
-      <TextInput
-        placeholder="Bata tudo no liquidificador ..."
-        placeholderTextColor={'#A9A9AC'}
-        value={preparoReceita}
-        onChangeText={setPreparoReceita}
-        style={[styles.input, styles.textArea]}
-        multiline
-      />
-
-      <Text style={styles.textCategoria}>Descrição</Text>
-      <TextInput
-        placeholder="Bolo fofinho e ..."
-        placeholderTextColor={'#A9A9AC'}
-        value={descReceita}
-        onChangeText={setDescReceita}
-        style={[styles.input, styles.textArea]}
-        multiline
-      />
-
-      <Text style={styles.textCategoria}>Tempo de preparo</Text>
-      <TextInput
-        placeholder="45 minutos"
-        placeholderTextColor={'#A9A9AC'}
-        value={tempoReceita}
-        onChangeText={setTempoReceita}
-        style={styles.input}
-      />
-
+  const imageSection = (
+    <View style={isDesktop && styles.imageColumnDesktop}>
       <Pressable style={styles.imageButton} onPress={pickImage}>
         <Text style={styles.imageButtonText}>
           {imgReceita ? 'Trocar imagem' : 'Selecionar imagem'}
         </Text>
       </Pressable>
 
-      {imgReceita && (
+      {imgReceita ? (
         <Image
           source={{ uri: imgReceita.uri }}
-          style={styles.preview}
+          style={[styles.preview, isDesktop && styles.previewDesktop]}
           resizeMode="cover"
         />
+      ) : (
+        isDesktop && (
+          <View style={styles.previewPlaceholderDesktop}>
+            <Text style={styles.previewPlaceholderText}>
+              A imagem selecionada aparecerá aqui
+            </Text>
+          </View>
+        )
       )}
+    </View>
+  )
 
-      <Pressable
-        style={[styles.submitButton, loading && styles.disabledButton]}
-        onPress={cadastrarReceita}
-        disabled={loading}
-      >
-        <Text style={styles.submitButtonText}>
-          {loading ? 'Cadastrando...' : 'Cadastrar receita'}
-        </Text>
-      </Pressable>
+  return (
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={[
+        styles.content,
+        isDesktop && styles.contentDesktop,
+      ]}
+      keyboardShouldPersistTaps="handled"
+      enableOnAndroid
+      extraScrollHeight={30}
+    >
+      {!isDesktop &&(
+        <Pressable style={styles.backButton} onPress={() => router.push('/blog')}>
+          <Text style={styles.backButtonText}>Voltar</Text>
+        </Pressable>
+      )}
+      
+
+      <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+        Cadastrar receita do blog
+      </Text>
+
+      <View style={[styles.card, isDesktop && styles.cardDesktop]}>
+        <View style={[styles.formLayout, isDesktop && styles.formLayoutDesktop]}>
+          {/* =================================================
+              CAMPOS DE TEXTO
+          ================================================= */}
+
+          <View style={isDesktop && styles.fieldsColumnDesktop}>
+            <Text style={styles.textCategoria}>Nome da receita</Text>
+            <TextInput
+              placeholder="Bolo de ..."
+              placeholderTextColor={'#A9A9AC'}
+              value={nomeReceita}
+              onChangeText={setNomeReceita}
+              style={styles.input}
+            />
+
+            <Text style={styles.textCategoria}>Ingredientes</Text>
+            <TextInput
+              placeholder="1/2 xicara de leite, 2 xicaras de ..."
+              placeholderTextColor={'#A9A9AC'}
+              value={ingReceita}
+              onChangeText={setIngReceita}
+              style={[styles.input, styles.textArea]}
+              multiline
+            />
+
+            <Text style={styles.textCategoria}>Modo de preparo</Text>
+            <TextInput
+              placeholder="Bata tudo no liquidificador ..."
+              placeholderTextColor={'#A9A9AC'}
+              value={preparoReceita}
+              onChangeText={setPreparoReceita}
+              style={[styles.input, styles.textArea]}
+              multiline
+            />
+
+            <Text style={styles.textCategoria}>Descrição</Text>
+            <TextInput
+              placeholder="Bolo fofinho e ..."
+              placeholderTextColor={'#A9A9AC'}
+              value={descReceita}
+              onChangeText={setDescReceita}
+              style={[styles.input, styles.textArea]}
+              multiline
+            />
+
+            <Text style={styles.textCategoria}>Tempo de preparo</Text>
+            <TextInput
+              placeholder="45 minutos"
+              placeholderTextColor={'#A9A9AC'}
+              value={tempoReceita}
+              onChangeText={setTempoReceita}
+              style={styles.input}
+            />
+
+            {/* No mobile, a imagem entra logo depois dos campos,
+                na mesma coluna */}
+            {!isDesktop && imageSection}
+          </View>
+
+          {/* No desktop, a imagem fica numa coluna separada,
+              ao lado dos campos */}
+          {isDesktop && imageSection}
+        </View>
+
+        <Pressable
+          style={[styles.submitButton, loading && styles.disabledButton]}
+          onPress={cadastrarReceita}
+          disabled={loading}
+        >
+          <Text style={styles.submitButtonText}>
+            {loading ? 'Cadastrando...' : 'Cadastrar receita'}
+          </Text>
+        </Pressable>
+      </View>
     </KeyboardAwareScrollView>
   )
 }
@@ -173,11 +215,71 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
+  /*
+   * No desktop, o conteúdo fica centralizado com
+   * largura máxima, evitando um formulário
+   * esticado demais em telas grandes.
+   */
+  contentDesktop: {
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+    paddingHorizontal: 32,
+    paddingTop: 32,
+  },
+
   title: {
     fontSize: 26,
     fontWeight: '800',
     marginBottom: 24,
     color: '#3b2417',
+  },
+
+  titleDesktop: {
+    fontSize: 34,
+    marginBottom: 28,
+  },
+
+  /*
+   * CARD (desktop)
+   *
+   * No mobile, os campos ficam soltos na tela
+   * (como antes). No desktop, tudo entra dentro
+   * de um card branco com sombra.
+   */
+  card: {},
+
+  cardDesktop: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 32,
+    elevation: 3,
+  },
+
+  /*
+   * LAYOUT DO FORMULÁRIO
+   *
+   * Mobile: tudo em uma coluna só (campos, depois
+   * imagem, como já era).
+   * Desktop: campos numa coluna maior à esquerda,
+   * imagem numa coluna menor à direita.
+   */
+  formLayout: {},
+
+  formLayoutDesktop: {
+    flexDirection: 'row',
+    gap: 32,
+    marginBottom: 28,
+  },
+
+  fieldsColumnDesktop: {
+    flex: 1.4,
+    minWidth: 0,
+  },
+
+  imageColumnDesktop: {
+    flex: 1,
+    minWidth: 0,
   },
 
   input: {
@@ -217,8 +319,32 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  previewDesktop: {
+    height: 320,
+    marginBottom: 0,
+  },
+
+  previewPlaceholderDesktop: {
+    width: '100%',
+    height: 320,
+    borderRadius: 16,
+    backgroundColor: '#f3ede4',
+    borderWidth: 1,
+    borderColor: '#e6dccb',
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+
+  previewPlaceholderText: {
+    color: '#a9968a',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+
   submitButton: {
-    backgroundColor: '#3b2417',
+    backgroundColor: '#0A0A0A',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',

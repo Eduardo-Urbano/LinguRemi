@@ -32,10 +32,6 @@ export default function ProductsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
-        Nossos Doces
-      </Text>
-
       {isLoading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -62,7 +58,7 @@ export default function ProductsScreen() {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <View style={isDesktop ? styles.cardWrapperDesktop : styles.cardWrapper}>
-              <ProductCard product={item} />
+              <ProductCard product={item} isDesktop={isDesktop} />
             </View>
           )}
         />
@@ -118,6 +114,7 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     paddingHorizontal: 0,
+    paddingTop: 30
   },
 
   recipeRow: {

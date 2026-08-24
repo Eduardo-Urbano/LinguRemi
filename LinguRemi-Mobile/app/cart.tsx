@@ -26,6 +26,8 @@ import LoadingModal from '../src/components/feedback/LoadingModal'
 import SuccessModal from '../src/components/feedback/SuccessModal'
 import ErrorModal from '../src/components/feedback/ErrorModal'
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
+import { useResponsive } from '@/src/hooks/useResponsive'
+import { Ionicons } from '@expo/vector-icons'
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -35,6 +37,8 @@ export default function CartScreen() {
   const [loading, setLoading] = useState(false)
   const [successVisible, setSuccessVisible] = useState(false)
   const [errorVisible, setErrorVisible] = useState(false)
+
+  const { isDesktop } = useResponsive()
 
   useFocusEffect(
     useCallback(() => {
@@ -151,10 +155,14 @@ export default function CartScreen() {
 
   const total = calculateTotal(cart)
 
+  function getItemTotal(item: CartItem) {
+    return item.tipoQuantidade === 'peso'
+      ? item.preco * item.quantidade * 10
+      : item.preco * item.quantidade
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Carrinho</Text>
-
       {cart.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Seu carrinho está vazio.</Text>
@@ -164,87 +172,156 @@ export default function CartScreen() {
           </Pressable>
         </View>
       ) : (
-        <>
-          <FlatList
-            data={cart}
-            keyExtractor={(_, index) => String(index)}
-            contentContainerStyle={styles.list}
-            renderItem={({ item, index }) => {
-              const itemTotal =
-                item.tipoQuantidade === 'peso'
-                  ? item.preco * item.quantidade * 10
-                  : item.preco * item.quantidade
+        <View style={[styles.body, isDesktop && styles.bodyDesktop]}>
+          <View style={[styles.listContainer, isDesktop && styles.listContainerDesktop]}>
+            <FlatList
+              data={cart}
+              keyExtractor={(_, index) => String(index)}
+              contentContainerStyle={styles.list}
+              renderItem={({ item, index }) => {
+                const itemTotal = getItemTotal(item)
 
-              return (
-                <ReanimatedSwipeable
-                  overshootRight={false}
-                  rightThreshold={80}
-                  renderRightActions={() => (
-                    <View style={styles.deleteAction}>
-                      <Text style={styles.deleteText}>Remover</Text>
-                    </View>
-                  )}
-                  onSwipeableOpen={() => removeItem(index)}
-                >
-                <View style={styles.item}>
-                  {item.imagem ? (
-                    <Image
-                      source={{ uri: item.imagem }}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <View style={styles.imagePlaceholder}>
-                      <Text style={styles.placeholderText}>Sem imagem</Text>
-                    </View>
-                  )}
+                const minQuantity =
+                  item.tipoQuantidade === 'peso' ? 0.1 : 5
 
-                  <View style={styles.itemInfo}>
-                    <Text style={styles.itemName}>{item.nome}</Text>
+                const isAtMin = item.quantidade <= minQuantity
 
-
-                    <View style={styles.quantityRow}>
-                      <Pressable
-                        style={styles.quantityButton}
-                        onPress={() => decreaseQuantity(index)}
-                      >
-                      <Text style={styles.quantityButtonText}>-</Text>
-                      </Pressable>
-                      <TextInput
-                        style={styles.input}
-                        keyboardType="numeric"
-                        value={String(item.quantidade)}
-                        onChangeText={(text) => {
-                          const value = Number(text.replace(',', '.'))
-                          if (value > 0) updateQuantity(index, value)
-                        }}
+                const itemContent = (
+                  <View style={styles.item}>
+                    {item.imagem ? (
+                      <Image
+                        source={{ uri: item.imagem }}
+                        style={styles.image}
+                        resizeMode="cover"
                       />
+                    ) : (
+                      <View style={styles.imagePlaceholder}>
+                        <Text style={styles.placeholderText}>Sem imagem</Text>
+                      </View>
+                    )}
 
-                      <Pressable
-                        style={styles.quantityButton}
-                        onPress={() => increaseQuantity(index)}
+                    <View style={styles.itemInfo}>
+                      <View style={styles.itemNameRow}>
+                        <Text style={styles.itemName}>{item.nome}</Text>
+                      </View>
+
+                      {/* Preço unitário, para deixar claro como
+                          o total do item é calculado */}
+                      <Text style={styles.unitPrice}>
+                        R$ {(item.tipoQuantidade === 'peso'
+                          ? item.preco * 10
+                          : item.preco
+                        ).toFixed(2)}
+                        {item.tipoQuantidade === 'peso' ? '/kg' : '/un'}
+                      </Text>
+
+                      <View style={styles.quantityRow}>
+                        <Pressable
+                          style={[
+                            styles.quantityButton,
+                            isAtMin && styles.quantityButtonDisabled,
+                          ]}
+                          onPress={() => decreaseQuantity(index)}
+                          disabled={isAtMin}
+                        >
+                          <Text style={styles.quantityButtonText}>-</Text>
+                        </Pressable>
+                        <TextInput
+                          style={styles.input}
+                          keyboardType="numeric"
+                          value={String(item.quantidade)}
+                          onChangeText={(text) => {
+                            const value = Number(text.replace(',', '.'))
+                            if (value > 0) updateQuantity(index, value)
+                          }}
+                        />
+
+                        <Pressable
+                          style={styles.quantityButton}
+                          onPress={() => increaseQuantity(index)}
+                        >
+                          <Text style={styles.quantityButtonText}>+</Text>
+                        </Pressable>
+                        
+                        <Text style={styles.unit}>
+                          {item.tipoQuantidade === 'peso' ? 'kg' : 'un'}
+                        </Text>
+
+                        {/* No desktop, a remoção é feita clicando
+                            neste botão — sem gesto de arrastar */}
+                      </View>
+                    </View>
+                    {isDesktop && (
+                          <Pressable
+                            style={styles.removeButton}
+                            onPress={() => removeItem(index)}
+                            accessibilityLabel={`Remover ${item.nome}`}
+                          >
+                            <Ionicons
+                              name="trash-outline"
+                              size={20}
+                              color="#FEFEFE"
+                            />
+                          </Pressable>
+                        )}
+                  </View>
+                )
+
+                // Desktop: sem swipe, só o botão "Remover" dentro do item.
+                if (isDesktop) {
+                  return itemContent
+                }
+
+                // Mobile: remoção por gesto de arrastar (swipe).
+                return (
+                  <ReanimatedSwipeable
+                    overshootRight={false}
+                    rightThreshold={80}
+                    renderRightActions={() => (
+                      <View style={styles.deleteAction}>
+                        <Ionicons name="trash-outline" size={22} color="#fff" />
+                        <Text style={styles.deleteText}>Remover</Text>
+                      </View>
+                    )}
+                    onSwipeableOpen={() => removeItem(index)}
+                  >
+                    {itemContent}
+                  </ReanimatedSwipeable>
+                )
+              }}
+            />
+          </View>
+
+          <View style={[styles.summary, isDesktop && styles.summaryDesktop]}>
+            <Text style={styles.summaryTitle}>Resumo</Text>
+
+            {/* No desktop, o resumo tem espaço de sobra e fica
+                fixo na tela, então mostramos o cálculo de cada
+                item — funciona como uma revisão do pedido antes
+                de finalizar a compra. */}
+            {isDesktop && (
+              <>
+                <View style={styles.summaryItemsList}>
+                  {cart.map((item, index) => (
+                    <View key={index} style={styles.summaryRow}>
+                      <Text
+                        style={styles.summaryLabel}
+                        numberOfLines={1}
                       >
-                        <Text style={styles.quantityButtonText}>+</Text>
-                      </Pressable>
+                        {item.nome} R$ {item.preco.toFixed(2)} × {item.quantidade}
+                        {item.tipoQuantidade === 'peso' ? ' kg' : ''}
+                      </Text>
 
-                      <Text style={styles.unit}>
-                        {item.tipoQuantidade === 'peso' ? 'kg' : 'un'}
+                      <Text style={styles.summaryValue}>
+                        R$ {getItemTotal(item).toFixed(2)}
                       </Text>
                     </View>
-
-                    <Text style={styles.itemTotal}>
-                      R$ {itemTotal.toFixed(2)}
-                    </Text>
-                  </View>
-
+                  ))}
                 </View>
-              </ReanimatedSwipeable>
-              )
-            }}
-          />
 
-          <View style={styles.summary}>
-            <Text style={styles.summaryTitle}>Resumo</Text>
+                <View style={styles.summaryDivider} />
+              </>
+            )}
 
             <Text style={styles.total}>Total: R$ {total.toFixed(2)}</Text>
 
@@ -252,7 +329,7 @@ export default function CartScreen() {
               <Text style={styles.checkoutButtonText}>Finalizar compra</Text>
             </Pressable>
           </View>
-        </>
+        </View>
       )}
       <Modal
         visible={paymentModalVisible}
@@ -361,6 +438,32 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
+  /*
+   * BODY
+   *
+   * Mobile: lista em cima, resumo embaixo
+   * (coluna, como já era).
+   * Desktop: lista (3/4) à esquerda, resumo
+   * (1/4) à direita, como na versão web.
+   */
+  body: {
+    flex: 1,
+  },
+
+  bodyDesktop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 24,
+  },
+
+  listContainer: {
+    flex: 1,
+  },
+
+  listContainerDesktop: {
+    flex: 3,
+  },
+
   list: {
     paddingBottom: 16,
   },
@@ -399,18 +502,30 @@ const styles = StyleSheet.create({
 
   itemInfo: {
     flex: 1,
+    flexDirection: 'column',
     marginLeft: 12,
+    marginRight: 12,
+  },
+
+  itemNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
   },
 
   itemName: {
     fontSize: 16,
     fontWeight: '700',
+    flex: 1,
   },
 
   removeButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 20,
+    alignSelf: 'stretch',
+    backgroundColor: '#dc2626'
   },
 
   removeText: {
@@ -418,9 +533,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
+  unitPrice: {
+    marginTop: 2,
+    fontSize: 13,
+    color: '#888',
+  },
+
   quantityRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
   },
 
@@ -448,6 +570,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#222',
     borderRadius: 16,
     padding: 18,
+  },
+
+  summaryDesktop: {
+    flex: 1,
+    // @ts-ignore -- 'sticky' funciona no react-native-web, mantém
+    // o resumo visível enquanto a lista de itens rola.
+    position: 'sticky',
+    top: 16,
+  },
+
+  summaryItemsList: {
+    maxHeight: 220,
+  },
+
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginBottom: 8,
+  },
+
+  summaryLabel: {
+    flex: 1,
+    color: '#d1d5db',
+    fontSize: 15,
+  },
+
+  summaryValue: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+
+  summaryDivider: {
+    height: 1,
+    backgroundColor: '#3f3f46',
+    marginVertical: 12,
   },
 
   summaryTitle: {
@@ -535,10 +695,16 @@ quantityButtonText: {
   fontSize: 18,
   fontWeight: '700',
 },
+
+quantityButtonDisabled: {
+  backgroundColor: '#9ca3af',
+},
 deleteAction: {
   backgroundColor: '#dc2626',
-  justifyContent: 'center',
+  flexDirection: 'row',
   alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: 6,
   width: "60%",
   marginBottom: 14,
   borderRadius: 16,

@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     },
     sucess: {
         backgroundColor: '#80c684',
-        color: '#991b1b',
+        color: '#EFEFEF',
         padding: 12,
         borderRadius: 12,
         marginBottom: 12,

@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
    */
   contentDesktop: {
     width: '100%',
-    maxWidth: 1100,
+    maxWidth: '60%',
     alignSelf: 'center',
     paddingHorizontal: 32,
     paddingTop: 24,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
     borderRadius: 16,
     padding: 20,
-    elevation: 3,
+    paddingHorizontal: 20,
   },
 
   image: {
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   },
 
   imageDesktop: {
-    width: 600,
+    width: '58%',
     height: 'auto',
     minHeight: 420,
     marginBottom: 0,
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
   },
 
   cardDesktop: {
-    width: 400,
+    width: '40%',
     flexShrink: 0,
     padding: 20,
   },
