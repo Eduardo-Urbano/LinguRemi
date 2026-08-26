@@ -64,9 +64,12 @@ export default function HomeScreen() {
     (player) => {
       player.loop = true
       player.muted = true
-      player.play()
     },
   )
+
+  useEffect(() => {
+    player.play()
+  }, [player])
 
   function animatePrimary(value: number) {
     Animated.timing(primaryHover, {
@@ -96,6 +99,8 @@ export default function HomeScreen() {
           style={styles.backgroundVideo}
           contentFit="cover"
           nativeControls={false}
+          allowsFullscreen={false}
+          allowsPictureInPicture={false}
         />
 
         <View style={styles.overlay} />

@@ -15,9 +15,11 @@ import { editProduct } from '@/src/services/adminService'
 import type { UpdateProductRequest } from '@/src/types/UpdateProductRequest'
 import type { Product } from '@/src/types/Product'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 export default function EditProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
+  const { isDesktop } = useResponsive()
 
   const [nomeReceitas, setNomeReceitas] = useState('')
   const [descReceitas, setDescReceitas] = useState('')
@@ -91,85 +93,98 @@ export default function EditProductScreen() {
   return (
     <KeyboardAwareScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[
+        styles.content,
+        isDesktop && styles.contentDesktop,
+      ]}
       enableOnAndroid
       keyboardShouldPersistTaps="handled"
     >
-      <Pressable style={styles.backButton} onPress={() => router.push('/admin/produtos/produtos')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
-      </Pressable>
-      <Text style={styles.title}>Editar produto</Text>
-
-      <TextInput
-        placeholder="Nome"
-        value={nomeReceitas}
-        onChangeText={setNomeReceitas}
-        style={styles.input}
-      />
-
-      <TextInput
-        placeholder="Descrição"
-        value={descReceitas}
-        onChangeText={setDescReceitas}
-        multiline
-        style={[styles.input, styles.textArea]}
-      />
-
-      <TextInput
-        placeholder="Preço"
-        value={valorReceitas}
-        onChangeText={setValorReceitas}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-
-      <TextInput
-        placeholder="Avaliação"
-        value={avaliacaoReceitas}
-        onChangeText={setAvaliacaoReceitas}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-
-      <TextInput
-        placeholder="Estoque"
-        value={disponivelReceitas}
-        onChangeText={setDisponivelReceitas}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-
-      <View style={styles.typeRow}>
+      {!isDesktop && (
         <Pressable
-          style={[
-            styles.typeButton,
-            tipoquantidadeReceitas === 'unidade' && styles.typeButtonActive,
-          ]}
-          onPress={() => setTipoquantidadeReceitas('unidade')}
+          style={styles.backButton}
+          onPress={() => router.push('/admin/produtos/produtos')}
         >
-          <Text style={styles.typeText}>Unidade</Text>
+          <Text style={styles.backButtonText}>Voltar</Text>
         </Pressable>
+      )}
+
+      <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+        Editar produto
+      </Text>
+
+      <View style={[styles.card, isDesktop && styles.cardDesktop]}>
+        <TextInput
+          placeholder="Nome"
+          value={nomeReceitas}
+          onChangeText={setNomeReceitas}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Descrição"
+          value={descReceitas}
+          onChangeText={setDescReceitas}
+          multiline
+          style={[styles.input, styles.textArea]}
+        />
+
+        <TextInput
+          placeholder="Preço"
+          value={valorReceitas}
+          onChangeText={setValorReceitas}
+          keyboardType="numeric"
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Avaliação"
+          value={avaliacaoReceitas}
+          onChangeText={setAvaliacaoReceitas}
+          keyboardType="numeric"
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Estoque"
+          value={disponivelReceitas}
+          onChangeText={setDisponivelReceitas}
+          keyboardType="numeric"
+          style={styles.input}
+        />
+
+        <View style={styles.typeRow}>
+          <Pressable
+            style={[
+              styles.typeButton,
+              tipoquantidadeReceitas === 'unidade' && styles.typeButtonActive,
+            ]}
+            onPress={() => setTipoquantidadeReceitas('unidade')}
+          >
+            <Text style={styles.typeText}>Unidade</Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.typeButton,
+              tipoquantidadeReceitas === 'peso' && styles.typeButtonActive,
+            ]}
+            onPress={() => setTipoquantidadeReceitas('peso')}
+          >
+            <Text style={styles.typeText}>Peso</Text>
+          </Pressable>
+        </View>
 
         <Pressable
-          style={[
-            styles.typeButton,
-            tipoquantidadeReceitas === 'peso' && styles.typeButtonActive,
-          ]}
-          onPress={() => setTipoquantidadeReceitas('peso')}
+          style={[styles.saveButton, saving && styles.disabledButton]}
+          onPress={handleSave}
+          disabled={saving}
         >
-          <Text style={styles.typeText}>Peso</Text>
+          <Text style={styles.saveButtonText}>
+            {saving ? 'Salvando...' : 'Salvar alterações'}
+          </Text>
         </Pressable>
       </View>
-
-      <Pressable
-        style={[styles.saveButton, saving && styles.disabledButton]}
-        onPress={handleSave}
-        disabled={saving}
-      >
-        <Text style={styles.saveButtonText}>
-          {saving ? 'Salvando...' : 'Salvar alterações'}
-        </Text>
-      </Pressable>
     </KeyboardAwareScrollView>
   )
 }
@@ -184,16 +199,53 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
+
+  /*
+   * No desktop, o conteúdo fica centralizado com
+   * largura contida — como não há campo de imagem
+   * aqui, uma coluna só já fica confortável de ler.
+   */
+  contentDesktop: {
+    width: '100%',
+    maxWidth: 640,
+    alignSelf: 'center',
+    paddingHorizontal: 32,
+    paddingTop: 32,
+  },
+
   center: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   title: {
     fontSize: 26,
     fontWeight: '800',
     marginBottom: 20,
   },
+
+  titleDesktop: {
+    fontSize: 34,
+    marginBottom: 28,
+  },
+
+  /*
+   * CARD (desktop)
+   *
+   * No mobile, os campos ficam soltos na tela
+   * (como antes). No desktop, tudo entra dentro
+   * de um card branco com sombra.
+   */
+  card: {},
+
+  cardDesktop: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 32,
+    elevation: 3,
+  },
+
   input: {
     backgroundColor: '#fff',
     borderRadius: 14,
