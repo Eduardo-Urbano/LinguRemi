@@ -17,6 +17,7 @@ import { getAdminProducts, deleteProduct } from '@/src/services/adminService'
 import { getRecipeImageUrl } from '@/src/services/recipeService'
 import type { Product } from '@/src/types/Product'
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
+import { useResponsive } from '@/src/hooks/useResponsive'
 
 const COLORS = {
   bg: '#faf7f2',
@@ -56,6 +57,7 @@ type ProdutosAdminPanelProps = {
 export function ProdutosAdminPanel({
   showBackButton = true,
 }: ProdutosAdminPanelProps) {
+  const { isDesktop } = useResponsive()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -114,29 +116,49 @@ export function ProdutosAdminPanel({
   }, [products, query, filter])
 
   const renderItem = useCallback(
-    ({ item }: { item: Product }) => (
-      <ReanimatedSwipeable
-        rightThreshold={80}
-        overshootRight={false}
-        renderRightActions={() => (
-          <View style={styles.deleteAction}>
-            <Ionicons
-              name="trash-outline"
-              size={24}
-              color="#fff"
-            />
-            <Text style={styles.deleteText}>Excluir</Text>
-          </View>
-        )}
-        onSwipeableOpen={() => {
-          setSelectedProduct(item)
-          setDeleteModalVisible(true)
-        }}
-      >
-        <ProductCard product={item} />
-      </ReanimatedSwipeable>
-    ),
-    []
+    ({ item }: { item: Product }) => {
+      const card = (
+        <ProductCard
+          product={item}
+          isDesktop={isDesktop}
+          onDelete={() => {
+            setSelectedProduct(item)
+            setDeleteModalVisible(true)
+          }}
+        />
+      )
+
+      // Desktop: sem gesto de arrastar — o próprio card tem
+      // um botão de excluir visível (mais intuitivo com mouse).
+      if (isDesktop) {
+        return card
+      }
+
+      // Mobile: mantém a remoção por swipe, como já era.
+      return (
+        <ReanimatedSwipeable
+          rightThreshold={80}
+          overshootRight={false}
+          renderRightActions={() => (
+            <View style={styles.deleteAction}>
+              <Ionicons
+                name="trash-outline"
+                size={24}
+                color="#fff"
+              />
+              <Text style={styles.deleteText}>Excluir</Text>
+            </View>
+          )}
+          onSwipeableOpen={() => {
+            setSelectedProduct(item)
+            setDeleteModalVisible(true)
+          }}
+        >
+          {card}
+        </ReanimatedSwipeable>
+      )
+    },
+    [isDesktop]
   )
 
   if (loading) {
@@ -299,7 +321,15 @@ function Header({
   )
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({
+  product,
+  isDesktop,
+  onDelete,
+}: {
+  product: Product
+  isDesktop: boolean
+  onDelete: () => void
+}) {
   const lvl = getStockLevel(product.disponivelReceitas)
   const s = stockStyle(lvl)
 
@@ -344,17 +374,23 @@ function ProductCard({ product }: { product: Product }) {
         </View>
       </View>
 
-      <Pressable
-        hitSlop={12}
-        onPress={(e) => {
-          e.stopPropagation()
-          // TODO: confirm + delete
-        }}
-        style={styles.iconBtn}
-        accessibilityLabel="Excluir produto"
-      >
-        <Ionicons name="trash-outline" size={20} color={COLORS.danger} />
-      </Pressable>
+      {/* No desktop, não há gesto de arrastar — este botão
+          é a forma de excluir o produto. No mobile, a remoção
+          já é feita pelo swipe, então o botão fica escondido
+          para não duplicar a ação. */}
+      {isDesktop && (
+        <Pressable
+          hitSlop={12}
+          onPress={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
+          style={styles.iconBtn}
+          accessibilityLabel="Excluir produto"
+        >
+          <Ionicons name="trash-outline" size={20} color={COLORS.danger} />
+        </Pressable>
+      )}
     </Pressable>
   )
 }
