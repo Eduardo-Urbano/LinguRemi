@@ -6,13 +6,15 @@ import { useResponsive } from '@/src/hooks/useResponsive'
 import { BlogAdminPanel } from '@/src/screens/BlogAdminPanel'
 import { ProdutosAdminPanel } from '@/src/screens/ProdutosAdminPanel'
 import { UsuariosAdminPanel } from '@/src/screens/UsuariosAdminPanel'
+import { InsumosAdminPanel } from '@/src/screens/InsumoAdminPanel'
 
-type Section = 'blog' | 'produtos' | 'usuarios'
+type Section = 'blog' | 'produtos' | 'usuarios' | 'insumos'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'blog', label: 'Gerenciar blog' },
   { key: 'produtos', label: 'Gerenciar Produtos' },
   { key: 'usuarios', label: 'Gerenciar usuarios' },
+  { key: 'insumos', label: 'Controle de insumos' },
 ]
 
 export default function IndexAdmin() {
@@ -30,6 +32,7 @@ export default function IndexAdmin() {
     if (section === 'blog') router.push('/admin/blog/blog')
     if (section === 'produtos') router.push('/admin/produtos/produtos')
     if (section === 'usuarios') router.push('/admin/usuarios/usuarios')
+    if (section === 'insumos') router.push('/admin/insumos/insumos')
   }
 
   return (
@@ -71,6 +74,9 @@ export default function IndexAdmin() {
           )}
           {activeSection === 'usuarios' && (
             <UsuariosAdminPanel showBackButton={false} />
+          )}
+          {activeSection === 'insumos' && (
+            <InsumosAdminPanel showBackButton={false} />
           )}
         </View>
       )}
